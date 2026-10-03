@@ -224,9 +224,9 @@ a:hover {
 }
 
 .avatar {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
+  width: 88px;
+  height: 88px;
+  border-radius: 18px;
   overflow: hidden;
   background-color: var(--color-divider);
 }
@@ -249,9 +249,9 @@ a:hover {
 }
 
 .avatar--placeholder {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
+  width: 88px;
+  height: 88px;
+  border-radius: 18px;
   background-color: var(--color-divider);
 }
 
@@ -261,15 +261,19 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  color: var(--color-secondary);
+  width: 44px;
+  height: 44px;
+  position: fixed;
+  top: 24px;
+  right: 32px;
+  color: var(--color-text);
   background: none;
   border: none;
   border-radius: 50%;
   cursor: pointer;
   padding: 0;
   transition: color 0.2s ease;
+  z-index: 100;
 }
 
 .theme-toggle:hover {
@@ -284,16 +288,21 @@ a:hover {
 /* Sun/Moon icon morphing */
 .theme-toggle .sun-core {
   transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 .theme-toggle .sun-rays {
   transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
               opacity 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform-box: fill-box;
   transform-origin: center;
 }
 
 .theme-toggle .moon-mask {
   transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 /* Light mode: show sun (rays visible, mask off-screen) */
@@ -512,10 +521,22 @@ a:hover {
     margin-bottom: var(--space-3);
   }
 
+  .nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .nav-list {
     flex-direction: row;
     flex-wrap: wrap;
     gap: var(--space-2);
+  }
+
+  .theme-toggle {
+    position: static;
+    width: 44px;
+    height: 44px;
   }
 
   .sidebar-bottom {
