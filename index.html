@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shreyas I Sutrave</title>
+  <meta name="description" content="Reverse Engineer | CSE">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Shreyas I Sutrave">
+  <meta property="og:description" content="Reverse Engineer | CSE">
+  <meta property="og:image" content="">
+  <meta property="og:type" content="website">
+
+  <!-- Favicon: "S" monogram -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232F6F62'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='20' font-weight='500' fill='%23F4F3F0'%3ES%3C/text%3E%3C/svg%3E">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="site-wrapper">
+
+    <!-- ============================================================
+         Left Column — Identity
+         ============================================================ -->
+    <header class="sidebar" role="banner">
+      <div class="sidebar-top">
+        <h1 class="identity-name">Shreyas I Sutrave</h1>
+        <p class="identity-title">Reverse Engineer | CSE</p>
+        <p class="identity-statement">I read systems the way I read people: for what they're not saying.</p>
+
+        <nav aria-label="Primary navigation">
+          <ul class="nav-list">
+            <li><a href="#proof" class="nav-link" data-section="proof">01 Proof</a></li>
+            <li><a href="#work" class="nav-link" data-section="work">02 Work</a></li>
+            <li><a href="#writeups" class="nav-link" data-section="writeups">03 Writeups</a></li>
+            <li><a href="#contact" class="nav-link" data-section="contact">04 Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="avatar" role="img" aria-label="Photo of Shreyas">
+          <img
+            src="assets/avatar.jpg"
+            alt="Shreyas I Sutrave"
+            onerror="this.parentElement.classList.add('avatar--placeholder'); this.style.display='none';"
+          >
+        </div>
+        <button class="theme-toggle" aria-label="Toggle color theme">theme</button>
+      </div>
+    </header>
+
+    <!-- ============================================================
+         Right Column — Content
+         ============================================================ -->
+    <main class="content">
+      <div class="content-inner">
+
+        <!-- 01 Proof -->
+        <section id="proof" class="section">
+          <p class="section-label reveal">01 Proof</p>
+
+          <div class="row reveal">
+            <p class="row-title">Hackathon</p>
+            <p class="row-meta">6th / ~50</p>
+          </div>
+          <div class="row reveal">
+            <p class="row-title">CTF</p>
+            <p class="row-meta">18th / 78</p>
+          </div>
+        </section>
+
+        <!-- 02 Work -->
+        <section id="work" class="section">
+          <p class="section-label reveal">02 Work</p>
+
+          <div class="row reveal">
+            <p class="row-title">[Project title]</p>
+            <p class="row-meta">[category] · [date]</p>
+          </div>
+        </section>
+
+        <!-- 03 Writeups -->
+        <section id="writeups" class="section">
+          <p class="section-label reveal">03 Writeups</p>
+
+          <div class="row reveal">
+            <p class="row-title">[Writeup title]</p>
+            <p class="row-meta">[category] · [date]</p>
+          </div>
+        </section>
+
+        <!-- 04 Contact -->
+        <section id="contact" class="section">
+          <p class="section-label reveal">04 Contact</p>
+          <p class="contact-statement reveal">Curious about how things think, whether they're running on silicon or not.</p>
+
+          <div class="row reveal">
+            <p class="row-meta">
+              <a href="#" class="contact-link">[github]</a>
+              <span style="margin: 0 var(--space-1);">·</span>
+              <a href="#" class="contact-link">[linkedin]</a>
+              <span style="margin: 0 var(--space-1);">·</span>
+              <a href="mailto:" class="contact-link">[email]</a>
+            </p>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
