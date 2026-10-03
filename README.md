@@ -6,10 +6,10 @@ Built with **HTML, CSS & JavaScript**.
 
 Currently under development.
 
-## Run locally
+## Run locally 
 
 Clone the repository:
 
 ```bash
-git clone https://github.com/USERNAME/REPOSITORY.git
-cd REPOSITORY
+git clone https://github.com/ShreyasLoL/portfolio.git
+cd portfolio
