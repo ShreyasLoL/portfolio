@@ -218,29 +218,26 @@ a:hover {
 
 .sidebar-bottom {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
   gap: var(--space-2);
 }
 
 .avatar {
-  width: 88px;
-  height: 88px;
-  border-radius: 18px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
   overflow: hidden;
   background-color: var(--color-divider);
+  flex-shrink: 0;
 }
 
 .avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(100%);
-  transition: filter 0.3s ease;
-}
-
-.avatar:hover img {
-  filter: grayscale(0%);
 }
 
 /* Placeholder when image fails to load */
@@ -249,10 +246,11 @@ a:hover {
 }
 
 .avatar--placeholder {
-  width: 88px;
-  height: 88px;
-  border-radius: 18px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
   background-color: var(--color-divider);
+  flex-shrink: 0;
 }
 
 /* ---- Theme Toggle ---- */
@@ -261,23 +259,21 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  position: fixed;
-  top: 24px;
-  right: 32px;
+  width: 40px;
+  height: 40px;
   color: var(--color-text);
-  background: none;
-  border: none;
+  background: var(--color-bg);
+  border: 1px solid var(--color-divider);
   border-radius: 50%;
   cursor: pointer;
   padding: 0;
-  transition: color 0.2s ease;
-  z-index: 100;
+  transition: color 0.3s ease, border-color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
 }
 
 .theme-toggle:hover {
   color: var(--color-accent);
+  border-color: var(--color-accent);
+  transform: scale(1.05);
 }
 
 .theme-toggle:focus-visible {
@@ -287,20 +283,20 @@ a:hover {
 
 /* Sun/Moon icon morphing */
 .theme-toggle .sun-core {
-  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
   transform-box: fill-box;
   transform-origin: center;
 }
 
 .theme-toggle .sun-rays {
-  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
-              opacity 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 700ms cubic-bezier(0.22, 1, 0.36, 1);
   transform-box: fill-box;
   transform-origin: center;
 }
 
 .theme-toggle .moon-mask {
-  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
   transform-box: fill-box;
   transform-origin: center;
 }
@@ -542,13 +538,15 @@ a:hover {
   .sidebar-bottom {
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     gap: var(--space-2);
     margin-top: var(--space-2);
   }
 
   .avatar, .avatar--placeholder {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
   }
 
   .content {
