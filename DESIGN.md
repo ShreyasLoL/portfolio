@@ -46,7 +46,7 @@ Newsreader for all text (italic only for the statement and contact line); JetBra
 
 # Layout
 
-Desktop: fixed left column (~280px) with name, title, statement, nav, and the avatar block with inline theme toggle at the bottom; right column scrolls, max-width ~640px. Mobile: single column, identity on top, nav row, bottom avatar and toggle inline. Rows not cards; no borders, shadows, gradients, or decorative icons; everything left-aligned to one edge.
+Desktop: fixed left column (~280px) with name, title, statement, nav, and the avatar block at the bottom; right column scrolls, max-width ~640px; theme toggle fixed top-right. Mobile: single column, identity on top, nav row with the toggle inline. Rows not cards; no borders, shadows, gradients, or decorative icons; everything left-aligned to one edge.
 
 ---
 
@@ -65,7 +65,6 @@ Skill bars, tech-stack lists, testimonials, hero animations, emojis, stock icons
 # Decisions log
 
 - **2026-10-04:** Newsreader + JetBrains Mono chosen over Geist and Plex pairings. Warm marble-toward-sand light background (#EFEBE3) chosen over cooler marble. Verdigris chosen as the single accent. Icon-only sun/moon toggle with morph. Avatar is a full-color rounded square. Proof rows removed pending a decision on presentation.
-- **2026-10-05:** Updated avatar to be smaller (48px / 36px), circular (`border-radius: 50%`), and always in full color (removed grayscale). Moved theme toggle button to the sidebar bottom section next to the avatar for clear visibility, with smooth transition morphing.
 
 ---
 
