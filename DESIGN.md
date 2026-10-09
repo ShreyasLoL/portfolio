@@ -46,7 +46,7 @@ Newsreader for all text (italic only for the statement and contact line); JetBra
 
 # Layout
 
-Desktop: fixed left column (~280px) with name, title, statement, nav, and the avatar block with inline theme toggle at the bottom; right column scrolls, max-width ~640px. Mobile: single column, identity on top, nav row, bottom avatar and toggle inline. Rows not cards; no borders, shadows, gradients, or decorative icons; everything left-aligned to one edge.
+Desktop: fixed left column (~280px) with name, title, statement, nav; right column scrolls, max-width ~640px. Mobile: single column, identity on top, nav row. Rows not cards; no borders, shadows, gradients, or decorative icons; everything left-aligned to one edge. Avatar block at the sidebar bottom (72px desktop, 48px mobile, circular, full color). Theme toggle is fixed top-right of the viewport, 44px hit area, always visible.
 
 ---
 
@@ -66,6 +66,7 @@ Skill bars, tech-stack lists, testimonials, hero animations, emojis, stock icons
 
 - **2026-10-04:** Newsreader + JetBrains Mono chosen over Geist and Plex pairings. Warm marble-toward-sand light background (#EFEBE3) chosen over cooler marble. Verdigris chosen as the single accent. Icon-only sun/moon toggle with morph. Avatar is a full-color rounded square. Proof rows removed pending a decision on presentation.
 - **2026-10-05:** Updated avatar to be smaller (48px / 36px), circular (`border-radius: 50%`), and always in full color (removed grayscale). Moved theme toggle button to the sidebar bottom section next to the avatar for clear visibility, with smooth transition morphing.
+- **2026-10-10:** Avatar enlarged to 72px/48px, full color always. Toggle moved to a fixed top-right position for visibility. Sun/moon morph reworked: core scale, ray retract and rotate, mask slide, icon rotation, all 500ms on the shared easing.
 
 ---
 
