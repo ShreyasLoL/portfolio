@@ -46,27 +46,40 @@ Newsreader for all text (italic only for the statement and contact line); JetBra
 
 # Layout
 
-Desktop: fixed left column (~280px) with name, title, statement, nav; right column scrolls, max-width ~640px. Mobile: single column, identity on top, nav row. Rows not cards; no borders, shadows, gradients, or decorative icons; everything left-aligned to one edge. Avatar block at the sidebar bottom (72px desktop, 48px mobile, circular, full color). Theme toggle is fixed top-right of the viewport, 44px hit area, always visible.
+Desktop: fixed left column (~280px) with name, title, statement, nav, and the avatar at the bottom; right column scrolls, max-width ~640px. Mobile: single column, identity on top, nav row, avatar below. Rows not cards; no shadows, gradients, or decorative icons; everything left-aligned to one edge.
+
+**Avatar:** circular (`border-radius: 50%`), always full color, no grayscale. 72px desktop, 48px mobile.
+
+**Theme toggle:** fixed top-right of the viewport (24px offsets, same on mobile), 44px hit area, always visible, icon-only, no background or border. Hover scales the icon slightly and shifts it to the accent color.
 
 ---
 
 # Motion
 
-Content fades up 8px on entering the viewport, 300ms. Rows shift 2px on hover. Toggle morph 500ms. Page theme transition as a circular reveal from the toggle. One easing curve everywhere: `cubic-bezier(0.22, 1, 0.36, 1)`. Animate only `transform`, `opacity`, and `clip-path`. Respect `prefers-reduced-motion`.
+One easing curve everywhere: `cubic-bezier(0.22, 1, 0.36, 1)`. Animate only `transform`, `opacity`, and `clip-path`. Respect `prefers-reduced-motion` (instant, no movement).
+
+- **Entrance:** content fades up 8px on entering the viewport, 300ms.
+- **Hover:** rows shift 2px.
+- **Theme transition:** directional circular reveal anchored at the toggle, 600ms. Light radiates out from the toggle and covers the page. Dark collapses back into the toggle. No flash of the wrong theme at any point. Other transitions are paused while it runs.
+- **Toggle icon morph:** 600ms, in sync with the page reveal. To dark: sun rays retract into the core and rotate, the moon mask slides in, the core scales up so the crescent reads clearly. To light: rays extend back out from the core. Same easing, slight stagger (rays, then core, then mask).
+
+---
+
+# Design choices
+
+- **Type:** Newsreader + JetBrains Mono, chosen over Geist and Plex pairings. Serif for voice, mono for metadata.
+- **Light background:** warm marble-toward-sand (`#EFEBE3`), chosen over a cooler marble.
+- **Accent:** verdigris, the single accent, used sparingly.
+- **Toggle:** icon-only sun/moon morph, placed where it is obvious instead of buried in the sidebar.
+- **Avatar:** small, circular, full color. It reads as a person, not a decoration.
+- **Theme direction:** light is emitted from a point, dark is absorbed back into it. The asymmetry is intentional.
+- **Proof rows:** removed pending a decision on presentation.
 
 ---
 
 # Do not add
 
 Skill bars, tech-stack lists, testimonials, hero animations, emojis, stock icons, extra sections or pages, or any copy not provided in DESIGN.md.
-
----
-
-# Decisions log
-
-- **2026-10-04:** Newsreader + JetBrains Mono chosen over Geist and Plex pairings. Warm marble-toward-sand light background (#EFEBE3) chosen over cooler marble. Verdigris chosen as the single accent. Icon-only sun/moon toggle with morph. Avatar is a full-color rounded square. Proof rows removed pending a decision on presentation.
-- **2026-10-05:** Updated avatar to be smaller (48px / 36px), circular (`border-radius: 50%`), and always in full color (removed grayscale). Moved theme toggle button to the sidebar bottom section next to the avatar for clear visibility, with smooth transition morphing.
-- **2026-10-10:** Avatar enlarged to 72px/48px, full color always. Toggle moved to a fixed top-right position for visibility. Sun/moon morph reworked: core scale, ray retract and rotate, mask slide, icon rotation, all 500ms on the shared easing.
 
 ---
 
@@ -83,4 +96,4 @@ Skill bars, tech-stack lists, testimonials, hero animations, emojis, stock icons
 
 # Working rules for AI agents
 
-Read DESIGN.md before making any change. Do not introduce colors, fonts, sizes, or spacing outside these tokens. If a requested change alters a design decision, update DESIGN.md in the same change and add a dated line to the decisions log.
+Read DESIGN.md before making any change. Do not introduce colors, fonts, sizes, or spacing outside these tokens. If a requested change alters a design decision, update the relevant section of DESIGN.md in the same change. There is no decisions log; this file always describes the current state.

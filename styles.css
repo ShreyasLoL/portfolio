@@ -120,6 +120,7 @@ a:hover {
   mix-blend-mode: normal;
 }
 
+/* To light (default): new layer on top, grows out of the toggle. */
 ::view-transition-old(root) {
   z-index: 1;
 }
@@ -128,13 +129,41 @@ a:hover {
   z-index: 9999;
 }
 
-/* When switching to dark, the OLD layer animates out on top. */
+/* To dark: old (light) layer on top, collapses into the toggle. */
 .theme-transition-dark::view-transition-old(root) {
   z-index: 9999;
 }
 
 .theme-transition-dark::view-transition-new(root) {
   z-index: 1;
+}
+
+/* The toggle is captured as its own layer, painted above both root
+   snapshots and rendered live, so the icon morph stays visible for the
+   whole reveal in either direction (otherwise the static old snapshot
+   covers it until the circle reaches the button). */
+.theme-toggle {
+  view-transition-name: theme-toggle;
+}
+
+::view-transition-group(theme-toggle) {
+  animation: none;
+}
+
+::view-transition-old(theme-toggle) {
+  animation: none;
+  opacity: 0;
+}
+
+::view-transition-new(theme-toggle) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* While switching, disable transitions so they don't fight the snapshot, except on toggle icon */
+html.theme-switching,
+html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
+  transition: none !important;
 }
 
 /* ============================================================
@@ -282,17 +311,19 @@ a:hover {
   outline-offset: 2px;
 }
 
-/* Sun/Moon icon base & morph */
+/* Sun/Moon icon base & morph (600ms, in sync with the page reveal) */
 .theme-toggle svg {
   transform-origin: center;
   transform: rotate(0deg) scale(1);
-  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .theme-toggle:hover svg {
   transform: rotate(0deg) scale(1.08);
 }
 
+/* fill-box + center: the rays group's box is centered on the core (12,12),
+   so scaling it pulls every ray toward / pushes it away from the core. */
 .theme-toggle .sun-core,
 .theme-toggle .sun-rays,
 .theme-toggle .moon-mask {
@@ -300,17 +331,18 @@ a:hover {
   transform-origin: center;
 }
 
+/* To light: rays appear immediately and grow out of the core. */
 .theme-toggle .sun-rays {
-  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1) 0ms,
-              opacity 500ms cubic-bezier(0.22, 1, 0.36, 1) 0ms;
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1) 0ms,
+              opacity 240ms cubic-bezier(0.22, 1, 0.36, 1) 0ms;
 }
 
 .theme-toggle .sun-core {
-  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1) 60ms;
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1) 60ms;
 }
 
 .theme-toggle .moon-mask {
-  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1) 100ms;
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1) 100ms;
 }
 
 /* Light mode: show sun (rays visible, mask off-screen) */
@@ -353,9 +385,13 @@ a:hover {
   transform: scale(1.35);
 }
 
+/* To dark: rays are pulled all the way into the core, fading only as they
+   arrive, so the retraction is visible rather than a fade. */
 [data-theme="dark"] .theme-toggle .sun-rays {
-  transform: scale(0.4) rotate(-90deg);
+  transform: scale(0) rotate(-90deg);
   opacity: 0;
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1) 0ms,
+              opacity 240ms cubic-bezier(0.22, 1, 0.36, 1) 360ms;
 }
 
 [data-theme="dark"] .theme-toggle .moon-mask {
@@ -377,8 +413,10 @@ a:hover {
   }
 
   :root:not([data-theme]) .theme-toggle .sun-rays {
-    transform: scale(0.4) rotate(-90deg);
+    transform: scale(0) rotate(-90deg);
     opacity: 0;
+    transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1) 0ms,
+                opacity 240ms cubic-bezier(0.22, 1, 0.36, 1) 360ms;
   }
 
   :root:not([data-theme]) .theme-toggle .moon-mask {
@@ -514,11 +552,11 @@ a:hover {
     transform: none;
   }
 
+  /* !important: the dark-state ray rules carry their own transition with
+     higher specificity. */
   .theme-toggle svg,
-  .theme-toggle .sun-core,
-  .theme-toggle .sun-rays,
-  .theme-toggle .moon-mask {
-    transition: none;
+  .theme-toggle svg * {
+    transition: none !important;
   }
 
   html {

@@ -8,6 +8,7 @@
   var toggle = document.querySelector('.theme-toggle');
   var root = document.documentElement;
   var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var isSwitching = false;
 
   /** Read saved theme, falling back to null (system default). */
   function savedTheme() {
@@ -46,77 +47,72 @@
   }
 
   toggle.addEventListener('click', function () {
-    var current = effectiveTheme();
-    var next = current === 'dark' ? 'light' : 'dark';
+    // Ignore clicks while a switch is running: a second startViewTransition
+    // would skip the current one (instant jump) and race its cleanup.
+    if (isSwitching) return;
 
-    // If View Transitions API is available and motion is allowed, use circle-clip.
-    if (
-      document.startViewTransition &&
-      !prefersReducedMotion.matches
-    ) {
-      // Compute the toggle button center as the animation origin.
-      var rect = toggle.getBoundingClientRect();
-      var x = rect.left + rect.width / 2;
-      var y = rect.top + rect.height / 2;
+    var next = effectiveTheme() === 'dark' ? 'light' : 'dark';
 
-      // Radius that covers the farthest corner from the origin.
-      var endRadius = Math.hypot(
-        Math.max(x, window.innerWidth - x),
-        Math.max(y, window.innerHeight - y)
-      );
-
-      // Add direction class so CSS can set z-index ordering.
-      if (next === 'dark') {
-        root.classList.add('theme-transition-dark');
-      }
-
-      var transition = document.startViewTransition(function () {
-        applyTheme(next);
-        saveTheme(next);
-      });
-
-      transition.ready.then(function () {
-        if (next === 'light') {
-          // Light: new layer circles in.
-          document.documentElement.animate(
-            {
-              clipPath: [
-                'circle(0px at ' + x + 'px ' + y + 'px)',
-                'circle(' + endRadius + 'px at ' + x + 'px ' + y + 'px)'
-              ]
-            },
-            {
-              duration: 500,
-              easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-              pseudoElement: '::view-transition-new(root)'
-            }
-          );
-        } else {
-          // Dark: old layer circles out (shrinks away).
-          document.documentElement.animate(
-            {
-              clipPath: [
-                'circle(' + endRadius + 'px at ' + x + 'px ' + y + 'px)',
-                'circle(0px at ' + x + 'px ' + y + 'px)'
-              ]
-            },
-            {
-              duration: 500,
-              easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-              pseudoElement: '::view-transition-old(root)'
-            }
-          );
-        }
-      });
-
-      transition.finished.then(function () {
-        root.classList.remove('theme-transition-dark');
-      });
-    } else {
-      // No View Transitions or reduced motion — instant switch.
+    // No View Transitions or reduced motion — instant switch.
+    if (!document.startViewTransition || prefersReducedMotion.matches) {
       applyTheme(next);
       saveTheme(next);
+      return;
     }
+
+    isSwitching = true;
+    var toDark = next === 'dark';
+
+    // Toggle button center is the reveal origin.
+    var rect = toggle.getBoundingClientRect();
+    var x = rect.left + rect.width / 2;
+    var y = rect.top + rect.height / 2;
+
+    // Radius that covers the farthest corner from the origin.
+    var endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    var atButton = 'circle(0px at ' + x + 'px ' + y + 'px)';
+    var fullPage = 'circle(' + endRadius + 'px at ' + x + 'px ' + y + 'px)';
+
+    // Both classes must be on <html> before the snapshot is taken so the
+    // z-index order is correct from the first frame.
+    root.classList.add('theme-switching');
+    root.classList.toggle('theme-transition-dark', toDark);
+
+    var transition = document.startViewTransition(function () {
+      applyTheme(next);
+      saveTheme(next);
+    });
+
+    transition.ready
+      .then(function () {
+        // Light: new layer grows out of the button.
+        // Dark: old (light) layer, on top, collapses into the button.
+        // fill: 'forwards' holds the end clip until the pseudo tree is torn
+        // down, so the old layer can't snap back to full size for a frame.
+        root.animate(
+          { clipPath: toDark ? [fullPage, atButton] : [atButton, fullPage] },
+          {
+            duration: 600,
+            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            fill: 'forwards',
+            pseudoElement: toDark
+              ? '::view-transition-old(root)'
+              : '::view-transition-new(root)'
+          }
+        );
+      })
+      .catch(function () {});
+
+    function cleanup() {
+      root.classList.remove('theme-switching', 'theme-transition-dark');
+      isSwitching = false;
+    }
+
+    transition.finished.then(cleanup, cleanup);
   });
 
   /* ==========================================================
