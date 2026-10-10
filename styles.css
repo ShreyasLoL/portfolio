@@ -182,8 +182,10 @@ a {
   transition: color 0.2s ease;
 }
 
-a:hover {
-  color: var(--color-accent);
+@media (hover: hover) {
+  a:hover {
+    color: var(--color-accent);
+  }
 }
 
 /* ---- Focus ---- */
@@ -302,6 +304,14 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   text-wrap: balance;
 }
 
+.identity-statement span {
+  display: block;
+}
+
+.identity-statement span:last-child {
+  white-space: nowrap;
+}
+
 /* ---- Navigation ---- */
 
 .nav-list {
@@ -320,8 +330,10 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   transition: color 0.2s ease;
 }
 
-.nav-link:hover {
-  color: var(--color-accent);
+@media (hover: hover) {
+  .nav-link:hover {
+    color: var(--color-accent);
+  }
 }
 
 .nav-link.active {
@@ -397,8 +409,10 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   transition: color 0.2s ease;
 }
 
-.theme-toggle:hover {
-  color: var(--color-accent);
+@media (hover: hover) {
+  .theme-toggle:hover {
+    color: var(--color-accent);
+  }
 }
 
 .theme-toggle:focus {
@@ -417,8 +431,10 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.theme-toggle:hover svg {
-  transform: rotate(0deg) scale(1.08);
+@media (hover: hover) {
+  .theme-toggle:hover svg {
+    transform: rotate(0deg) scale(1.08);
+  }
 }
 
 /* fill-box + center: the rays group's box is centered on the core (12,12),
@@ -450,9 +466,11 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   transform: rotate(0deg) scale(1);
 }
 
-[data-theme="light"] .theme-toggle:hover svg,
-:root:not([data-theme]) .theme-toggle:hover svg {
-  transform: rotate(0deg) scale(1.08);
+@media (hover: hover) {
+  [data-theme="light"] .theme-toggle:hover svg,
+  :root:not([data-theme]) .theme-toggle:hover svg {
+    transform: rotate(0deg) scale(1.08);
+  }
 }
 
 [data-theme="light"] .theme-toggle .sun-core,
@@ -476,8 +494,10 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   transform: rotate(40deg) scale(1);
 }
 
-[data-theme="dark"] .theme-toggle:hover svg {
-  transform: rotate(40deg) scale(1.08);
+@media (hover: hover) {
+  [data-theme="dark"] .theme-toggle:hover svg {
+    transform: rotate(40deg) scale(1.08);
+  }
 }
 
 [data-theme="dark"] .theme-toggle .sun-core {
@@ -503,8 +523,10 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
     transform: rotate(40deg) scale(1);
   }
 
-  :root:not([data-theme]) .theme-toggle:hover svg {
-    transform: rotate(40deg) scale(1.08);
+  @media (hover: hover) {
+    :root:not([data-theme]) .theme-toggle:hover svg {
+      transform: rotate(40deg) scale(1.08);
+    }
   }
 
   :root:not([data-theme]) .theme-toggle .sun-core {
@@ -575,8 +597,10 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   border-top: 1px solid var(--color-divider);
 }
 
-.row:hover {
-  transform: translateX(2px);
+@media (hover: hover) {
+  .row:hover {
+    transform: translateX(2px);
+  }
 }
 
 .row-title {
@@ -615,8 +639,10 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   transition: color 0.2s ease;
 }
 
-.contact-link:hover {
-  color: var(--color-accent);
+@media (hover: hover) {
+  .contact-link:hover {
+    color: var(--color-accent);
+  }
 }
 
 /* ============================================================
@@ -724,5 +750,26 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 
   .section {
     margin-bottom: 64px;
+  }
+}
+
+/* ============================================================
+   Coarse Pointer (Touch targets)
+   ============================================================ */
+
+@media (pointer: coarse) {
+  .nav-list {
+    gap: 0;
+  }
+
+  .nav-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .contact-link {
+    display: inline-block;
+    padding: 12px 0;
   }
 }

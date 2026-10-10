@@ -195,7 +195,7 @@
      ========================================================== */
 
   var navLinks = document.querySelectorAll('.nav-link');
-  var sections = Array.prototype.slice.call(document.querySelectorAll('.section'));
+  var sections = Array.prototype.slice.call(document.querySelectorAll('.section:not([hidden])'));
 
   /** Set the active nav link by section id. */
   function setActiveNav(id) {

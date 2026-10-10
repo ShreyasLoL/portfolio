@@ -8,11 +8,11 @@
 
 # Copy (exact, do not rewrite)
 
-**Statement** *(italic)*: "I read systems the way I read people: for what they're not saying."
+**Statement** *(italic)*: "I read systems the way I read people: for what they're not saying." Line breaks are fixed to its meaning across three block lines: "I read systems the way" / "I read people:" / "for what they're not saying." (formatting rather than a copy change).
 
 **Contact line** *(italic)*: "Curious about how things think, whether they're running on silicon or not."
 
-Sections are numbers only for now: 01, 02, 03, 04 Contact. Proof rows are removed for now. Mimo Kiosk is excluded for now.
+Sections are numbers only for now: 01, 02, 03, 04 Contact. Proof rows are removed for now. Mimo Kiosk is excluded for now. Sections 01 to 03 are hidden (`hidden` attribute) until they have content.
 
 ---
 
@@ -65,7 +65,7 @@ Desktop: fixed left column (~280px) with name, title, statement, nav, and the av
 One easing curve everywhere: `cubic-bezier(0.22, 1, 0.36, 1)`. Animate only `transform`, `opacity`, and `clip-path`. Respect `prefers-reduced-motion` (instant, no movement).
 
 - **Entrance:** content fades up 8px on entering the viewport, 300ms.
-- **Hover:** rows shift 2px.
+- **Hover:** rows shift 2px. Hover styles are gated behind `@media (hover: hover)` to prevent sticky states on touch devices. On coarse pointers (`@media (pointer: coarse)`), nav links and contact links provide 44px tap targets with `.nav-list` gap set to 0.
 - **Avatar load:** the placeholder circle (`--color-divider`) holds the space until the photo has loaded, then the photo fades in, opacity only, 300ms. If the photo is missing, the placeholder stays.
 - **Theme transition:** directional circular reveal anchored at the toggle, 600ms. Light radiates out from the toggle and covers the page. Dark collapses back into the toggle. No flash of the wrong theme at any point. Other transitions are paused while it runs.
 - **Toggle icon morph:** 600ms, in sync with the page reveal. To dark: sun rays retract into the core and rotate, the moon mask slides in, the core scales up so the crescent reads clearly. To light: rays extend back out from the core. Same easing, slight stagger (rays, then core, then mask).
