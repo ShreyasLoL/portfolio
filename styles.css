@@ -1,4 +1,82 @@
 /* ============================================================
+   Fonts
+   ============================================================ */
+
+/* Self-hosted, Latin subset. Newsreader roman is one variable file
+   (wght 400–500) so the name and body share a single request. */
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url('assets/fonts/newsreader-roman.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Newsreader';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('assets/fonts/newsreader-italic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('assets/fonts/jetbrains-mono.woff2') format('woff2');
+}
+
+/* Metric-matched fallbacks: a local system font resized and re-spaced to
+   the webfont, so the swap doesn't move anything. Values come from the font
+   files (HarfBuzz-shaped widths of the page copy, OS/2 typo metrics).
+   Liberation fonts share Times New Roman / Courier New metrics. */
+@font-face {
+  font-family: 'Newsreader Fallback';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Times New Roman'), local('TimesNewRomanPSMT'), local('Liberation Serif');
+  size-adjust: 105.72%;
+  ascent-override: 69.52%;
+  descent-override: 25.07%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Newsreader Fallback';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Times New Roman'), local('TimesNewRomanPSMT'), local('Liberation Serif');
+  size-adjust: 106.15%;
+  ascent-override: 69.24%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Newsreader Fallback';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Times New Roman Italic'), local('TimesNewRomanPS-ItalicMT'), local('Liberation Serif Italic');
+  size-adjust: 97.74%;
+  ascent-override: 75.20%;
+  descent-override: 27.11%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono Fallback';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Courier New'), local('CourierNewPSMT'), local('Liberation Mono');
+  size-adjust: 99.98%;
+  ascent-override: 102.02%;
+  descent-override: 30.00%;
+  line-gap-override: 0%;
+}
+
+/* ============================================================
    Design Tokens
    ============================================================ */
 
@@ -11,8 +89,8 @@
   --space-5: 96px;
 
   /* ---- Typography ---- */
-  --font-body: 'Newsreader', serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-body: 'Newsreader', 'Newsreader Fallback', serif;
+  --font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
 
   --size-name: 30px;
   --size-statement: 20px;
@@ -30,6 +108,9 @@
   --color-secondary: #6A665C;
   --color-text: #1F1D19;
   --color-accent: #2F6F62;
+
+  /* Native UI (scrollbars, form controls, overscroll) follows the theme. */
+  color-scheme: light dark;
 }
 
 /* ---- Dark palette ---- */
@@ -49,6 +130,7 @@
   --color-secondary: #8F8B82;
   --color-text: #ECE8DF;
   --color-accent: #5FB3A0;
+  color-scheme: dark;
 }
 
 [data-theme="light"] {
@@ -57,6 +139,7 @@
   --color-secondary: #6A665C;
   --color-text: #1F1D19;
   --color-accent: #2F6F62;
+  color-scheme: light;
 }
 
 /* ============================================================
@@ -200,6 +283,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   font-weight: var(--weight-medium);
   line-height: 1.2;
   margin-bottom: var(--space-1);
+  text-wrap: balance;
 }
 
 .identity-title {
@@ -210,11 +294,12 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 }
 
 .identity-statement {
-  font-size: var(--size-body);
+  font-size: var(--size-statement);
   font-style: italic;
   color: var(--color-text);
   line-height: var(--leading-body);
   margin-bottom: var(--space-4);
+  text-wrap: balance;
 }
 
 /* ---- Navigation ---- */
@@ -264,6 +349,20 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* The divider-colored circle holds the space until the photo has loaded,
+   then the photo fades in over it (script.js adds .loaded). Gated on
+   scripting so the photo is never hidden when JS is off. */
+@media (scripting: enabled) {
+  .avatar img {
+    opacity: 0;
+    transition: opacity 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .avatar img.loaded {
+    opacity: 1;
+  }
 }
 
 /* Placeholder when image fails to load */
@@ -484,6 +583,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   font-size: var(--size-body);
   font-weight: var(--weight-medium);
   margin-bottom: 2px;
+  text-wrap: pretty;
 }
 
 .row-meta {
@@ -500,6 +600,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   color: var(--color-secondary);
   line-height: var(--leading-body);
   margin-bottom: var(--space-3);
+  text-wrap: balance;
 }
 
 .contact-links {
@@ -550,6 +651,10 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 
   .row:hover {
     transform: none;
+  }
+
+  .avatar img {
+    transition: none;
   }
 
   /* !important: the dark-state ray rules carry their own transition with

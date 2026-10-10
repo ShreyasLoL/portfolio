@@ -35,9 +35,23 @@
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
+  var themeColorMetas = document.querySelectorAll('meta[name="theme-color"]');
+
+  /** Point the browser chrome at the active --color-bg (single source: CSS). */
+  function syncThemeColor() {
+    var bg = getComputedStyle(root).getPropertyValue('--color-bg').trim();
+    if (!bg) return;
+    themeColorMetas.forEach(function (meta) {
+      meta.setAttribute('content', bg);
+    });
+  }
+
   /** Apply a theme by name ('light' | 'dark'). */
   function applyTheme(name) {
     root.setAttribute('data-theme', name);
+    // Same tick as the attribute, so inside the View Transition callback the
+    // browser chrome switches with the page.
+    syncThemeColor();
   }
 
   // On load: apply saved preference, or leave to system default.
@@ -118,6 +132,36 @@
 
     transition.finished.then(cleanup, cleanup);
   });
+
+  /* ==========================================================
+     Avatar fade-in
+     ========================================================== */
+
+  var avatarImg = document.querySelector('.avatar img');
+
+  /** Fade the photo in over its placeholder once it can paint in one go. */
+  function showAvatar() {
+    function reveal() {
+      avatarImg.classList.add('loaded');
+    }
+    // decode() waits for the pixels, so the fade never starts on a blank image.
+    if (avatarImg.decode) {
+      avatarImg.decode().then(reveal, reveal);
+    } else {
+      reveal();
+    }
+  }
+
+  if (avatarImg) {
+    // A cached image can finish before this script runs, so its load event
+    // is already gone. A missing image is complete with naturalWidth 0; the
+    // inline onerror swaps in the placeholder, so leave it alone.
+    if (avatarImg.complete && avatarImg.naturalWidth > 0) {
+      showAvatar();
+    } else if (!avatarImg.complete) {
+      avatarImg.addEventListener('load', showAvatar);
+    }
+  }
 
   /* ==========================================================
      Scroll-reveal (IntersectionObserver)

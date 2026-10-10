@@ -28,13 +28,19 @@ CSS variables only, never hard-coded in components.
 | `--color-text` | `#1F1D19` | `#ECE8DF` |
 | `--color-accent` | `#2F6F62` | `#5FB3A0` |
 
-Accent is used only on: hover, the active nav item, `::selection`, and the favicon. Default to system preference via `prefers-color-scheme`, with a persisted toggle.
+Accent is used only on: hover, the active nav item, `::selection`, and the favicon. Default to system preference via `prefers-color-scheme`, with a persisted toggle. `color-scheme` follows the active theme so scrollbars, form controls, and overscroll match.
+
+**Known exceptions (hex outside CSS variables):** only where variables can't reach. The favicon data URI, and the two `<meta name="theme-color">` tags in `index.html`, which mirror `--color-bg` for light and dark (the browser chrome color; JS reuses them on first paint and reads `--color-bg` on toggle). Change them together with the tokens.
 
 ---
 
 # Typography
 
 Newsreader for all text (italic only for the statement and contact line); JetBrains Mono only for metadata and small labels. Sizes: name 30px, statement 20px, body 16px, metadata 13px. Body line-height 1.6. Weights 400 and 500 only.
+
+**Loading:** self-hosted woff2, Latin subset, in `assets/fonts/` (Newsreader roman variable 400–500, Newsreader italic 400, JetBrains Mono 400). Above-the-fold faces are preloaded. `font-display: swap` with metric-matched local fallbacks (Times New Roman / Courier New, via `size-adjust` and metric overrides derived from the font files) so the swap doesn't shift layout. If a new weight or style is used, add its file and fallback face.
+
+**Wrapping:** `text-wrap: balance` on the name, statement, and contact line; `text-wrap: pretty` on body text. Never on mono metadata or nav.
 
 ---
 
@@ -60,6 +66,7 @@ One easing curve everywhere: `cubic-bezier(0.22, 1, 0.36, 1)`. Animate only `tra
 
 - **Entrance:** content fades up 8px on entering the viewport, 300ms.
 - **Hover:** rows shift 2px.
+- **Avatar load:** the placeholder circle (`--color-divider`) holds the space until the photo has loaded, then the photo fades in, opacity only, 300ms. If the photo is missing, the placeholder stays.
 - **Theme transition:** directional circular reveal anchored at the toggle, 600ms. Light radiates out from the toggle and covers the page. Dark collapses back into the toggle. No flash of the wrong theme at any point. Other transitions are paused while it runs.
 - **Toggle icon morph:** 600ms, in sync with the page reveal. To dark: sun rays retract into the core and rotate, the moon mask slides in, the core scales up so the crescent reads clearly. To light: rays extend back out from the core. Same easing, slight stagger (rays, then core, then mask).
 

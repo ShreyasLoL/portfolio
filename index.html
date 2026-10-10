@@ -15,10 +15,15 @@
   <!-- Favicon: "S" monogram -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232F6F62'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='20' font-weight='500' fill='%23F4F3F0'%3ES%3C/text%3E%3C/svg%3E">
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+  <!-- Fonts: self-hosted (styles.css), above-the-fold faces preloaded -->
+  <link rel="preload" href="assets/fonts/newsreader-roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/newsreader-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- Browser chrome: --color-bg per theme. Meta tags can't read CSS vars,
+       so these two hex values are a known exception (see DESIGN.md). -->
+  <meta name="theme-color" content="#EFEBE3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#131210" media="(prefers-color-scheme: dark)">
 
   <!-- Theme Initialization to prevent FOUC -->
   <script>
@@ -32,6 +37,13 @@
       } else {
         document.documentElement.setAttribute('data-theme', window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       }
+
+      // Browser chrome follows the resolved theme (saved override included),
+      // reusing the hex from the matching meta above.
+      var resolved = document.documentElement.getAttribute('data-theme');
+      var metas = document.querySelectorAll('meta[name="theme-color"]');
+      var color = document.querySelector('meta[name="theme-color"][media*="' + resolved + '"]').getAttribute('content');
+      for (var i = 0; i < metas.length; i++) metas[i].setAttribute('content', color);
     })();
   </script>
   <link rel="stylesheet" href="styles.css">
@@ -84,6 +96,9 @@
           <img
             src="assets/avatar.jpg"
             alt="Shreyas I Sutrave"
+            width="72"
+            height="72"
+            decoding="async"
             onerror="this.parentElement.classList.add('avatar--placeholder'); this.style.display='none';"
           >
         </div>
