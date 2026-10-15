@@ -290,11 +290,27 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 }
 
 .identity-title {
+  position: relative;
   font-family: var(--font-body);
   font-size: var(--size-title);
   font-weight: var(--weight-medium);
   line-height: 1.2;
   margin-bottom: var(--space-3);
+}
+
+.identity-title::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 100%;
+  transform: scaleY(-1);
+  color: var(--color-divider);
+  opacity: 0.5;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 80%);
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 80%);
 }
 
 .identity-title .title-primary,
