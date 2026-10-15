@@ -288,10 +288,19 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   text-wrap: balance;
 }
 
-.identity-title {
+.identity-title,
+.identity-meta {
   font-family: var(--font-mono);
   font-size: var(--size-meta);
   color: var(--color-secondary);
+}
+
+.identity-title {
+  margin-bottom: var(--space-1);
+}
+
+.identity-meta {
+  line-height: 1.4;
   margin-bottom: var(--space-3);
 }
 
