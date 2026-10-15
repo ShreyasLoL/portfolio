@@ -104,3 +104,4 @@ Skill bars, tech-stack lists, testimonials, hero animations, emojis, stock icons
 # Working rules for AI agents
 
 Read DESIGN.md before making any change. Do not introduce colors, fonts, sizes, or spacing outside these tokens. If a requested change alters a design decision, update the relevant section of DESIGN.md in the same change. There is no decisions log; this file always describes the current state.
+A maximalist form is planned, see docs/MAXIMAL.md. Do not implement.
