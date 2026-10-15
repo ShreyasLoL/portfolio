@@ -12,7 +12,7 @@
 
 **Contact line** *(italic)*: "Curious about how things think, whether they're running on silicon or not."
 
-**Education metadata** (in `.sidebar-bottom` above the avatar):
+**Education metadata** (in `.sidebar-bottom` above the avatar, with 1px hairline border):
 - B.Tech CSE-IoT
 - Cybersecurity
 - REVA University · 2029
@@ -41,7 +41,7 @@ Accent is used only on: hover, the active nav item, `::selection`, and the favic
 
 # Typography
 
-Newsreader for all text (italic only for the statement and contact line); JetBrains Mono only for metadata and small labels. Title: Newsreader 500, 20px (`--size-title`), two-tone (primary "Reverse Engineer" in `--color-text`, secondary "| CSE" in `--color-secondary`, pipe spacing via margin). Sizes: name 30px, title 20px, statement 18px, body 16px, metadata 13px. Body line-height 1.6. Weights 400 and 500 only.
+Newsreader for all text (italic only for the statement and contact line); JetBrains Mono only for metadata and small labels. Title: Newsreader 400, 20px (`--size-title`), two-tone (primary "Reverse Engineer" in `--color-text`, secondary "| CSE" in `--color-secondary`, pipe spacing via margin). Sizes: name 30px, title 20px, statement 18px, body 16px, metadata 13px. Body line-height 1.6. Weights 400 and 500 only.
 
 **Loading:** self-hosted woff2, Latin subset, in `assets/fonts/` (Newsreader roman variable 400–500, Newsreader italic 400, JetBrains Mono 400). Above-the-fold faces are preloaded. `font-display: swap` with metric-matched local fallbacks (Times New Roman / Courier New, via `size-adjust` and metric overrides derived from the font files) so the swap doesn't shift layout. If a new weight or style is used, add its file and fallback face.
 
@@ -57,7 +57,7 @@ Newsreader for all text (italic only for the statement and contact line); JetBra
 
 # Layout
 
-Desktop: fixed left column (~280px) with name, title, statement, nav, and the avatar at the bottom; right column scrolls, max-width ~640px. Mobile: single column, identity on top, nav row, avatar below. Rows not cards; no shadows, gradients, or decorative icons (the title echo is an approved exception to the "no shadows" rule); everything left-aligned to one edge.
+Desktop: fixed left column (~280px) with name, title, statement, nav, and the hairline footer with education metadata and avatar at the bottom; right column scrolls, max-width ~640px. Mobile: single column, identity on top, nav row, hairline education block and avatar below. Rows not cards; no shadows, gradients, or decorative icons; everything left-aligned to one edge.
 
 **Avatar:** circular (`border-radius: 50%`), always full color, no grayscale. 72px desktop, 48px mobile.
 
