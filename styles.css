@@ -93,6 +93,7 @@
   --font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
 
   --size-name: 30px;
+  --size-title: 20px;
   --size-statement: 18px;
   --size-body: 16px;
   --size-meta: 13px;
@@ -288,20 +289,30 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   text-wrap: balance;
 }
 
-.identity-title,
+.identity-title {
+  font-family: var(--font-body);
+  font-size: var(--size-title);
+  font-weight: var(--weight-medium);
+  line-height: 1.2;
+  margin-bottom: var(--space-3);
+}
+
+.identity-title .title-primary,
+.identity-title span:first-child {
+  color: var(--color-text);
+}
+
+.identity-title .title-secondary,
+.identity-title span:last-child {
+  color: var(--color-secondary);
+  margin-left: var(--space-1);
+}
+
 .identity-meta {
   font-family: var(--font-mono);
   font-size: var(--size-meta);
   color: var(--color-secondary);
-}
-
-.identity-title {
-  margin-bottom: var(--space-1);
-}
-
-.identity-meta {
   line-height: 1.4;
-  margin-bottom: var(--space-3);
 }
 
 .identity-statement {
@@ -356,7 +367,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--space-2);
+  gap: var(--space-1);
 }
 
 .avatar {
@@ -742,9 +753,9 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   }
 
   .sidebar-bottom {
-    flex-direction: row;
-    align-items: center;
-    gap: var(--space-2);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
     margin-top: var(--space-2);
   }
 
