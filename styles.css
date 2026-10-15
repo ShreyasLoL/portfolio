@@ -93,7 +93,7 @@
   --font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
 
   --size-name: 30px;
-  --size-statement: 20px;
+  --size-statement: 18px;
   --size-body: 16px;
   --size-meta: 13px;
 
@@ -266,7 +266,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   position: fixed;
   top: 0;
   left: 0;
-  width: 312px;
+  width: 280px;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -549,7 +549,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 /* ---- Right Column (Content) ---- */
 
 .content {
-  margin-left: 312px;
+  margin-left: 280px;
   flex: 1;
   display: flex;
   justify-content: flex-start;
