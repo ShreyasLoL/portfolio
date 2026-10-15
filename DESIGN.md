@@ -17,7 +17,7 @@
 - Cybersecurity
 - REVA University · 2029
 
-Sections are numbers only for now: 01, 02, 03, 04 Contact. Proof rows are removed for now. Mimo Kiosk is excluded for now. Sections 01 to 03 are hidden (`hidden` attribute) until they have content.
+Sections are numbers only for now: 01, 02, 03, 04 Contact. Proof rows are removed for now. Mimo Kiosk is excluded for now.
 
 ---
 
