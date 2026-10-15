@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — Shreyas I Sutrave</title>
+  <meta name="description" content="Nothing is mapped at this address.">
+
+  <!-- Favicon: "S" monogram -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232F6F62'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='20' font-weight='500' fill='%23EFEBE3'%3ES%3C/text%3E%3C/svg%3E">
+
+  <!-- Fonts: self-hosted (styles.css), above-the-fold faces preloaded -->
+  <link rel="preload" href="assets/fonts/newsreader-roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/newsreader-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- Browser chrome: --color-bg per theme. Meta tags can't read CSS vars,
+       so these two hex values are a known exception (see DESIGN.md). -->
+  <meta name="theme-color" content="#EFEBE3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#131210" media="(prefers-color-scheme: dark)">
+
+  <!-- Theme Initialization to prevent FOUC -->
+  <script>
+    (function() {
+      function getTheme() {
+        try { return localStorage.getItem('theme'); } catch(e) { return null; }
+      }
+      var theme = getTheme();
+      if (theme === 'dark' || theme === 'light') {
+        document.documentElement.setAttribute('data-theme', theme);
+      } else {
+        document.documentElement.setAttribute('data-theme', window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      }
+
+      var resolved = document.documentElement.getAttribute('data-theme');
+      var metas = document.querySelectorAll('meta[name="theme-color"]');
+      var color = document.querySelector('meta[name="theme-color"][media*="' + resolved + '"]').getAttribute('content');
+      for (var i = 0; i < metas.length; i++) metas[i].setAttribute('content', color);
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <button class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <mask id="moon-mask">
+        <rect x="0" y="0" width="100%" height="100%" fill="white"/>
+        <circle class="moon-mask" cx="15" cy="9" r="6" fill="black"/>
+      </mask>
+      <circle class="sun-core" cx="12" cy="12" r="5" mask="url(#moon-mask)" fill="currentColor" stroke="none"/>
+      <g class="sun-rays">
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </g>
+    </svg>
+  </button>
+
+  <div class="site-wrapper">
+    <main class="content page-404">
+      <div class="content-inner content-404">
+        <section class="section">
+          <p class="section-label">404</p>
+          <p class="identity-statement">Nothing is mapped at this address.</p>
+          <div class="row row-404">
+            <p class="row-meta">
+              <a href="/" class="contact-link">[return]</a>
+            </p>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

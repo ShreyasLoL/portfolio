@@ -777,3 +777,25 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
     padding: 12px 0;
   }
 }
+
+/* ============================================================
+   404 Page
+   ============================================================ */
+
+.page-404 {
+  margin-left: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content-404 {
+  max-width: 480px;
+}
+
+.row-404 {
+  border-top: 1px solid var(--color-divider);
+  border-bottom: none;
+  padding-top: var(--space-2);
+}
