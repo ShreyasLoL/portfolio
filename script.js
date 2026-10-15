@@ -1,11 +1,12 @@
+/* ============================================================
+   Theme unit: toggle, persistence, and circular reveal
+   ============================================================ */
 (function () {
   'use strict';
 
-  /* ==========================================================
-     Theme toggle
-     ========================================================== */
-
   var toggle = document.querySelector('.theme-toggle');
+  if (!toggle) return;
+
   var root = document.documentElement;
   var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   var isSwitching = false;
@@ -132,12 +133,16 @@
 
     transition.finished.then(cleanup, cleanup);
   });
+})();
 
-  /* ==========================================================
-     Avatar fade-in
-     ========================================================== */
+/* ============================================================
+   Avatar unit: decode and fade-in over placeholder
+   ============================================================ */
+(function () {
+  'use strict';
 
   var avatarImg = document.querySelector('.avatar img');
+  if (!avatarImg) return;
 
   /** Fade the photo in over its placeholder once it can paint in one go. */
   function showAvatar() {
@@ -152,20 +157,23 @@
     }
   }
 
-  if (avatarImg) {
-    // A cached image can finish before this script runs, so its load event
-    // is already gone. A missing image is complete with naturalWidth 0; the
-    // inline onerror swaps in the placeholder, so leave it alone.
-    if (avatarImg.complete && avatarImg.naturalWidth > 0) {
-      showAvatar();
-    } else if (!avatarImg.complete) {
-      avatarImg.addEventListener('load', showAvatar);
-    }
+  // A cached image can finish before this script runs, so its load event
+  // is already gone. A missing image is complete with naturalWidth 0; the
+  // inline onerror swaps in the placeholder, so leave it alone.
+  if (avatarImg.complete && avatarImg.naturalWidth > 0) {
+    showAvatar();
+  } else if (!avatarImg.complete) {
+    avatarImg.addEventListener('load', showAvatar);
   }
+})();
 
-  /* ==========================================================
-     Scroll-reveal (IntersectionObserver)
-     ========================================================== */
+/* ============================================================
+   Reveal unit: scroll-reveal via IntersectionObserver
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   if (!prefersReducedMotion.matches && 'IntersectionObserver' in window) {
     var observer = new IntersectionObserver(
@@ -189,10 +197,13 @@
       el.classList.add('visible');
     });
   }
+})();
 
-  /* ==========================================================
-     Active nav item follows scroll position
-     ========================================================== */
+/* ============================================================
+   Nav unit: active nav item follows scroll position
+   ============================================================ */
+(function () {
+  'use strict';
 
   var navLinks = document.querySelectorAll('.nav-link');
   var sections = Array.prototype.slice.call(document.querySelectorAll('.section:not([hidden])'));

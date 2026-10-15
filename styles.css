@@ -645,6 +645,10 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   }
 }
 
+.contact-sep {
+  margin: 0 var(--space-1);
+}
+
 /* ============================================================
    Scroll-reveal Animation
    ============================================================ */
