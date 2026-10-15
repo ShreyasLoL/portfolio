@@ -52,7 +52,7 @@ Newsreader for all text (italic only for the statement and contact line); JetBra
 
 # Layout
 
-Desktop: fixed left column (~280px) with name, title, statement, nav, and the avatar at the bottom; right column scrolls, max-width ~640px. Mobile: single column, identity on top, nav row, avatar below. Rows not cards; no shadows, gradients, or decorative icons; everything left-aligned to one edge.
+Desktop: fixed left column (~312px) with name, title, statement, nav, and the avatar at the bottom; right column scrolls, max-width ~640px. Mobile: single column, identity on top, nav row, avatar below. Rows not cards; no shadows, gradients, or decorative icons; everything left-aligned to one edge.
 
 **Avatar:** circular (`border-radius: 50%`), always full color, no grayscale. 72px desktop, 48px mobile.
 

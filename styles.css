@@ -266,7 +266,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   position: fixed;
   top: 0;
   left: 0;
-  width: 280px;
+  width: 312px;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -309,6 +309,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 }
 
 .identity-statement span:last-child {
+  margin-left: 0.15em;
   white-space: nowrap;
 }
 
@@ -548,7 +549,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 /* ---- Right Column (Content) ---- */
 
 .content {
-  margin-left: 280px;
+  margin-left: 312px;
   flex: 1;
   display: flex;
   justify-content: flex-start;
