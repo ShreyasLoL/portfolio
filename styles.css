@@ -258,7 +258,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 
 .site-wrapper {
   display: flex;
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* ---- Left Column (Identity) ---- */
@@ -268,7 +268,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   top: 0;
   left: 0;
   width: 280px;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -675,7 +675,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 }
 
 /* ============================================================
-   Scroll-reveal Animation
+   Scroll-reveal & Entrance Animation
    ============================================================ */
 
 .reveal {
@@ -690,6 +690,17 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
               transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ============================================================
    Reduced Motion
    ============================================================ */
@@ -702,6 +713,11 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 
   .reveal.visible {
     transition: none;
+  }
+
+  .identity-name,
+  .avatar {
+    animation: none;
   }
 
   .row:hover {
@@ -725,7 +741,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 }
 
 /* ============================================================
-   Mobile (< 720px)
+   Mobile (<= 720px)
    ============================================================ */
 
 @media (max-width: 720px) {
@@ -739,39 +755,109 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
     height: auto;
     border-right: none;
     border-bottom: 1px solid var(--color-divider);
-    padding: var(--space-3);
+    padding: calc(var(--space-3) + env(safe-area-inset-top))
+             calc(var(--space-3) + env(safe-area-inset-right))
+             var(--space-3)
+             calc(var(--space-3) + env(safe-area-inset-left));
+    display: grid;
+    grid-template-columns: 1fr auto;
+    row-gap: 0;
   }
 
-  .sidebar-top {
+  .sidebar-top,
+  .sidebar-bottom {
+    display: contents;
+  }
+
+  /* Header row: name left, avatar top-right */
+  .identity-name {
+    grid-column: 1;
+    grid-row: 1;
+    max-width: calc(var(--space-5) * 2);
+    margin-bottom: var(--space-1);
+    padding-right: var(--space-2);
+    animation: fadeUp 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .avatar,
+  .avatar--placeholder {
+    grid-column: 2;
+    grid-row: 1;
+    width: 48px;
+    height: 48px;
+    justify-self: end;
+    align-self: start;
+    margin-top: 2px;
+    animation: fadeUp 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Title and statement below */
+  .identity-title {
+    grid-column: 1 / -1;
+    grid-row: 2;
     margin-bottom: var(--space-3);
   }
 
   .identity-statement {
+    grid-column: 1 / -1;
+    grid-row: 3;
     margin-bottom: var(--space-3);
+  }
+
+  .identity-statement span {
+    display: inline;
+    margin-left: 0;
+    white-space: normal;
+  }
+
+  /* Navigation row: 24px gap, 44px tap targets, accent only on active */
+  .sidebar nav {
+    grid-column: 1 / -1;
+    grid-row: 4;
   }
 
   .nav-list {
     flex-direction: row;
     flex-wrap: wrap;
-    gap: var(--space-2);
+    gap: var(--space-3);
   }
 
-  .sidebar-bottom {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-3);
-    margin-top: var(--space-2);
+  .nav-link {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: var(--color-secondary);
+  }
+
+  @media (hover: hover) {
+    .nav-link:hover {
+      color: var(--color-secondary);
+    }
+  }
+
+  .nav-link.active,
+  .nav-link.active:hover {
+    color: var(--color-accent);
+  }
+
+  /* Education metadata hairline block below nav */
+  .identity-meta {
+    grid-column: 1 / -1;
+    grid-row: 5;
+    margin-top: var(--space-3);
     width: 100%;
   }
 
-  .avatar, .avatar--placeholder {
-    width: 48px;
-    height: 48px;
-  }
-
+  /* Content area */
   .content {
     margin-left: 0;
-    padding: var(--space-3);
+    padding-top: var(--space-3);
+    padding-left: calc(var(--space-3) + env(safe-area-inset-left));
+    padding-right: calc(var(--space-3) + env(safe-area-inset-right));
+    padding-bottom: calc(var(--space-5) + env(safe-area-inset-bottom));
   }
 
   .content-inner {
@@ -781,13 +867,26 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   .section {
     margin-bottom: 64px;
   }
+
+  .contact-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Theme toggle: bottom dock (thumb zone, safe-area-inset-bottom aware) */
+  .theme-toggle {
+    top: auto;
+    bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
+    right: calc(var(--space-3) + env(safe-area-inset-right));
+  }
 }
 
 /* ============================================================
-   Coarse Pointer (Touch targets)
+   Coarse Pointer (Desktop Touch targets)
    ============================================================ */
 
-@media (pointer: coarse) {
+@media (pointer: coarse) and (min-width: 721px) {
   .nav-list {
     gap: 0;
   }
@@ -810,7 +909,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 
 .page-404 {
   margin-left: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -55,11 +55,20 @@
     syncThemeColor();
   }
 
-  // On load: apply saved preference, or leave to system default.
+  // On load: apply saved preference, or sync current theme to meta.
   var stored = savedTheme();
   if (stored === 'dark' || stored === 'light') {
     applyTheme(stored);
+  } else {
+    syncThemeColor();
   }
+
+  // Sync if system color scheme changes and no override is stored.
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
+    if (!savedTheme()) {
+      syncThemeColor();
+    }
+  });
 
   toggle.addEventListener('click', function () {
     // Ignore clicks while a switch is running: a second startViewTransition

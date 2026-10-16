@@ -57,11 +57,11 @@ Newsreader for all text (italic only for the statement and contact line); JetBra
 
 # Layout
 
-Desktop: fixed left column (~280px) with name, title, statement, nav, and the hairline footer with education metadata and avatar at the bottom; right column scrolls, max-width ~640px. Mobile: single column, identity on top, nav row, hairline education block and avatar below. Rows not cards; no shadows, gradients, or decorative icons; everything left-aligned to one edge.
+Desktop: fixed left column (~280px) with name, title, statement, nav, and the hairline footer with education metadata and avatar at the bottom; right column scrolls, max-width ~640px. Mobile: single column; header row with name on the left and avatar top-right (48px, circular, full color), title and naturally wrapping statement below, nav row, and hairline education block below. Rows not cards; no shadows, gradients, or decorative icons; everything left-aligned to one edge.
 
-**Avatar:** circular (`border-radius: 50%`), always full color, no grayscale. 72px desktop, 48px mobile.
+**Avatar:** circular (`border-radius: 50%`), always full color, no grayscale. 72px desktop (in hairline footer), 48px mobile (in header row top-right).
 
-**Theme toggle:** fixed top-right of the viewport (24px offsets, same on mobile), 44px hit area, always visible, icon-only, no background or border. Hover scales the icon slightly and shifts it to the accent color.
+**Theme toggle:** fixed top-right of the viewport on desktop (24px offsets); on mobile, docked at the bottom-right in the thumb zone (24px offsets, safe-area-inset-bottom aware). 44px hit area, always visible, icon-only, no background or border. Hover scales the icon slightly and shifts it to the accent color. Circular reveal originates from the toggle's actual center.
 
 ---
 
@@ -69,8 +69,8 @@ Desktop: fixed left column (~280px) with name, title, statement, nav, and the ha
 
 One easing curve everywhere: `cubic-bezier(0.22, 1, 0.36, 1)`. Animate only `transform`, `opacity`, and `clip-path`. Respect `prefers-reduced-motion` (instant, no movement).
 
-- **Entrance:** content fades up 8px on entering the viewport, 300ms.
-- **Hover:** rows shift 2px. Hover styles are gated behind `@media (hover: hover)` to prevent sticky states on touch devices. On coarse pointers (`@media (pointer: coarse)`), nav links and contact links provide 44px tap targets with `.nav-list` gap set to 0.
+- **Entrance:** content fades up 8px on entering the viewport, 300ms. On mobile, avatar and name fade up together (8px, 300ms).
+- **Hover:** rows shift 2px. Hover styles are gated behind `@media (hover: hover)` to prevent sticky states on touch devices. On desktop coarse pointers (`@media (pointer: coarse) and (min-width: 721px)`), nav links and contact links provide 44px tap targets with `.nav-list` gap set to 0. On mobile, nav items have 24px gap and 44px tap targets.
 - **Avatar load:** the placeholder circle (`--color-divider`) holds the space until the photo has loaded, then the photo fades in, opacity only, 300ms. If the photo is missing, the placeholder stays.
 - **Theme transition:** directional circular reveal anchored at the toggle, 600ms. Light radiates out from the toggle and covers the page. Dark collapses back into the toggle. No flash of the wrong theme at any point. Other transitions are paused while it runs.
 - **Toggle icon morph:** 600ms, in sync with the page reveal. To dark: sun rays retract into the core and rotate, the moon mask slides in, the core scales up so the crescent reads clearly. To light: rays extend back out from the core. Same easing, slight stagger (rays, then core, then mask).
