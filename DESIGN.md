@@ -34,9 +34,9 @@ CSS variables only, never hard-coded in components.
 | `--color-text` | `#1A1815` | `#ECE8DF` |
 | `--color-accent` | `#2F6F62` | `#5FB3A0` |
 
-Accent is used only on: hover, the active nav item, `::selection`, and the favicon. Default to system preference via `prefers-color-scheme`, with a persisted toggle. `color-scheme` follows the active theme so scrollbars, form controls, and overscroll match.
+Accent is used only on: hover, the active nav item, and `::selection`. Default to system preference via `prefers-color-scheme`, with a persisted toggle. `color-scheme` follows the active theme so scrollbars, form controls, and overscroll match.
 
-**Known exceptions (hex outside CSS variables):** only where variables can't reach. The favicon data URI, and the two `<meta name="theme-color">` tags in `index.html`, which mirror `--color-bg` for light and dark (the browser chrome color; JS reuses them on first paint and reads `--color-bg` on toggle). Change them together with the tokens.
+**Known exceptions (hex outside CSS variables):** only where variables can't reach. The two `<meta name="theme-color">` tags in `index.html`, which mirror `--color-bg` for light and dark (the browser chrome color; JS reuses them on first paint and reads `--color-bg` on toggle). Change them together with the tokens.
 
 ---
 
@@ -85,6 +85,7 @@ One easing curve everywhere: `cubic-bezier(0.22, 1, 0.36, 1)`. Animate only `tra
 - **Accent:** verdigris, the single accent, used sparingly.
 - **Toggle:** icon-only sun/moon morph, placed where it is obvious instead of buried in the sidebar.
 - **Avatar:** small, circular, full color. It reads as a person, not a decoration.
+- **Favicon:** the avatar, circular.
 - **Theme direction:** light is emitted from a point, dark is absorbed back into it. The asymmetry is intentional.
 - **Proof rows:** removed pending a decision on presentation.
 
@@ -102,7 +103,7 @@ Skill bars, tech-stack lists, testimonials, hero animations, emojis, stock icons
 - First Work entry
 - First Writeup entry
 - Domain and hosting
-- Favicon and Open Graph image
+- Open Graph image
 - 404 page
 
 ---
