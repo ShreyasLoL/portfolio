@@ -2,6 +2,7 @@
 
 **Name:** Shreyas I Sutrave
 **Title:** Reverse Engineer | CSE
+**Page title:** Shreyas | Portfolio (exact, do not rewrite)
 **Tone:** Dry, concrete, no adjectives about myself, quiet confidence with no ego, minimal and uncluttered, curiosity gap (proof visible, a sense that more exists).
 
 ---
