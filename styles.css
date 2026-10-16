@@ -104,10 +104,10 @@
   --leading-body: 1.6;
 
   /* ---- Light palette (default) ---- */
-  --color-bg: #EFEBE3;
-  --color-divider: #DDD8CD;
-  --color-secondary: #6A665C;
-  --color-text: #1F1D19;
+  --color-bg: #F7F4ED;
+  --color-divider: #E6E1D5;
+  --color-secondary: #6B665B;
+  --color-text: #1A1815;
   --color-accent: #2F6F62;
 
   /* Native UI (scrollbars, form controls, overscroll) follows the theme. */
@@ -117,8 +117,8 @@
 /* ---- Dark palette ---- */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-bg: #131210;
-    --color-divider: #26241F;
+    --color-bg: #0F0E0E;
+    --color-divider: #282624;
     --color-secondary: #8F8B82;
     --color-text: #ECE8DF;
     --color-accent: #5FB3A0;
@@ -126,8 +126,8 @@
 }
 
 [data-theme="dark"] {
-  --color-bg: #131210;
-  --color-divider: #26241F;
+  --color-bg: #0F0E0E;
+  --color-divider: #282624;
   --color-secondary: #8F8B82;
   --color-text: #ECE8DF;
   --color-accent: #5FB3A0;
@@ -135,10 +135,10 @@
 }
 
 [data-theme="light"] {
-  --color-bg: #EFEBE3;
-  --color-divider: #DDD8CD;
-  --color-secondary: #6A665C;
-  --color-text: #1F1D19;
+  --color-bg: #F7F4ED;
+  --color-divider: #E6E1D5;
+  --color-secondary: #6B665B;
+  --color-text: #1A1815;
   --color-accent: #2F6F62;
   color-scheme: light;
 }

@@ -27,10 +27,10 @@ CSS variables only, never hard-coded in components.
 
 | Token | Light | Dark |
 |---|---|---|
-| `--color-bg` | `#EFEBE3` | `#131210` |
-| `--color-divider` | `#DDD8CD` | `#26241F` |
-| `--color-secondary` | `#6A665C` | `#8F8B82` |
-| `--color-text` | `#1F1D19` | `#ECE8DF` |
+| `--color-bg` | `#F7F4ED` | `#0F0E0E` |
+| `--color-divider` | `#E6E1D5` | `#282624` |
+| `--color-secondary` | `#6B665B` | `#8F8B82` |
+| `--color-text` | `#1A1815` | `#ECE8DF` |
 | `--color-accent` | `#2F6F62` | `#5FB3A0` |
 
 Accent is used only on: hover, the active nav item, `::selection`, and the favicon. Default to system preference via `prefers-color-scheme`, with a persisted toggle. `color-scheme` follows the active theme so scrollbars, form controls, and overscroll match.
@@ -80,7 +80,7 @@ One easing curve everywhere: `cubic-bezier(0.22, 1, 0.36, 1)`. Animate only `tra
 # Design choices
 
 - **Type:** Newsreader + JetBrains Mono, chosen over Geist and Plex pairings. Serif for voice, mono for metadata.
-- **Light background:** warm marble-toward-sand (`#EFEBE3`), chosen over a cooler marble.
+- **Light background:** warm marble-toward-sand (`#F7F4ED`), chosen over a cooler marble.
 - **Accent:** verdigris, the single accent, used sparingly.
 - **Toggle:** icon-only sun/moon morph, placed where it is obvious instead of buried in the sidebar.
 - **Avatar:** small, circular, full color. It reads as a person, not a decoration.
