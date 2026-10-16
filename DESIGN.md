@@ -85,7 +85,7 @@ One easing curve everywhere: `cubic-bezier(0.22, 1, 0.36, 1)`. Animate only `tra
 - **Accent:** verdigris, the single accent, used sparingly.
 - **Toggle:** icon-only sun/moon morph, placed where it is obvious instead of buried in the sidebar.
 - **Avatar:** small, circular, full color. It reads as a person, not a decoration.
-- **Favicon:** the avatar, circular.
+- **Favicon:** the avatar, square.
 - **Theme direction:** light is emitted from a point, dark is absorbed back into it. The asymmetry is intentional.
 - **Proof rows:** removed pending a decision on presentation.
 
