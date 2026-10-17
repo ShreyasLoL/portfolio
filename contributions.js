@@ -19,6 +19,7 @@
 
   var grid = root.querySelector('.contrib-grid');
   var scroller = root.querySelector('.contrib-scroll');
+  var monthsContainer = root.querySelector('.contrib-months');
   var tooltip = root.querySelector('.contrib-tooltip');
   var totalEl = root.querySelector('.contrib-total');
   var live = root.querySelector('.contrib-live');
@@ -110,11 +111,48 @@
       el.style.gridColumn = d.col + 1;
       el.style.gridRow = d.weekday + 1;
       el.style.setProperty('--col', d.col);
+      if (d.count > 0) {
+        el.classList.add('is-clickable');
+      }
       d.el = el;
       frag.appendChild(el);
     });
 
+    // Today marker: most recent cell gets a 1px outline
+    days[days.length - 1].el.classList.add('is-today');
+
     grid.appendChild(frag);
+
+    // Month labels: position above first week of each month, avoid collisions
+    if (monthsContainer) {
+      monthsContainer.innerHTML = '';
+      var lastCol = -10;
+      cal.weeks.forEach(function (week, col) {
+        var daysInWeek = week.contributionDays || [];
+        if (!daysInWeek.length) return;
+        var firstDayOfMonth = null;
+        for (var k = 0; k < daysInWeek.length; k++) {
+          var dateParts = daysInWeek[k].date.split('-');
+          var dayNum = Number(dateParts[2]);
+          if (dayNum === 1 || (col === 0 && k === 0)) {
+            firstDayOfMonth = daysInWeek[k];
+            break;
+          }
+        }
+        if (firstDayOfMonth) {
+          if (col - lastCol >= 3 && col <= 50) {
+            var mParts = firstDayOfMonth.date.split('-');
+            var mName = MONTHS[Number(mParts[1]) - 1];
+            var mSpan = document.createElement('span');
+            mSpan.className = 'contrib-month';
+            mSpan.textContent = mName;
+            mSpan.style.gridColumnStart = col + 1;
+            monthsContainer.appendChild(mSpan);
+            lastCol = col;
+          }
+        }
+      });
+    }
 
     var total = typeof cal.totalContributions === 'number'
       ? cal.totalContributions
@@ -125,17 +163,26 @@
     grid.setAttribute('aria-label', countLabel(total) + ' in the past year');
     grid.tabIndex = 0;
 
-    // When the grid scrolls (narrow screens), start at the most recent weeks.
     updateFit();
+    // When the grid scrolls (narrow screens), start at the most recent weeks.
     scroller.scrollLeft = scroller.scrollWidth;
   }
 
-  /** Clip only when the grid is wider than the column. */
+  /** Size cells from container width on desktop so it fills 640px edge-to-edge. */
   function updateFit() {
-    scroller.classList.toggle('is-fit', grid.offsetWidth <= root.clientWidth);
+    var isDesktop = window.matchMedia('(min-width: 721px)').matches;
+    var colW = root.clientWidth;
+    if (isDesktop && colW >= 633) {
+      var cellW = (colW - 52 * 3) / 53;
+      root.style.setProperty('--cg-cell', cellW + 'px');
+      scroller.classList.add('is-fit');
+    } else {
+      root.style.removeProperty('--cg-cell');
+      scroller.classList.remove('is-fit');
+    }
   }
 
-  /* ---- Tooltip ---- */
+  /* ---- Tooltip (fade only, no movement) ---- */
 
   function tooltipText(d) {
     return countLabel(d.count) + ' \u00B7 ' + formatDate(d.date);
@@ -146,11 +193,10 @@
     var d = days[i];
     if (!d) return;
     tooltip.textContent = tooltipText(d);
-    tooltip.hidden = false;
 
     var wrap = root.getBoundingClientRect();
     var cell = d.el.getBoundingClientRect();
-    var tip = tooltip.getBoundingClientRect(); // fractional, unlike offsetWidth
+    var tip = tooltip.getBoundingClientRect();
     var tw = tip.width;
     var th = tip.height;
 
@@ -165,10 +211,20 @@
     }
 
     tooltip.style.transform = 'translate(' + x + 'px, ' + Math.round(y) + 'px)';
+    tooltip.classList.add('is-active');
   }
 
   function hideTooltip() {
-    tooltip.hidden = true;
+    tooltip.classList.remove('is-active');
+  }
+
+  /* ---- External link navigation ---- */
+
+  function openDay(d) {
+    if (d && d.count > 0) {
+      var url = 'https://github.com/ShreyasLoL?tab=overview&from=' + d.date + '&to=' + d.date;
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
   }
 
   /* ---- Interaction ---- */
@@ -220,6 +276,15 @@
       if (!grid.contains(e.target)) hideTooltip();
     });
 
+    // Click: open GitHub overview for days with > 0 contributions
+    grid.addEventListener('click', function (e) {
+      var cell = e.target.closest('.contrib-cell');
+      if (cell && grid.contains(cell)) {
+        var idx = Number(cell.getAttribute('data-i'));
+        openDay(days[idx]);
+      }
+    });
+
     // Keyboard: one tab stop, arrows move between days.
     grid.addEventListener('focus', function () {
       if (!grid.matches(':focus-visible')) return;
@@ -243,6 +308,7 @@
         case 'ArrowUp':    next = byPos[d.col + ':' + (d.weekday - 1)]; break;
         case 'Home':       next = 0; break;
         case 'End':        next = days.length - 1; break;
+        case 'Enter':      openDay(d); return;
         case 'Escape':     hideTooltip(); return;
         default: return;
       }
@@ -251,9 +317,31 @@
       if (next !== undefined) setActive(next);
     });
 
+    // Legend filter swatches
+    var swatches = root.querySelectorAll('.contrib-swatches .contrib-cell');
+    swatches.forEach(function (swatch) {
+      var lvl = swatch.getAttribute('data-level');
+      function startFilter() {
+        root.setAttribute('data-filter-level', lvl);
+      }
+      function stopFilter() {
+        root.removeAttribute('data-filter-level');
+      }
+      swatch.addEventListener('pointerenter', startFilter);
+      swatch.addEventListener('pointerleave', stopFilter);
+      swatch.addEventListener('focus', startFilter);
+      swatch.addEventListener('blur', stopFilter);
+      swatch.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          stopFilter();
+          swatch.blur();
+        }
+      });
+    });
+
     // Positions go stale when the grid scrolls or the layout changes.
     scroller.addEventListener('scroll', function () {
-      if (document.activeElement === grid && active >= 0 && !tooltip.hidden) {
+      if (document.activeElement === grid && active >= 0 && tooltip.classList.contains('is-active')) {
         showTooltip(active);
       } else {
         hideTooltip();
@@ -285,7 +373,7 @@
       }
     }, { threshold: 0.1 });
 
-    observer.observe(grid);
+    observer.observe(root);
   }
 
   /* ---- Boot ---- */

@@ -132,19 +132,36 @@
           <!-- Contribution grid: filled by contributions.js from data/contributions.json -->
           <div class="contrib" data-src="data/contributions.json">
             <div class="contrib-scroll">
-              <div class="contrib-grid"></div>
+              <div class="contrib-wrap">
+                <div class="contrib-head">
+                  <div class="contrib-weekdays-spacer" aria-hidden="true"></div>
+                  <div class="contrib-months" aria-hidden="true"></div>
+                </div>
+                <div class="contrib-body">
+                  <div class="contrib-weekdays" aria-hidden="true">
+                    <span class="contrib-weekday"></span>
+                    <span class="contrib-weekday">Mon</span>
+                    <span class="contrib-weekday"></span>
+                    <span class="contrib-weekday">Wed</span>
+                    <span class="contrib-weekday"></span>
+                    <span class="contrib-weekday">Fri</span>
+                    <span class="contrib-weekday"></span>
+                  </div>
+                  <div class="contrib-grid"></div>
+                </div>
+              </div>
             </div>
-            <div class="contrib-tooltip" aria-hidden="true" hidden></div>
+            <div class="contrib-tooltip" aria-hidden="true"></div>
             <p class="contrib-meta">
               <span class="contrib-total"></span>
               <span class="contrib-legend" aria-hidden="true">
                 less
                 <span class="contrib-swatches">
-                  <span class="contrib-cell" data-level="0"></span>
-                  <span class="contrib-cell" data-level="1"></span>
-                  <span class="contrib-cell" data-level="2"></span>
-                  <span class="contrib-cell" data-level="3"></span>
-                  <span class="contrib-cell" data-level="4"></span>
+                  <span class="contrib-cell" data-level="0" tabindex="0" role="button" aria-label="Filter level 0"></span>
+                  <span class="contrib-cell" data-level="1" tabindex="0" role="button" aria-label="Filter level 1"></span>
+                  <span class="contrib-cell" data-level="2" tabindex="0" role="button" aria-label="Filter level 2"></span>
+                  <span class="contrib-cell" data-level="3" tabindex="0" role="button" aria-label="Filter level 3"></span>
+                  <span class="contrib-cell" data-level="4" tabindex="0" role="button" aria-label="Filter level 4"></span>
                 </span>
                 more
               </span>

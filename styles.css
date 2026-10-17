@@ -678,17 +678,28 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
    Contribution grid (section 01)
    ============================================================ */
 
-/* 53 columns x 9px + 52 gaps x 3px = 633px, inside the 640px column.
-   The 7 explicit rows reserve the grid's height before the data arrives,
-   so rendering it shifts nothing. */
 .contrib {
   --cg-cell: 9px;
   --cg-gap: 3px;
+  --cg-label-w: 28px;
+  --contrib-level-0: color-mix(in srgb, var(--color-text) 8%, var(--color-divider));
   position: relative;
   margin-top: var(--space-3);
-  /* Ignore the grid's intrinsic width: it scrolls inside its own box
-     instead of widening the column (no page overflow on mobile). */
   contain: inline-size;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .contrib {
+    --contrib-level-0: var(--color-divider);
+  }
+}
+
+[data-theme="dark"] .contrib {
+  --contrib-level-0: var(--color-divider);
+}
+
+[data-theme="light"] .contrib {
+  --contrib-level-0: color-mix(in srgb, var(--color-text) 8%, var(--color-divider));
 }
 
 /* Rendered by JS only; without it there is nothing to show. */
@@ -698,10 +709,6 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   }
 }
 
-/* Vertical padding gives the focus ring and entrance offset room inside
-   the scroll box; the negative margin cancels it. No horizontal gutter, so
-   scrolled cells never spill past the content edge. When the grid fits
-   (JS adds .is-fit), nothing is clipped at all. */
 .contrib-scroll {
   overflow-x: auto;
   overflow-y: hidden;
@@ -718,26 +725,134 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   display: none;
 }
 
+.contrib-wrap {
+  width: max-content;
+  min-width: 100%;
+}
+
+.contrib-head {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-1);
+}
+
+.contrib-months {
+  display: grid;
+  grid-template-columns: repeat(53, var(--cg-cell));
+  gap: var(--cg-gap);
+  width: max-content;
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  line-height: 1;
+  color: var(--color-secondary);
+  user-select: none;
+}
+
+.contrib-month {
+  grid-row: 1;
+  white-space: nowrap;
+}
+
+.contrib-body {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+}
+
+.contrib-weekdays {
+  display: grid;
+  grid-template-rows: repeat(7, var(--cg-cell));
+  gap: var(--cg-gap);
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  line-height: 1;
+  color: var(--color-secondary);
+  user-select: none;
+  pointer-events: none;
+}
+
+.contrib-weekday {
+  display: flex;
+  align-items: center;
+  height: var(--cg-cell);
+}
+
+/* On desktop when grid fits 640px, weekday labels sit in the 48px left gutter */
+.contrib-scroll.is-fit .contrib-weekdays {
+  position: absolute;
+  right: calc(100% + var(--space-1));
+  top: 0;
+  width: var(--cg-label-w);
+  text-align: right;
+  justify-items: end;
+}
+
+.contrib-scroll.is-fit .contrib-weekdays-spacer {
+  display: none;
+}
+
+.contrib-scroll.is-fit .contrib-grid,
+.contrib-scroll.is-fit .contrib-months {
+  width: 100%;
+}
+
+/* On mobile / narrow screens where grid scrolls horizontally, weekday labels stay sticky on the left */
+.contrib-scroll:not(.is-fit) .contrib-weekdays {
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  width: var(--cg-label-w);
+  background-color: var(--color-bg);
+  padding-right: 6px;
+  margin-right: 2px;
+}
+
+.contrib-scroll:not(.is-fit) .contrib-weekdays-spacer {
+  display: block;
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  width: calc(var(--cg-label-w) + 8px);
+  flex-shrink: 0;
+  background-color: var(--color-bg);
+}
+
 .contrib-grid {
   display: grid;
   grid-template-rows: repeat(7, var(--cg-cell));
   grid-auto-columns: var(--cg-cell);
   gap: var(--cg-gap);
   width: max-content;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .contrib-grid:focus-visible {
   outline: none;
 }
 
-/* ---- Cells & intensity ramp (existing tokens only) ---- */
+.contrib.is-visible .contrib-grid {
+  clip-path: inset(0 0 0 0);
+}
+
+/* ---- Cells & intensity ramp ---- */
 
 .contrib-cell {
   display: block;
   width: var(--cg-cell);
   height: var(--cg-cell);
   border-radius: 2px;
-  background-color: var(--color-divider);
+  background-color: var(--contrib-level-0);
+  transition: opacity 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.contrib-grid .contrib-cell {
+  opacity: 0;
+  transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.contrib.is-visible .contrib-grid .contrib-cell {
+  opacity: 1;
 }
 
 .contrib-cell[data-level="1"] {
@@ -756,13 +871,73 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   background-color: color-mix(in srgb, var(--color-text) 100%, var(--color-divider));
 }
 
-/* Keyboard position: monochrome ring, kept off the accent like the ramp. */
+/* Today marker */
+.contrib-cell.is-today {
+  outline: 1px solid var(--color-secondary);
+  outline-offset: 1px;
+}
+
+/* Clickable cells */
+.contrib-cell.is-clickable {
+  cursor: pointer;
+}
+
+/* Keyboard active cell ring */
 .contrib-grid:focus-visible .contrib-cell.is-active {
   outline: 2px solid var(--color-text);
   outline-offset: 1px;
 }
 
-/* ---- Tooltip ---- */
+/* ---- Legend filter ---- */
+
+.contrib.is-visible[data-filter-level] .contrib-grid .contrib-cell {
+  opacity: 0.25;
+  transition: opacity 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.contrib.is-visible[data-filter-level="0"] .contrib-grid .contrib-cell[data-level="0"],
+.contrib.is-visible[data-filter-level="1"] .contrib-grid .contrib-cell[data-level="1"],
+.contrib.is-visible[data-filter-level="2"] .contrib-grid .contrib-cell[data-level="2"],
+.contrib.is-visible[data-filter-level="3"] .contrib-grid .contrib-cell[data-level="3"],
+.contrib.is-visible[data-filter-level="4"] .contrib-grid .contrib-cell[data-level="4"] {
+  opacity: 1;
+}
+
+.contrib[data-filter-level] .contrib-swatches .contrib-cell {
+  opacity: 0.25;
+  transition: opacity 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.contrib[data-filter-level="0"] .contrib-swatches .contrib-cell[data-level="0"],
+.contrib[data-filter-level="1"] .contrib-swatches .contrib-cell[data-level="1"],
+.contrib[data-filter-level="2"] .contrib-swatches .contrib-cell[data-level="2"],
+.contrib[data-filter-level="3"] .contrib-swatches .contrib-cell[data-level="3"],
+.contrib[data-filter-level="4"] .contrib-swatches .contrib-cell[data-level="4"] {
+  opacity: 1;
+}
+
+/* ---- Hover focus dimming (desktop hover + keyboard focus only) ---- */
+
+@media (hover: hover) {
+  .contrib.is-visible:not([data-filter-level]) .contrib-grid:hover .contrib-cell {
+    opacity: 0.6;
+    transition: opacity 150ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .contrib.is-visible:not([data-filter-level]) .contrib-grid:hover .contrib-cell:hover {
+    opacity: 1;
+  }
+}
+
+.contrib.is-visible:not([data-filter-level]) .contrib-grid:focus-visible .contrib-cell {
+  opacity: 0.6;
+  transition: opacity 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.contrib.is-visible:not([data-filter-level]) .contrib-grid:focus-visible .contrib-cell.is-active {
+  opacity: 1;
+}
+
+/* ---- Tooltip (fade only, no movement) ---- */
 
 .contrib-tooltip {
   position: absolute;
@@ -778,6 +953,15 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   color: var(--color-bg);
   background-color: var(--color-text);
   pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 150ms cubic-bezier(0.22, 1, 0.36, 1),
+              visibility 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.contrib-tooltip.is-active {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* ---- Metadata line & legend ---- */
@@ -807,6 +991,15 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   gap: var(--cg-gap);
 }
 
+.contrib-swatches .contrib-cell {
+  cursor: pointer;
+}
+
+.contrib-swatches .contrib-cell:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 1px;
+}
+
 /* Screen-reader-only live region for keyboard navigation. */
 .contrib-live {
   position: absolute;
@@ -818,29 +1011,22 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   white-space: nowrap;
 }
 
-/* ---- Entrance: cells fade up 4px, staggered by column ---- */
+/* ---- Entrance fades for labels and metadata ---- */
 
-.contrib-grid .contrib-cell {
+.contrib-meta,
+.contrib-months,
+.contrib-weekdays {
   opacity: 0;
   transform: translateY(4px);
+  transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.contrib-meta {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-.contrib.is-visible .contrib-grid .contrib-cell,
-.contrib.is-visible .contrib-meta {
+.contrib.is-visible .contrib-meta,
+.contrib.is-visible .contrib-months,
+.contrib.is-visible .contrib-weekdays {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 300ms cubic-bezier(0.22, 1, 0.36, 1),
-              transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* 10ms per column: 52 x 10 = 520ms stagger, last cell done at 820ms. */
-.contrib.is-visible .contrib-grid .contrib-cell {
-  transition-delay: calc(var(--col, 0) * 10ms);
 }
 
 /* ============================================================
@@ -897,13 +1083,27 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
     transition: none;
   }
 
+  .contrib .contrib-grid,
+  .contrib.is-visible .contrib-grid {
+    clip-path: none !important;
+    transition: none !important;
+  }
+
   .contrib .contrib-grid .contrib-cell,
-  .contrib .contrib-meta,
   .contrib.is-visible .contrib-grid .contrib-cell,
-  .contrib.is-visible .contrib-meta {
-    opacity: 1;
-    transform: none;
-    transition: none;
+  .contrib .contrib-meta,
+  .contrib.is-visible .contrib-meta,
+  .contrib .contrib-months,
+  .contrib.is-visible .contrib-months,
+  .contrib .contrib-weekdays,
+  .contrib.is-visible .contrib-weekdays {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .contrib-tooltip {
+    transition: none !important;
   }
 
   /* !important: the dark-state ray rules carry their own transition with
