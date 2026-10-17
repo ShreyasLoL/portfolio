@@ -128,6 +128,29 @@
         <section id="proof" class="section">
           <p class="section-label reveal">01</p>
           <div class="divider reveal"></div>
+
+          <!-- Contribution grid: filled by contributions.js from data/contributions.json -->
+          <div class="contrib" data-src="data/contributions.json">
+            <div class="contrib-scroll">
+              <div class="contrib-grid"></div>
+            </div>
+            <div class="contrib-tooltip" aria-hidden="true" hidden></div>
+            <p class="contrib-meta">
+              <span class="contrib-total"></span>
+              <span class="contrib-legend" aria-hidden="true">
+                less
+                <span class="contrib-swatches">
+                  <span class="contrib-cell" data-level="0"></span>
+                  <span class="contrib-cell" data-level="1"></span>
+                  <span class="contrib-cell" data-level="2"></span>
+                  <span class="contrib-cell" data-level="3"></span>
+                  <span class="contrib-cell" data-level="4"></span>
+                </span>
+                more
+              </span>
+            </p>
+            <span class="contrib-live" aria-live="polite"></span>
+          </div>
         </section>
 
         <!-- 02 -->
@@ -164,5 +187,6 @@
   </div>
 
   <script src="script.js"></script>
+  <script src="contributions.js"></script>
 </body>
 </html>

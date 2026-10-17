@@ -675,6 +675,175 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 }
 
 /* ============================================================
+   Contribution grid (section 01)
+   ============================================================ */
+
+/* 53 columns x 9px + 52 gaps x 3px = 633px, inside the 640px column.
+   The 7 explicit rows reserve the grid's height before the data arrives,
+   so rendering it shifts nothing. */
+.contrib {
+  --cg-cell: 9px;
+  --cg-gap: 3px;
+  position: relative;
+  margin-top: var(--space-3);
+  /* Ignore the grid's intrinsic width: it scrolls inside its own box
+     instead of widening the column (no page overflow on mobile). */
+  contain: inline-size;
+}
+
+/* Rendered by JS only; without it there is nothing to show. */
+@media (scripting: none) {
+  .contrib {
+    display: none;
+  }
+}
+
+/* Vertical padding gives the focus ring and entrance offset room inside
+   the scroll box; the negative margin cancels it. No horizontal gutter, so
+   scrolled cells never spill past the content edge. When the grid fits
+   (JS adds .is-fit), nothing is clipped at all. */
+.contrib-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  padding-block: 4px;
+  margin-block: -4px;
+}
+
+.contrib-scroll.is-fit {
+  overflow: visible;
+}
+
+.contrib-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.contrib-grid {
+  display: grid;
+  grid-template-rows: repeat(7, var(--cg-cell));
+  grid-auto-columns: var(--cg-cell);
+  gap: var(--cg-gap);
+  width: max-content;
+}
+
+.contrib-grid:focus-visible {
+  outline: none;
+}
+
+/* ---- Cells & intensity ramp (existing tokens only) ---- */
+
+.contrib-cell {
+  display: block;
+  width: var(--cg-cell);
+  height: var(--cg-cell);
+  border-radius: 2px;
+  background-color: var(--color-divider);
+}
+
+.contrib-cell[data-level="1"] {
+  background-color: color-mix(in srgb, var(--color-text) 25%, var(--color-divider));
+}
+
+.contrib-cell[data-level="2"] {
+  background-color: color-mix(in srgb, var(--color-text) 45%, var(--color-divider));
+}
+
+.contrib-cell[data-level="3"] {
+  background-color: color-mix(in srgb, var(--color-text) 70%, var(--color-divider));
+}
+
+.contrib-cell[data-level="4"] {
+  background-color: color-mix(in srgb, var(--color-text) 100%, var(--color-divider));
+}
+
+/* Keyboard position: monochrome ring, kept off the accent like the ramp. */
+.contrib-grid:focus-visible .contrib-cell.is-active {
+  outline: 2px solid var(--color-text);
+  outline-offset: 1px;
+}
+
+/* ---- Tooltip ---- */
+
+.contrib-tooltip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  padding: 4px var(--space-1);
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  line-height: 1.4;
+  white-space: nowrap;
+  color: var(--color-bg);
+  background-color: var(--color-text);
+  pointer-events: none;
+}
+
+/* ---- Metadata line & legend ---- */
+
+.contrib-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--space-3);
+  row-gap: var(--space-1);
+  margin-top: var(--space-2);
+  min-height: 1.6em;
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  line-height: 1.6;
+  color: var(--color-secondary);
+}
+
+.contrib-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.contrib-swatches {
+  display: inline-flex;
+  gap: var(--cg-gap);
+}
+
+/* Screen-reader-only live region for keyboard navigation. */
+.contrib-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---- Entrance: cells fade up 4px, staggered by column ---- */
+
+.contrib-grid .contrib-cell {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+.contrib-meta {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.contrib.is-visible .contrib-grid .contrib-cell,
+.contrib.is-visible .contrib-meta {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 10ms per column: 52 x 10 = 520ms stagger, last cell done at 820ms. */
+.contrib.is-visible .contrib-grid .contrib-cell {
+  transition-delay: calc(var(--col, 0) * 10ms);
+}
+
+/* ============================================================
    Scroll-reveal & Entrance Animation
    ============================================================ */
 
@@ -725,6 +894,15 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   }
 
   .avatar img {
+    transition: none;
+  }
+
+  .contrib .contrib-grid .contrib-cell,
+  .contrib .contrib-meta,
+  .contrib.is-visible .contrib-grid .contrib-cell,
+  .contrib.is-visible .contrib-meta {
+    opacity: 1;
+    transform: none;
     transition: none;
   }
 
@@ -866,6 +1044,13 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 
   .section {
     margin-bottom: 64px;
+  }
+
+  /* Total and legend may wrap to two lines on narrow phones; reserve both
+     so filling in the total never shifts the page. */
+  .contrib-meta {
+    min-height: calc(2 * 1.6em + var(--space-1));
+    align-content: flex-start;
   }
 
   .contact-link {
