@@ -123,7 +123,7 @@
 
     grid.appendChild(frag);
 
-    // Month labels: position above first week of each month, avoid collisions
+    // Month labels: position above first week containing day 1 of each month (skip partial first month)
     if (monthsContainer) {
       monthsContainer.innerHTML = '';
       var lastCol = -10;
@@ -134,13 +134,13 @@
         for (var k = 0; k < daysInWeek.length; k++) {
           var dateParts = daysInWeek[k].date.split('-');
           var dayNum = Number(dateParts[2]);
-          if (dayNum === 1 || (col === 0 && k === 0)) {
+          if (dayNum === 1) {
             firstDayOfMonth = daysInWeek[k];
             break;
           }
         }
         if (firstDayOfMonth) {
-          if (col - lastCol >= 3 && col <= 50) {
+          if (col - lastCol >= 2 && col <= 51) {
             var mParts = firstDayOfMonth.date.split('-');
             var mName = MONTHS[Number(mParts[1]) - 1];
             var mSpan = document.createElement('span');
@@ -172,8 +172,9 @@
   function updateFit() {
     var isDesktop = window.matchMedia('(min-width: 721px)').matches;
     var colW = root.clientWidth;
+    var gutter = 32;
     if (isDesktop && colW >= 633) {
-      var cellW = (colW - 52 * 3) / 53;
+      var cellW = ((colW - gutter) - 52 * 3) / 53;
       root.style.setProperty('--cg-cell', cellW + 'px');
       scroller.classList.add('is-fit');
     } else {
@@ -240,8 +241,9 @@
     // Keep the cell inside the scroll box without scrolling the page.
     var s = scroller.getBoundingClientRect();
     var c = el.getBoundingClientRect();
-    if (c.left < s.left + 4) {
-      scroller.scrollLeft -= s.left + 4 - c.left;
+    var leftOffset = scroller.classList.contains('is-fit') ? 4 : 36;
+    if (c.left < s.left + leftOffset) {
+      scroller.scrollLeft -= s.left + leftOffset - c.left;
     } else if (c.right > s.right - 4) {
       scroller.scrollLeft += c.right - (s.right - 4);
     }
