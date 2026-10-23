@@ -55,7 +55,9 @@ Newsreader for all text; Newsreader italic only for the statement and contact li
 
 # Layout
 
-One page with a centered, left-aligned content column, `--width-column: 880px`. Side margins remain empty. No sidebar. The fixed top bar is `--height-topbar: 80px`, with a 3-column `1fr auto 1fr` layout: separate small name link at left, navigation centered in the viewport, and space for the fixed top-right theme toggle. The navigation remains in normal flow and each link has a 44px minimum hit height. A dedicated glass layer behind the top bar content fades in with `--p` (no blur); the divider fades in at the same rate. Unsupported blur uses a 92% solid background, and reduced transparency uses a solid background. The toggle stays fixed at the top-right with pointer events enabled. The hero is exactly 100svh high at all widths; content sits around 45% viewport height and contains only name, title, and statement. Work, Proof, and Contact appear in that order as 01, 02, and 03.
+One page with a centered, left-aligned content column, `--width-column: 880px`. Side margins remain empty. No sidebar. The fixed top bar is `--height-topbar: 80px`, with a 3-column `1fr auto 1fr` layout: separate small name link at left, navigation centered in the viewport, and space for the fixed top-right theme toggle. The navigation remains in normal flow and each link has a 44px minimum hit height. A solid top-bar background layer and divider fade in over `--p` 0.50–0.85. The toggle stays fixed at the top-right, 24px from the right edge and vertically centered in the bar, with pointer events enabled. The hero is exactly 100svh high at all widths; content sits around 45% viewport height and contains only name, title, and statement. Work, Proof, and Contact appear in that order as 01, 02, and 03.
+
+The document scrollbar is hidden while wheel, touch, keyboard, and anchor scrolling remain available.
 
 Below Contact, one quiet row aligned to the content column's left edge holds the education metadata and a circular, 48px, full-color avatar. The divider-colored circle remains visible if the image fails to load.
 
@@ -77,7 +79,7 @@ Contact uses the supplied italic line and the existing GitHub and LinkedIn links
 
 # Motion
 
-On load, the name, title, and statement fade up 8px over 300ms, staggered by 150ms. One passive, animation-frame-throttled scroll listener sets `--p` from 0 to 1 across the hero. CSS disperses the in-flow hero quote (opacity 1→0 over p 0–0.35, drift −8px), title (0–0.50, −16px), and name (0.10–0.65, −24px) using only opacity and transform. The separate top-bar name fades in over p 0.60–0.85; the top-bar glass layer and divider fade in over 0.50–0.85. Under reduced motion, drift is removed and opacity switches at p 0.5.
+On load, the name, title, and statement fade up 8px over 300ms, staggered by 150ms. One passive, animation-frame-throttled scroll listener sets `--p` from 0 to 1 across the hero. CSS disperses the in-flow hero quote (opacity 1→0 over p 0–0.35, drift −8px), title (0–0.50, −16px), and name (0.10–0.65, −24px) using only opacity and transform. The separate top-bar name fades in over p 0.60–0.85; the solid top-bar background and divider fade in over 0.50–0.85. Under reduced motion, drift is removed and opacity switches at p 0.5.
 
 The active section in the numbered navigation follows section entry and uses `aria-current="location"`. Tabs, rows, the contribution cells, and the redacted reveal use the same `cubic-bezier(0.22, 1, 0.36, 1)` easing. Theme changes retain the directional circular reveal and sun/moon icon morph, both 600ms with that easing. Under `prefers-reduced-motion`, transitions and anchor scrolling are instant; scroll-linked transforms and entrance motion are disabled, and the top-bar name appears with opacity at p 0.5. No blur is used. Motion, when enabled, uses transform, opacity, and clip-path only; layout properties are not animated.
 

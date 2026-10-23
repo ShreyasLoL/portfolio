@@ -331,6 +331,7 @@ window.highlightRepo = function highlightRepo(repo) {
       element.addEventListener('animationend', function () { element.classList.remove('is-entering'); }, { once: true });
     });
   }
+})();
 
 /* ============================================================
    Nav unit: active nav item follows section entry
