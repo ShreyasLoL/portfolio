@@ -1,26 +1,21 @@
 # Identity
 
-**Name:** Shreyas I Sutrave
+**Name:** Shreyas
 **Title:** Reverse Engineer | CSE
 **Page title:** Shreyas | Portfolio (exact, do not rewrite)
-**Tone:** Dry, concrete, no adjectives about myself, quiet confidence with no ego, minimal and uncluttered, curiosity gap (proof visible, a sense that more exists).
+**Tone:** Dry, concrete, no adjectives about myself, quiet confidence with no ego, minimal and uncluttered.
 
 ---
 
 # Copy (exact, do not rewrite)
 
-**Statement** *(italic)*: "I read systems the way I read people: for what they're not saying." Line breaks are fixed to its meaning across three block lines: "I read systems the way" / "I read people:" / "for what they're not saying." (formatting rather than a copy change).
+**Statement** *(italic)*: "I read systems the way I read people: for what they're not saying." Line breaks are fixed to its meaning across three block lines: "I read systems the way" / "I read people:" / "for what they're not saying."
+
+**Education metadata:** "B.Tech CSE-IoT · Cybersecurity · REVA University · 2029"
+
+**Sections:** Work, Proof, Contact. Section numbers are generated from order. Writeups is a commented-out section and navigation link between Proof and Contact; enabling both inserts it as 03 and moves Contact to 04.
 
 **Contact line** *(italic)*: "Curious about how things think, whether they're running on silicon or not."
-
-**Education metadata** (in `.sidebar-bottom` above the avatar, with 1px hairline border):
-- B.Tech CSE-IoT
-- Cybersecurity
-- REVA University · 2029
-
-Sections are numbers only for now: 01, 02, 03, 04 Contact. Proof rows are removed for now. Mimo Kiosk is excluded for now.
-
-**Contribution grid (01)**: metadata line "N contributions, past year" (singular "contribution" for 1), legend "less" / "more", tooltip "N contributions · Mon DD, YYYY" (e.g. "12 contributions · Oct 07, 2026").
 
 ---
 
@@ -36,76 +31,65 @@ CSS variables only, never hard-coded in components.
 | `--color-text` | `#1A1815` | `#ECE8DF` |
 | `--color-accent` | `#2F6F62` | `#5FB3A0` |
 
-Accent is used only on: hover, the active nav item, and `::selection`. Default to system preference via `prefers-color-scheme`, with a persisted toggle. `color-scheme` follows the active theme so scrollbars, form controls, and overscroll match.
+Accent is used only for hover, the active navigation item, and `::selection`. Default to system preference via `prefers-color-scheme`, with a persisted toggle. `color-scheme` follows the active theme so scrollbars, form controls, and overscroll match.
 
-**Known exceptions (hex outside CSS variables):** only where variables can't reach. The two `<meta name="theme-color">` tags in `index.html`, which mirror `--color-bg` for light and dark (the browser chrome color; JS reuses them on first paint and reads `--color-bg` on toggle). Change them together with the tokens.
+**Known exceptions (hex outside CSS variables):** the three `<meta name="theme-color">` values in `index.html`, which mirror `--color-bg` for light and dark. The theme initialization script uses these values for the browser chrome.
 
 ---
 
 # Typography
 
-Newsreader for all text (italic only for the statement and contact line); JetBrains Mono only for metadata and small labels. Title: Newsreader 400, 20px (`--size-title`), two-tone (primary "Reverse Engineer" in `--color-text`, secondary "| CSE" in `--color-secondary`, pipe spacing via margin). Sizes: name 30px, title 20px, statement 18px, body 16px, metadata 13px. Body line-height 1.6. Weights 400 and 500 only.
+Newsreader for all text; Newsreader italic only for the statement and contact line. JetBrains Mono for metadata and small labels. Hero name: Newsreader 500, `--size-hero-name: clamp(44px, 7vw, 72px)`. Hero quote: Newsreader italic 400, `--size-hero-quote: clamp(18px, 2vw, 24px)`. Hero title: JetBrains Mono 400, `--size-meta`, secondary color. Body: 16px. Metadata: 13px. Weights: 400 and 500 only.
 
-**Loading:** self-hosted woff2, Latin subset, in `assets/fonts/` (Newsreader roman variable 400–500, Newsreader italic 400, JetBrains Mono 400). Above-the-fold faces are preloaded. `font-display: swap` with metric-matched local fallbacks (Times New Roman / Courier New, via `size-adjust` and metric overrides derived from the font files) so the swap doesn't shift layout. If a new weight or style is used, add its file and fallback face.
+**Loading:** self-hosted woff2, Latin subset, in `assets/fonts/` (Newsreader roman variable 400–500, Newsreader italic 400, JetBrains Mono 400). Above-the-fold faces are preloaded. `font-display: swap` with metric-matched local fallbacks (Times New Roman / Courier New) so the swap does not shift layout.
 
-**Wrapping:** `text-wrap: balance` on the name, statement, and contact line; `text-wrap: pretty` on body text. Never on mono metadata or nav.
+**Wrapping:** `text-wrap: balance` on the name and statement; `text-wrap: pretty` on body text. Never on mono metadata or navigation.
 
 ---
 
 # Spacing
 
-8px base. Steps: 8 / 16 / 24 / 48 / 96. 96px between sections on desktop, 64px on mobile, 16px between rows.
+8px base. Steps: 8 / 16 / 24 / 48 / 96. Use the existing steps for spacing. Sections are 96px apart on desktop and 64px apart on mobile.
 
 ---
 
 # Layout
 
-Desktop: fixed left column (~280px) with name, title, statement, nav, and the hairline footer with education metadata and avatar at the bottom; right column scrolls, max-width ~640px. Mobile: single column; header row with name on the left and avatar top-right (48px, circular, full color), title and naturally wrapping statement below, nav row, and hairline education block below. Rows not cards; no shadows, gradients, or decorative icons; everything left-aligned to one edge.
+One page with a centered, left-aligned content column, `--width-column: 880px`. Side margins remain empty. No sidebar. The fixed top bar is `--height-topbar: 72px`, transparent over the hero, with a single-row numbered navigation and the theme toggle reserved at the top-right. The hero is centered, 88svh high on desktop and 100svh on mobile. The 01 Work, 02 Proof, and 03 Contact shells follow in that order.
 
-**Avatar:** circular (`border-radius: 50%`), always full color, no grayscale. 72px desktop (in hairline footer), 48px mobile (in header row top-right).
+The avatar is circular, 48px, full color, beside the education metadata. The divider-colored circle remains visible if the image fails to load.
 
-**Theme toggle:** fixed top-right of the viewport on desktop (24px offsets); on mobile, docked at the bottom-right in the thumb zone (24px offsets, safe-area-inset-bottom aware). 44px hit area, always visible, icon-only, no background or border. Hover scales the icon slightly and shifts it to the accent color. Circular reveal originates from the toggle's actual center.
-
-**Contribution grid:** in section 01, below the divider (24px). 7 rows (Sun–Sat) by 53 columns (one per week), square cells, 3px gap, 2px radius, no borders or shadows. Mon/Wed/Fri labels on the left (mono 13px, `--color-secondary`) sit inside the column in a 32px gutter aligning with the "01" label, divider, and legend; scrolling with the grid on mobile while staying sticky on the left without layout shift. On desktop, cells size from container width minus the 32px gutter filling the 640px column edge-to-edge (~8.53px cells, no leftover space); below ~720px fixed 9px cells with inner horizontal scroll (scrollbar hidden), starting at the most recent week. Month labels above the grid aligned to the first week containing day 1 of each month (skipping partial first months to prevent duplicate month labels, with collision skip as safeguard). Five levels: level 0 = `color-mix(in srgb, var(--color-text) 8%, var(--color-divider))` in light mode (`--color-divider` in dark mode); levels 1–4 = `color-mix(in srgb, var(--color-text) 25% / 45% / 70% / 100%, var(--color-divider))`; thresholds are quartiles of non-zero days. Today marker: most recent cell has a 1px outline using `--color-secondary`, offset 1px. Click: cells with > 0 contributions open `https://github.com/ShreyasLoL?tab=overview&from=DATE&to=DATE` in a new tab (`rel="noopener noreferrer"`); zero-count cells are inert; Enter on focused cell triggers click; pointer cursor only on clickable cells. Hover/focus: hovered/focused cell stays opacity 1 while others drop to 0.6 (disabled on touch). Legend filter: hovering/focusing a legend swatch sets non-matching levels to opacity 0.25 (200ms, shared easing). Tooltip: mono 13px, `--color-bg` on `--color-text`, clamped to column edges, opacity fade only (150ms, no movement). Entrance: 600ms left-to-right clip-path sweep over the grid with soft opacity fade on cells inside; labels and metadata fade up 4px; instant under `prefers-reduced-motion`. Height reserved before load (zero layout shift). If data fails, nothing renders. Data: `data/contributions.json` in the GitHub GraphQL `contributionCalendar` shape; phase 1 is MOCK data (`"mock": true`, generated by `scripts/mock-contributions.mjs`); phase 2 replaces the file only.
+**Theme toggle:** fixed top-right of the viewport (24px offsets), 44px hit area, always visible, icon-only, no background or border. Hover scales the icon slightly and shifts it to the accent color. Circular reveal originates from the toggle's actual center. Theme init and View Transition behavior remain unchanged.
 
 ---
 
 # Motion
 
-One easing curve everywhere: `cubic-bezier(0.22, 1, 0.36, 1)`. Animate only `transform`, `opacity`, and `clip-path`. Respect `prefers-reduced-motion` (instant, no movement).
-
-- **Entrance:** content fades up 8px on entering the viewport, 300ms. On mobile, avatar and name fade up together (8px, 300ms).
-- **Hover:** rows shift 2px. Hover styles are gated behind `@media (hover: hover)` to prevent sticky states on touch devices. On desktop coarse pointers (`@media (pointer: coarse) and (min-width: 721px)`), nav links and contact links provide 44px tap targets with `.nav-list` gap set to 0. On mobile, nav items have 24px gap and 44px tap targets.
-- **Avatar load:** the placeholder circle (`--color-divider`) holds the space until the photo has loaded, then the photo fades in, opacity only, 300ms. If the photo is missing, the placeholder stays.
-- **Theme transition:** directional circular reveal anchored at the toggle, 600ms. Light radiates out from the toggle and covers the page. Dark collapses back into the toggle. No flash of the wrong theme at any point. Other transitions are paused while it runs.
-- **Toggle icon morph:** 600ms, in sync with the page reveal. To dark: sun rays retract into the core and rotate, the moon mask slides in, the core scales up so the crescent reads clearly. To light: rays extend back out from the core. Same easing, slight stagger (rays, then core, then mask).
+The page foundation is static. Theme changes retain the directional circular reveal and sun/moon icon morph, both 600ms with `cubic-bezier(0.22, 1, 0.36, 1)`. Under `prefers-reduced-motion`, transitions are instant and anchor scrolling is immediate. The easing curve for the motion system is `cubic-bezier(0.22, 1, 0.36, 1)`. Motion, when enabled, uses transform, opacity, and clip-path only.
 
 ---
 
 # Design choices
 
-- **Type:** Newsreader + JetBrains Mono, chosen over Geist and Plex pairings. Serif for voice, mono for metadata.
-- **Light background:** warm marble-toward-sand (`#F7F4ED`), chosen over a cooler marble.
-- **Accent:** verdigris, the single accent, used sparingly.
-- **Toggle:** icon-only sun/moon morph, placed where it is obvious instead of buried in the sidebar.
+- **Type:** Newsreader + JetBrains Mono. Serif for voice, mono for metadata.
+- **Light background:** warm marble-toward-sand (`#F7F4ED`).
+- **Accent:** verdigris, used sparingly.
+- **Toggle:** icon-only sun/moon morph, placed at the fixed top-right.
 - **Avatar:** small, circular, full color. It reads as a person, not a decoration.
 - **Favicon:** the avatar, square.
-- **Theme direction:** light is emitted from a point, dark is absorbed back into it. The asymmetry is intentional.
-- **Proof rows:** removed pending a decision on presentation.
-- **Contribution grid:** monochrome ramp built from existing tokens (divider to text, with level 0 tinted 8% text in light mode for readability), no accent and no new colors, so it reads as texture, not decoration. Includes month/weekday labels, desktop edge-to-edge fill, left-to-right clip-path sweep entrance, legend level filtering, hover focus dimming, today marker, and direct day links to GitHub. Lives in 01. Phase 1 uses mock data; real GitHub data comes in phase 2 as a drop-in file replacement.
+- **Theme direction:** light radiates from the toggle and dark collapses back into it. The asymmetry is intentional.
 
 ---
 
 # Do not add
 
-Skill bars, tech-stack lists, testimonials, hero animations, emojis, stock icons, extra sections or pages, or any copy not provided in DESIGN.md.
+Skill bars, tech-stack lists, testimonials, emojis, stock icons, extra sections or pages, or copy not provided in DESIGN.md. Do not implement the maximalist form; it is parked in `docs/MAXIMAL.md`.
 
 ---
 
 # Open items
 
-- How proof (hackathon and CTF results) is presented
-- First Work entry
+- Work and Proof content
 - First Writeup entry
 - Domain and hosting
 - Open Graph image
@@ -116,4 +100,3 @@ Skill bars, tech-stack lists, testimonials, hero animations, emojis, stock icons
 # Working rules for AI agents
 
 Read DESIGN.md before making any change. Do not introduce colors, fonts, sizes, or spacing outside these tokens. If a requested change alters a design decision, update the relevant section of DESIGN.md in the same change. There is no decisions log; this file always describes the current state.
-A maximalist form is planned, see docs/MAXIMAL.md. Do not implement.

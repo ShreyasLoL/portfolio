@@ -23,8 +23,7 @@
   <link rel="preload" href="assets/fonts/newsreader-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin>
 
-  <!-- Browser chrome: --color-bg per theme. Meta tags can't read CSS vars,
-       so these hex values are a known exception (see DESIGN.md). -->
+  <!-- Browser chrome: --color-bg per theme. These values mirror the CSS tokens. -->
   <meta name="theme-color" content="#F7F4ED">
   <meta name="theme-color" content="#F7F4ED" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0F0E0E" media="(prefers-color-scheme: dark)">
@@ -54,154 +53,94 @@
 </head>
 <body>
 
-  <button class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <mask id="moon-mask">
-        <rect x="0" y="0" width="100%" height="100%" fill="white"/>
-        <circle class="moon-mask" cx="15" cy="9" r="6" fill="black"/>
-      </mask>
-      <circle class="sun-core" cx="12" cy="12" r="5" mask="url(#moon-mask)" fill="currentColor" stroke="none"/>
-      <g class="sun-rays">
-        <line x1="12" y1="1" x2="12" y2="3"/>
-        <line x1="12" y1="21" x2="12" y2="23"/>
-        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-        <line x1="1" y1="12" x2="3" y2="12"/>
-        <line x1="21" y1="12" x2="23" y2="12"/>
-        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-      </g>
-    </svg>
-  </button>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <span class="topbar-name-target" aria-hidden="true"></span>
+      <nav aria-label="Primary navigation">
+        <ul class="nav-list">
+          <li><a href="#work" class="nav-link" data-section="work" aria-current="location"><span class="nav-copy">Work</span></a></li>
+          <li><a href="#proof" class="nav-link" data-section="proof"><span class="nav-copy">Proof</span></a></li>
+          <!-- Uncomment this link when enabling the Writeups section.
+          <li><a href="#writeups" class="nav-link" data-section="writeups"><span class="nav-copy">Writeups</span></a></li>
+          -->
+          <li><a href="#contact" class="nav-link" data-section="contact"><span class="nav-copy">Contact</span></a></li>
+        </ul>
+      </nav>
+    </div>
 
-  <div class="site-wrapper">
+    <button class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <mask id="moon-mask">
+          <rect x="0" y="0" width="100%" height="100%" fill="white"/>
+          <circle class="moon-mask" cx="15" cy="9" r="6" fill="black"/>
+        </mask>
+        <circle class="sun-core" cx="12" cy="12" r="5" mask="url(#moon-mask)" fill="currentColor" stroke="none"/>
+        <g class="sun-rays">
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </g>
+      </svg>
+    </button>
+  </header>
 
-    <!-- ============================================================
-         Left Column — Identity
-         ============================================================ -->
-    <header class="sidebar" role="banner">
-      <div class="sidebar-top">
-        <h1 class="identity-name">Shreyas I Sutrave</h1>
-        <p class="identity-title"><span class="title-primary">Reverse Engineer</span><span class="title-secondary">| CSE</span></p>
-        <p class="identity-statement">
+  <main class="site-main">
+    <section class="hero" aria-labelledby="hero-name">
+      <div class="hero-content">
+        <div class="hero-name-slot">
+          <h1 class="hero-name" id="hero-name">Shreyas</h1>
+        </div>
+        <p class="hero-title">REVERSE ENGINEER | CSE</p>
+        <blockquote class="hero-quote">
           <span>I read systems the way</span>
           <span>I read people:</span>
           <span>for what they're not saying.</span>
-        </p>
-
-        <nav aria-label="Primary navigation">
-          <ul class="nav-list">
-            <li><a href="#proof" class="nav-link" data-section="proof">01</a></li>
-            <li><a href="#work" class="nav-link" data-section="work">02</a></li>
-            <li><a href="#writeups" class="nav-link" data-section="writeups">03</a></li>
-            <li><a href="#contact" class="nav-link" data-section="contact">04 Contact</a></li>
-          </ul>
-        </nav>
-      </div>
-
-      <div class="sidebar-bottom">
-        <div class="identity-meta">
-          <p>B.Tech CSE-IoT</p>
-          <p>Cybersecurity</p>
-          <p>REVA University · 2029</p>
-        </div>
-        <div class="avatar" role="img" aria-label="Photo of Shreyas">
-          <img
-            src="assets/avatar.jpg"
-            alt="Shreyas I Sutrave"
-            width="72"
-            height="72"
-            decoding="async"
-            onerror="this.parentElement.classList.add('avatar--placeholder'); this.style.display='none';"
-          >
+        </blockquote>
+        <div class="hero-education">
+          <p>B.Tech CSE-IoT · Cybersecurity · REVA University · 2029</p>
+          <div class="avatar" role="img" aria-label="Photo of Shreyas">
+            <img
+              src="assets/avatar.jpg"
+              alt="Shreyas I Sutrave"
+              width="48"
+              height="48"
+              decoding="async"
+              onerror="this.parentElement.classList.add('avatar--placeholder'); this.style.display='none';"
+            >
+          </div>
         </div>
       </div>
-    </header>
+    </section>
 
-    <!-- ============================================================
-         Right Column — Content
-         ============================================================ -->
-    <main class="content">
-      <div class="content-inner">
+    <div class="content-column">
+      <section id="work" class="section">
+        <h2 class="section-label">Work</h2>
+        <div class="divider"></div>
+      </section>
 
-        <!-- 01 -->
-        <section id="proof" class="section">
-          <p class="section-label reveal">01</p>
-          <div class="divider reveal"></div>
+      <section id="proof" class="section">
+        <h2 class="section-label">Proof</h2>
+        <div class="divider"></div>
+      </section>
 
-          <!-- Contribution grid: filled by contributions.js from data/contributions.json -->
-          <div class="contrib" data-src="data/contributions.json">
-            <div class="contrib-scroll">
-              <div class="contrib-wrap">
-                <div class="contrib-head">
-                  <div class="contrib-weekdays-spacer" aria-hidden="true"></div>
-                  <div class="contrib-months" aria-hidden="true"></div>
-                </div>
-                <div class="contrib-body">
-                  <div class="contrib-weekdays" aria-hidden="true">
-                    <span class="contrib-weekday"></span>
-                    <span class="contrib-weekday">Mon</span>
-                    <span class="contrib-weekday"></span>
-                    <span class="contrib-weekday">Wed</span>
-                    <span class="contrib-weekday"></span>
-                    <span class="contrib-weekday">Fri</span>
-                    <span class="contrib-weekday"></span>
-                  </div>
-                  <div class="contrib-grid"></div>
-                </div>
-              </div>
-            </div>
-            <div class="contrib-tooltip" aria-hidden="true"></div>
-            <p class="contrib-meta">
-              <span class="contrib-total"></span>
-              <span class="contrib-legend" aria-hidden="true">
-                less
-                <span class="contrib-swatches">
-                  <span class="contrib-cell" data-level="0" tabindex="0" role="button" aria-label="Filter level 0"></span>
-                  <span class="contrib-cell" data-level="1" tabindex="0" role="button" aria-label="Filter level 1"></span>
-                  <span class="contrib-cell" data-level="2" tabindex="0" role="button" aria-label="Filter level 2"></span>
-                  <span class="contrib-cell" data-level="3" tabindex="0" role="button" aria-label="Filter level 3"></span>
-                  <span class="contrib-cell" data-level="4" tabindex="0" role="button" aria-label="Filter level 4"></span>
-                </span>
-                more
-              </span>
-            </p>
-            <span class="contrib-live" aria-live="polite"></span>
-          </div>
-        </section>
+      <!-- Uncomment this section when enabling the Writeups navigation link.
+      <section id="writeups" class="section">
+        <h2 class="section-label">Writeups</h2>
+        <div class="divider"></div>
+      </section>
+      -->
 
-        <!-- 02 -->
-        <section id="work" class="section">
-          <p class="section-label reveal">02</p>
-          <div class="divider reveal"></div>
-        </section>
-
-        <!-- 03 -->
-        <section id="writeups" class="section">
-          <p class="section-label reveal">03</p>
-          <div class="divider reveal"></div>
-        </section>
-
-        <!-- 04 Contact -->
-        <section id="contact" class="section">
-          <p class="section-label reveal">04 Contact</p>
-          <p class="contact-statement reveal">Curious about how things think, whether they're running on silicon or not.</p>
-
-          <div class="row reveal">
-            <p class="row-meta">
-              <a href="https://github.com/ShreyasLoL" class="contact-link" target="_blank" rel="noopener noreferrer">[github]</a>
-              <span class="contact-sep">·</span>
-              <a href="https://www.linkedin.com/in/shreyasis-5a87722b9/" class="contact-link" target="_blank" rel="noopener noreferrer">[linkedin]</a>
-              <span class="contact-sep">·</span>
-              <a href="mailto:shreyasisutrave.06@gmail.com" class="contact-link">[email]</a>
-            </p>
-          </div>
-        </section>
-
-      </div>
-    </main>
-
-  </div>
+      <section id="contact" class="section">
+        <h2 class="section-label">Contact</h2>
+        <div class="divider"></div>
+      </section>
+    </div>
+  </main>
 
   <script src="script.js"></script>
   <script src="contributions.js"></script>
