@@ -382,7 +382,7 @@ window.highlightRepo = function highlightRepo(repo) {
   }
 
   if (!prefersReducedMotion.matches) {
-    [name, document.querySelector('.hero-title'), document.querySelector('.hero-quote'), document.querySelector('.hero-education')]
+    [name, document.querySelector('.hero-title'), document.querySelector('.hero-quote')]
       .filter(Boolean)
       .forEach(function (element) {
         element.classList.add('is-entering');

@@ -276,6 +276,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   cursor: pointer;
   color: var(--color-secondary);
   transition: color 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: auto;
 }
 
 @media (hover: hover) {
@@ -427,6 +428,37 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   pointer-events: none;
 }
 
+.topbar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: color-mix(in srgb, var(--color-bg) 72%, transparent);
+  opacity: var(--p);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  pointer-events: none;
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .topbar::before {
+    background: color-mix(in srgb, var(--color-bg) 92%, transparent);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .topbar::before {
+    background: var(--color-bg);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+html.theme-switching .topbar::before {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
 .topbar::after {
   content: '';
   position: absolute;
@@ -439,9 +471,10 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 
 .topbar-inner {
   position: relative;
-  display: flex;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: flex-start;
   width: calc(100% - var(--space-3) - var(--space-3));
   max-width: var(--width-column);
   height: 100%;
@@ -450,14 +483,15 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 }
 
 .topbar nav {
-  position: fixed;
-  top: var(--space-3);
-  right: calc(24px + 44px + var(--space-2));
+  grid-column: 2;
+  grid-row: 1;
 }
 
 .topbar-name-target {
-  position: absolute;
-  inset: var(--space-3) auto auto 0;
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+  align-self: center;
   width: 0;
   height: 44px;
 }
@@ -515,8 +549,8 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 .hero {
   display: grid;
   place-items: center;
-  min-height: 88vh;
-  min-height: 88svh;
+  height: 100svh;
+  min-height: 100svh;
   padding-block: var(--height-topbar) var(--space-3);
   text-align: center;
 }
@@ -525,7 +559,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-2);
+  gap: 0;
   width: calc(100% - var(--space-3) - var(--space-3));
 }
 
@@ -580,6 +614,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   font-weight: var(--weight-normal);
   color: var(--color-secondary);
   opacity: calc(1 - var(--p));
+  margin-top: var(--space-3);
 }
 
 .hero-quote {
@@ -591,6 +626,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   text-wrap: balance;
   opacity: calc(1 - (var(--p) * 0.82));
   transform: translateY(calc(var(--p) * -4px));
+  margin-top: var(--space-4);
 }
 
 .hero-quote span {
@@ -600,20 +636,19 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 .hero-education {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: var(--space-2);
-  margin-top: var(--space-1);
+  margin-top: var(--space-4);
   font-family: var(--font-mono);
   font-size: var(--size-meta);
   line-height: 1.6;
   color: var(--color-secondary);
-  opacity: calc(1 - var(--p));
+  opacity: 1;
 }
 
 .is-scrolling .hero-name,
 .is-scrolling .hero-title,
-.is-scrolling .hero-quote,
-.is-scrolling .hero-education {
+.is-scrolling .hero-quote {
   will-change: transform, opacity;
 }
 
@@ -835,6 +870,18 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   gap: var(--space-1);
   width: var(--space-5);
   transition: opacity 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.work-tab--redacted {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+}
+
+.work-tab--redacted .redacted-bars {
+  gap: 2px;
+  width: 24px;
 }
 
 .redacted-bars span {
@@ -1222,21 +1269,8 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 
 @media (max-width: 720px) {
   .hero {
-    min-height: 100vh;
+    height: 100svh;
     min-height: 100svh;
-  }
-
-  .hero-content {
-    gap: var(--space-1);
-  }
-
-  .hero-education {
-    align-items: center;
-    gap: var(--space-1);
-  }
-
-  .nav-list {
-    gap: var(--space-2);
   }
 
   .content-column {
@@ -1246,6 +1280,20 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 
   .section {
     margin-bottom: calc(var(--space-3) + var(--space-3) + var(--space-2));
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar-inner {
+    width: calc(100% - var(--space-2) - var(--space-2));
+  }
+
+  .nav-list {
+    gap: var(--space-1);
+  }
+
+  .nav-link {
+    min-width: 36px;
   }
 }
 
@@ -1283,10 +1331,6 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   }
 
   .hero-title,
-  .hero-education {
-    opacity: calc(1 - var(--p));
-  }
-
   .hero-quote {
     opacity: calc(1 - (var(--p) * 0.82));
     transform: none;
@@ -1320,8 +1364,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 
   .is-scrolling .hero-name,
   .is-scrolling .hero-title,
-  .is-scrolling .hero-quote,
-  .is-scrolling .hero-education {
+  .is-scrolling .hero-quote {
     will-change: auto;
   }
 

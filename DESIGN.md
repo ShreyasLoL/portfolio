@@ -55,9 +55,9 @@ Newsreader for all text; Newsreader italic only for the statement and contact li
 
 # Layout
 
-One page with a centered, left-aligned content column, `--width-column: 880px`. Side margins remain empty. No sidebar. The fixed top bar is `--height-topbar: 72px`, transparent over the hero, with the name at the left, a single-row numbered navigation, and the theme toggle fixed at the top-right. The navigation reserves the toggle's 44px hit area plus one 16px spacing step. A divider fades in as the hero is left. The hero is centered, 88svh high on desktop and 100svh on mobile. Work, Proof, and Contact appear in that order as 01, 02, and 03.
+One page with a centered, left-aligned content column, `--width-column: 880px`. Side margins remain empty. No sidebar. The fixed top bar is `--height-topbar: 72px`, with a 3-column `1fr auto 1fr` layout: handed-off name at left, navigation centered in the viewport, and space for the fixed top-right theme toggle. The navigation remains in normal flow and each link has a 44px minimum hit height. A dedicated glass layer behind the top bar content uses 16px backdrop blur and fades in with `--p`; the divider fades in at the same rate. Unsupported blur uses a 92% solid background, and reduced transparency uses a solid background. The toggle stays fixed at the top-right with pointer events enabled. The hero is centered and exactly 100svh high at all widths, with only the name, title, and statement. Work, Proof, and Contact appear in that order as 01, 02, and 03.
 
-The avatar is circular, 48px, full color, beside the education metadata. The divider-colored circle remains visible if the image fails to load.
+Below Contact, one quiet row aligned to the content column's left edge holds the education metadata and a circular, 48px, full-color avatar. The divider-colored circle remains visible if the image fails to load.
 
 **Theme toggle:** fixed top-right of the viewport (24px offsets), 44px hit area, always visible, icon-only, no background or border. Hover scales the icon slightly and shifts it to the accent color. Circular reveal originates from the toggle's actual center. Theme init and View Transition behavior remain unchanged.
 
@@ -65,7 +65,7 @@ The avatar is circular, 48px, full color, beside the education metadata. The div
 
 # Sections
 
-Work has five numbered tabs: three project placeholders and two redacted panels. The tablist follows the horizontal ARIA tabs pattern, supports arrow keys and Home/End, and uses a 2px transform underline. Without JavaScript, every panel remains visible in a stack. Project panels contain a title, two-line summary, one `type · year · status` metadata line, and optional `[github]` / `[site]` links that appear only when their `data-url` value is set. Redacted panels show divider-colored bars; hover or focus reveals `in progress` with a clip-path wipe. Each tab carries an empty `data-repo` hook, and `highlightRepo(repo)` is a no-op.
+Work has five tabs: three project placeholders labeled Project A, Project B, and Project C, followed by two redacted tabs shown as short bars with the accessible name “Redacted.” The tablist follows the horizontal ARIA tabs pattern, supports arrow keys and Home/End, and uses a 2px transform underline. Without JavaScript, every panel remains visible in a stack. Project panels contain a title, two-line summary, one `type · year · status` metadata line, and optional `[github]` / `[site]` links that appear only when their `data-url` value is set. Redacted panels show divider-colored bars; hover or focus reveals `in progress` with a clip-path wipe. Each tab carries an empty `data-repo` hook, and `highlightRepo(repo)` is a no-op.
 
 The existing GitHub contribution renderer and GraphQL-shaped data file are reused at the end of Work. The monochrome intensity ramp uses divider for zero and text at 25%, 45%, 70%, and 100% opacity. The graph has an opacity-only diagonal entrance wave, keyboard navigation, a `date · N commits` readout, and a `N contributions, past year` caption. `data/contributions.json` is a snapshot from the public GitHub profile dated 2026-10-23: 148 contributions across 2025-10-19 through 2026-10-23.
 
@@ -77,9 +77,9 @@ Contact uses the supplied italic line and the existing GitHub and LinkedIn links
 
 # Motion
 
-On load, the name, title, statement, and education line fade up 8px over 300ms, staggered by 150ms. One passive, animation-frame-throttled scroll listener sets `--p` from 0 to 1 across the hero. It drives the same H1 from its centered position into the top-bar name slot with transform only. The statement fades to 18% opacity and drifts up 4px; the title and education line fade out. The top-bar divider fades in. Handoff geometry is recalculated on resize and font load.
+On load, the name, title, and statement fade up 8px over 300ms, staggered by 150ms. One passive, animation-frame-throttled scroll listener sets `--p` from 0 to 1 across the hero. It drives the same H1 from its centered position into the top-bar name slot with transform only. The statement fades to 18% opacity and drifts up 4px; the title fades out. The top-bar glass layer and divider fade in. Handoff geometry is recalculated on resize and font load.
 
-The active section in the numbered navigation follows section entry and uses `aria-current="location"`. Tabs, rows, the contribution cells, and the redacted reveal use the same `cubic-bezier(0.22, 1, 0.36, 1)` easing. Theme changes retain the directional circular reveal and sun/moon icon morph, both 600ms with that easing. Under `prefers-reduced-motion`, transitions and anchor scrolling are instant; scroll-linked transforms and entrance motion are disabled, and the top-bar name swaps in with opacity. Motion, when enabled, uses transform, opacity, and clip-path only.
+The active section in the numbered navigation follows section entry and uses `aria-current="location"`. Tabs, rows, the contribution cells, and the redacted reveal use the same `cubic-bezier(0.22, 1, 0.36, 1)` easing. Theme changes retain the directional circular reveal and sun/moon icon morph, both 600ms with that easing. Under `prefers-reduced-motion`, transitions and anchor scrolling are instant; scroll-linked transforms and entrance motion are disabled, and the top-bar name swaps in with opacity. The top bar is the only element allowed to use backdrop blur; no other blur is used. Motion, when enabled, uses transform, opacity, and clip-path only; layout properties are not animated.
 
 ---
 

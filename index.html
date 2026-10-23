@@ -101,19 +101,6 @@
           <span>I read people:</span>
           <span>for what they're not saying.</span>
         </blockquote>
-        <div class="hero-education">
-          <p>B.Tech CSE-IoT · Cybersecurity · REVA University · 2029</p>
-          <div class="avatar" role="img" aria-label="Photo of Shreyas">
-            <img
-              src="assets/avatar.jpg"
-              alt="Shreyas I Sutrave"
-              width="48"
-              height="48"
-              decoding="async"
-              onerror="this.parentElement.classList.add('avatar--placeholder'); this.style.display='none';"
-            >
-          </div>
-        </div>
       </div>
     </section>
 
@@ -121,11 +108,11 @@
       <section id="work" class="section" aria-labelledby="work-heading">
         <h2 id="work-heading" class="section-label">Work</h2>
         <div class="work-tablist" role="tablist" aria-label="Work projects" aria-orientation="horizontal">
-          <button id="work-tab-01" class="work-tab" type="button" role="tab" aria-selected="true" aria-controls="work-panel-01" aria-label="Project 01" tabindex="0" data-repo="">01</button>
-          <button id="work-tab-02" class="work-tab" type="button" role="tab" aria-selected="false" aria-controls="work-panel-02" aria-label="Project 02" tabindex="-1" data-repo="">02</button>
-          <button id="work-tab-03" class="work-tab" type="button" role="tab" aria-selected="false" aria-controls="work-panel-03" aria-label="Project 03" tabindex="-1" data-repo="">03</button>
-          <button id="work-tab-04" class="work-tab" type="button" role="tab" aria-selected="false" aria-controls="work-panel-04" aria-label="Redacted project 01" tabindex="-1" data-repo="">04</button>
-          <button id="work-tab-05" class="work-tab" type="button" role="tab" aria-selected="false" aria-controls="work-panel-05" aria-label="Redacted project 02" tabindex="-1" data-repo="">05</button>
+          <button id="work-tab-01" class="work-tab" type="button" role="tab" aria-selected="true" aria-controls="work-panel-01" tabindex="0" data-repo="">Project A</button>
+          <button id="work-tab-02" class="work-tab" type="button" role="tab" aria-selected="false" aria-controls="work-panel-02" tabindex="-1" data-repo="">Project B</button>
+          <button id="work-tab-03" class="work-tab" type="button" role="tab" aria-selected="false" aria-controls="work-panel-03" tabindex="-1" data-repo="">Project C</button>
+          <button id="work-tab-04" class="work-tab work-tab--redacted" type="button" role="tab" aria-selected="false" aria-controls="work-panel-04" aria-label="Redacted" tabindex="-1" data-repo=""><span class="redacted-bars" aria-hidden="true"><span></span><span></span><span></span></span></button>
+          <button id="work-tab-05" class="work-tab work-tab--redacted" type="button" role="tab" aria-selected="false" aria-controls="work-panel-05" aria-label="Redacted" tabindex="-1" data-repo=""><span class="redacted-bars" aria-hidden="true"><span></span><span></span><span></span></span></button>
           <span class="work-tab-underline" aria-hidden="true"></span>
         </div>
 
@@ -251,6 +238,20 @@
           <a class="contact-link" href="mailto:your-email@example.com" data-placeholder="email address">[email]</a>
         </p>
       </section>
+
+      <div class="hero-education">
+        <div class="avatar" role="img" aria-label="Photo of Shreyas">
+          <img
+            src="assets/avatar.jpg"
+            alt="Shreyas I Sutrave"
+            width="48"
+            height="48"
+            decoding="async"
+            onerror="this.parentElement.classList.add('avatar--placeholder'); this.style.display='none';"
+          >
+        </div>
+        <p>B.Tech CSE-IoT · Cybersecurity · REVA University · 2029</p>
+      </div>
     </div>
   </main>
 
