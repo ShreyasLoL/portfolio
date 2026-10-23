@@ -91,6 +91,7 @@
   /* ---- Typography ---- */
   --font-body: 'Newsreader', 'Newsreader Fallback', serif;
   --font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
+  --p: 0;
 
   --size-name: 30px;
   --size-title: 20px;
@@ -274,7 +275,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   border: none;
   cursor: pointer;
   color: var(--color-secondary);
-  transition: color 0.2s ease;
+  transition: color 200ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (hover: hover) {
@@ -426,17 +427,32 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   pointer-events: none;
 }
 
+.topbar::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background-color: var(--color-divider);
+  opacity: var(--p);
+  pointer-events: none;
+}
+
 .topbar-inner {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   width: calc(100% - var(--space-3) - var(--space-3));
   max-width: var(--width-column);
   height: 100%;
   margin-inline: auto;
-  padding-right: calc(44px + var(--space-2));
   pointer-events: auto;
+}
+
+.topbar nav {
+  position: fixed;
+  top: calc((var(--height-topbar) - 44px) / 2);
+  right: calc(24px + 44px + var(--space-2));
 }
 
 .topbar-name-target {
@@ -526,11 +542,44 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   text-wrap: balance;
 }
 
+.hero-name.handoff-ready {
+  position: fixed;
+  z-index: 51;
+  top: var(--handoff-start-y);
+  left: var(--handoff-start-x);
+  width: max-content;
+  transform-origin: top left;
+  transform: translate(
+    calc(var(--handoff-x) * var(--p)),
+    calc(var(--handoff-y) * var(--p))
+  ) scale(calc(1 + (var(--handoff-scale) - 1) * var(--p)));
+}
+
+.hero-name.is-entering {
+  animation: hero-enter 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-title.is-entering,
+.hero-quote.is-entering,
+.hero-education.is-entering {
+  animation: hero-enter 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-title.is-entering { animation-delay: 150ms; }
+.hero-quote.is-entering { animation-delay: 300ms; }
+.hero-education.is-entering { animation-delay: 450ms; }
+
+@keyframes hero-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .hero-title {
   font-family: var(--font-mono);
   font-size: var(--size-meta);
   font-weight: var(--weight-normal);
   color: var(--color-secondary);
+  opacity: calc(1 - var(--p));
 }
 
 .hero-quote {
@@ -540,6 +589,8 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   line-height: 1.35;
   color: var(--color-text);
   text-wrap: balance;
+  opacity: calc(1 - (var(--p) * 0.82));
+  transform: translateY(calc(var(--p) * -4px));
 }
 
 .hero-quote span {
@@ -556,6 +607,14 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   font-size: var(--size-meta);
   line-height: 1.6;
   color: var(--color-secondary);
+  opacity: calc(1 - var(--p));
+}
+
+.is-scrolling .hero-name,
+.is-scrolling .hero-title,
+.is-scrolling .hero-quote,
+.is-scrolling .hero-education {
+  will-change: transform, opacity;
 }
 
 .avatar,
@@ -721,6 +780,41 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .hero-name.is-entering,
+  .hero-title.is-entering,
+  .hero-quote.is-entering,
+  .hero-education.is-entering {
+    animation: none;
+  }
+
+  .hero-name.handoff-ready {
+    transform: none;
+    opacity: clamp(0, calc(1 - (var(--p) * 2)), 1);
+  }
+
+  .hero-name.handoff-ready.is-handed-off {
+    top: var(--handoff-end-y);
+    left: var(--handoff-end-x);
+    opacity: clamp(0, calc((var(--p) - 0.5) * 2), 1);
+  }
+
+  .hero-title,
+  .hero-education {
+    opacity: calc(1 - var(--p));
+  }
+
+  .hero-quote {
+    opacity: calc(1 - (var(--p) * 0.82));
+    transform: none;
+  }
+
+  .is-scrolling .hero-name,
+  .is-scrolling .hero-title,
+  .is-scrolling .hero-quote,
+  .is-scrolling .hero-education {
+    will-change: auto;
   }
 
   .avatar img,

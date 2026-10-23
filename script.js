@@ -177,72 +177,136 @@
 })();
 
 /* ============================================================
-   Reveal unit: scroll-reveal via IntersectionObserver
+   Hero unit: entrance, scroll progress, and name handoff
    ============================================================ */
 (function () {
   'use strict';
 
+  var root = document.documentElement;
+  var hero = document.querySelector('.hero');
+  var name = document.querySelector('.hero-name');
+  var nameSlot = document.querySelector('.hero-name-slot');
+  var nameTarget = document.querySelector('.topbar-name-target');
   var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  if (!prefersReducedMotion.matches && 'IntersectionObserver' in window) {
-    var observer = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
+  if (!hero || !name || !nameSlot || !nameTarget) return;
 
-    document.querySelectorAll('.reveal').forEach(function (el) {
-      observer.observe(el);
-    });
-  } else {
-    // No animation — show everything immediately.
-    document.querySelectorAll('.reveal').forEach(function (el) {
-      el.classList.add('visible');
-    });
+  function measureHandoff() {
+    var slotRect = nameSlot.getBoundingClientRect();
+    var targetRect = nameTarget.getBoundingClientRect();
+    var width = name.offsetWidth;
+    var height = name.offsetHeight;
+    var baseSize = parseFloat(getComputedStyle(root).getPropertyValue('--size-name')) || 30;
+    var currentSize = parseFloat(getComputedStyle(name).fontSize) || 72;
+    var scale = baseSize / currentSize;
+    var startX = slotRect.left + (slotRect.width - width) / 2;
+    var startY = slotRect.top + window.scrollY + (slotRect.height - height) / 2;
+    var endX = targetRect.left;
+    var endY = targetRect.top + (targetRect.height - height * scale) / 2;
+
+    name.style.setProperty('--handoff-start-x', startX + 'px');
+    name.style.setProperty('--handoff-start-y', startY + 'px');
+    name.style.setProperty('--handoff-end-x', endX + 'px');
+    name.style.setProperty('--handoff-end-y', endY + 'px');
+    name.style.setProperty('--handoff-x', (endX - startX) + 'px');
+    name.style.setProperty('--handoff-y', (endY - startY) + 'px');
+    name.style.setProperty('--handoff-scale', String(scale));
+    name.classList.add('handoff-ready');
+  }
+
+  function progressForScroll() {
+    var distance = Math.max(1, hero.offsetHeight);
+    return Math.max(0, Math.min(1, window.scrollY / distance));
+  }
+
+  function updateProgress() {
+    var progress = progressForScroll();
+    root.style.setProperty('--p', progress.toFixed(4));
+    if (prefersReducedMotion.matches) {
+      name.classList.toggle('is-handed-off', progress >= 0.5);
+    }
+  }
+
+  var frame = 0;
+  var scrollIdleTimer = 0;
+
+  window.addEventListener('scroll', function () {
+    if (!frame) {
+      frame = window.requestAnimationFrame(function () {
+        frame = 0;
+        updateProgress();
+      });
+    }
+
+    root.classList.add('is-scrolling');
+    window.clearTimeout(scrollIdleTimer);
+    scrollIdleTimer = window.setTimeout(function () {
+      root.classList.remove('is-scrolling');
+    }, 120);
+  }, { passive: true });
+
+  window.addEventListener('resize', function () {
+    measureHandoff();
+    updateProgress();
+  }, { passive: true });
+
+  measureHandoff();
+  updateProgress();
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(measureHandoff);
+    if (document.fonts.addEventListener) {
+      document.fonts.addEventListener('loadingdone', measureHandoff);
+    }
+  }
+
+  if (!prefersReducedMotion.matches) {
+    [name, document.querySelector('.hero-title'), document.querySelector('.hero-quote'), document.querySelector('.hero-education')]
+      .filter(Boolean)
+      .forEach(function (element) {
+        element.classList.add('is-entering');
+        element.addEventListener('animationend', function () {
+          element.classList.remove('is-entering');
+        }, { once: true });
+      });
   }
 })();
 
 /* ============================================================
-   Nav unit: active nav item follows scroll position
+   Nav unit: active nav item follows section entry
    ============================================================ */
 (function () {
   'use strict';
 
-  var navLinks = document.querySelectorAll('.nav-link');
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-link'));
   var sections = Array.prototype.slice.call(document.querySelectorAll('.section:not([hidden])'));
 
-  /** Set the active nav link by section id. */
   function setActiveNav(id) {
     navLinks.forEach(function (link) {
-      link.classList.toggle('active', link.getAttribute('data-section') === id);
+      if (link.getAttribute('data-section') === id) {
+        link.setAttribute('aria-current', 'location');
+      } else {
+        link.removeAttribute('aria-current');
+      }
     });
   }
 
-  // At scroll position 0, first section is active.
-  if (sections.length) {
-    setActiveNav(sections[0].getAttribute('id'));
+  function updateActiveNav() {
+    var line = window.innerHeight * 0.3;
+    var active = sections[0];
+    sections.forEach(function (section) {
+      if (section.getBoundingClientRect().top <= line) active = section;
+    });
+    if (active) setActiveNav(active.id);
   }
+
+  if (sections.length) setActiveNav(sections[0].id);
 
   if ('IntersectionObserver' in window) {
-    var navObserver = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            setActiveNav(entry.target.getAttribute('id'));
-          }
-        });
-      },
-      { rootMargin: '0px 0px -80% 0px' }
-    );
-
-    sections.forEach(function (sec) {
-      navObserver.observe(sec);
+    var navObserver = new IntersectionObserver(updateActiveNav, {
+      rootMargin: '-20% 0px -65% 0px',
+      threshold: 0
     });
+    sections.forEach(function (section) { navObserver.observe(section); });
   }
 })();

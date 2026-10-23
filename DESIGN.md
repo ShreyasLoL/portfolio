@@ -55,7 +55,7 @@ Newsreader for all text; Newsreader italic only for the statement and contact li
 
 # Layout
 
-One page with a centered, left-aligned content column, `--width-column: 880px`. Side margins remain empty. No sidebar. The fixed top bar is `--height-topbar: 72px`, transparent over the hero, with a single-row numbered navigation and the theme toggle reserved at the top-right. The hero is centered, 88svh high on desktop and 100svh on mobile. The 01 Work, 02 Proof, and 03 Contact shells follow in that order.
+One page with a centered, left-aligned content column, `--width-column: 880px`. Side margins remain empty. No sidebar. The fixed top bar is `--height-topbar: 72px`, transparent over the hero, with the name at the left, a single-row numbered navigation, and the theme toggle fixed at the top-right. The navigation reserves the toggle's 44px hit area plus one 16px spacing step. A divider fades in as the hero is left. The hero is centered, 88svh high on desktop and 100svh on mobile. The 01 Work, 02 Proof, and 03 Contact shells follow in that order.
 
 The avatar is circular, 48px, full color, beside the education metadata. The divider-colored circle remains visible if the image fails to load.
 
@@ -65,7 +65,9 @@ The avatar is circular, 48px, full color, beside the education metadata. The div
 
 # Motion
 
-The page foundation is static. Theme changes retain the directional circular reveal and sun/moon icon morph, both 600ms with `cubic-bezier(0.22, 1, 0.36, 1)`. Under `prefers-reduced-motion`, transitions are instant and anchor scrolling is immediate. The easing curve for the motion system is `cubic-bezier(0.22, 1, 0.36, 1)`. Motion, when enabled, uses transform, opacity, and clip-path only.
+On load, the name, title, statement, and education line fade up 8px over 300ms, staggered by 150ms. One passive, animation-frame-throttled scroll listener sets `--p` from 0 to 1 across the hero. It drives the same H1 from its centered position into the top-bar name slot with transform only. The statement fades to 18% opacity and drifts up 4px; the title and education line fade out. The top-bar divider fades in. Handoff geometry is recalculated on resize and font load.
+
+The active section in the numbered navigation follows section entry and uses `aria-current="location"`. Theme changes retain the directional circular reveal and sun/moon icon morph, both 600ms with `cubic-bezier(0.22, 1, 0.36, 1)`. Under `prefers-reduced-motion`, transitions and anchor scrolling are instant; scroll-linked transforms and entrance motion are disabled, and the top-bar name swaps in with opacity. Motion, when enabled, uses transform, opacity, and clip-path only.
 
 ---
 
