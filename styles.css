@@ -99,8 +99,9 @@
   --size-body: 16px;
   --size-meta: 13px;
   --size-hero-name: clamp(44px, 7vw, 72px);
+  --size-hero-title: clamp(14px, 1.4vw, 16px);
   --size-hero-quote: clamp(18px, 2vw, 24px);
-  --height-topbar: 72px;
+  --height-topbar: 80px;
   --width-column: 880px;
 
   --weight-normal: 400;
@@ -262,7 +263,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 
 .theme-toggle {
   position: fixed;
-  top: 24px;
+  top: calc((var(--height-topbar) - 44px) / 2);
   right: 24px;
   z-index: 100;
   display: flex;
@@ -434,7 +435,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   inset: 0;
   z-index: 0;
   background: color-mix(in srgb, var(--color-bg) 72%, transparent);
-  opacity: var(--p);
+  opacity: clamp(0, calc((var(--p) - 0.50) / 0.35), 1);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   pointer-events: none;
@@ -465,7 +466,7 @@ html.theme-switching .topbar::before {
   inset: auto 0 0;
   height: 1px;
   background-color: var(--color-divider);
-  opacity: var(--p);
+  opacity: clamp(0, calc((var(--p) - 0.50) / 0.35), 1);
   pointer-events: none;
 }
 
@@ -487,13 +488,13 @@ html.theme-switching .topbar::before {
   grid-row: 1;
 }
 
-.topbar-name-target {
+.topbar-name {
   grid-column: 1;
   grid-row: 1;
   justify-self: start;
-  align-self: center;
-  width: 0;
-  height: 44px;
+  font-size: var(--size-name);
+  font-weight: var(--weight-medium);
+  opacity: clamp(0, calc((var(--p) - 0.60) / 0.25), 1);
 }
 
 .nav-list {
@@ -551,7 +552,7 @@ html.theme-switching .topbar::before {
   place-items: center;
   height: 100svh;
   min-height: 100svh;
-  padding-block: var(--height-topbar) var(--space-3);
+  padding-block: var(--height-topbar) calc(var(--space-5) + var(--space-4));
   text-align: center;
 }
 
@@ -563,30 +564,13 @@ html.theme-switching .topbar::before {
   width: calc(100% - var(--space-3) - var(--space-3));
 }
 
-.hero-name-slot {
-  display: grid;
-  place-items: center;
-  min-height: calc(var(--size-hero-name) * 1.2);
-}
-
 .hero-name {
   font-size: var(--size-hero-name);
   font-weight: var(--weight-medium);
   line-height: 1.2;
   text-wrap: balance;
-}
-
-.hero-name.handoff-ready {
-  position: fixed;
-  z-index: 51;
-  top: var(--handoff-start-y);
-  left: var(--handoff-start-x);
-  width: max-content;
-  transform-origin: top left;
-  transform: translate(
-    calc(var(--handoff-x) * var(--p)),
-    calc(var(--handoff-y) * var(--p))
-  ) scale(calc(1 + (var(--handoff-scale) - 1) * var(--p)));
+  opacity: clamp(0, calc((0.65 - var(--p)) / 0.55), 1);
+  transform: translateY(calc(-24px * clamp(0, calc(var(--p) / 0.65), 1)));
 }
 
 .hero-name.is-entering {
@@ -610,10 +594,12 @@ html.theme-switching .topbar::before {
 
 .hero-title {
   font-family: var(--font-mono);
-  font-size: var(--size-meta);
+  font-size: var(--size-hero-title);
   font-weight: var(--weight-normal);
   color: var(--color-secondary);
-  opacity: calc(1 - var(--p));
+  letter-spacing: 0.08em;
+  opacity: clamp(0, calc((0.50 - var(--p)) / 0.50), 1);
+  transform: translateY(calc(-16px * clamp(0, calc(var(--p) / 0.50), 1)));
   margin-top: var(--space-3);
 }
 
@@ -624,8 +610,8 @@ html.theme-switching .topbar::before {
   line-height: 1.35;
   color: var(--color-text);
   text-wrap: balance;
-  opacity: calc(1 - (var(--p) * 0.82));
-  transform: translateY(calc(var(--p) * -4px));
+  opacity: clamp(0, calc((0.35 - var(--p)) / 0.35), 1);
+  transform: translateY(calc(-8px * clamp(0, calc(var(--p) / 0.35), 1)));
   margin-top: var(--space-4);
 }
 
@@ -1319,20 +1305,12 @@ html.theme-switching .topbar::before {
     animation: none;
   }
 
-  .hero-name.handoff-ready {
-    transform: none;
-    opacity: clamp(0, calc(1 - (var(--p) * 2)), 1);
-  }
+  .topbar-name { opacity: clamp(0, calc((var(--p) - 0.5) * 2), 1); }
 
-  .hero-name.handoff-ready.is-handed-off {
-    top: var(--handoff-end-y);
-    left: var(--handoff-end-x);
-    opacity: clamp(0, calc((var(--p) - 0.5) * 2), 1);
-  }
-
+  .hero-name,
   .hero-title,
   .hero-quote {
-    opacity: calc(1 - (var(--p) * 0.82));
+    opacity: clamp(0, calc(1 - (var(--p) * 2)), 1);
     transform: none;
   }
 

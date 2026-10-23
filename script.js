@@ -306,92 +306,31 @@ window.highlightRepo = function highlightRepo(repo) {
   var root = document.documentElement;
   var hero = document.querySelector('.hero');
   var name = document.querySelector('.hero-name');
-  var nameSlot = document.querySelector('.hero-name-slot');
-  var nameTarget = document.querySelector('.topbar-name-target');
   var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-  if (!hero || !name || !nameSlot || !nameTarget) return;
-
-  function measureHandoff() {
-    var slotRect = nameSlot.getBoundingClientRect();
-    var targetRect = nameTarget.getBoundingClientRect();
-    var width = name.offsetWidth;
-    var height = name.offsetHeight;
-    var baseSize = parseFloat(getComputedStyle(root).getPropertyValue('--size-name')) || 30;
-    var currentSize = parseFloat(getComputedStyle(name).fontSize) || 72;
-    var scale = baseSize / currentSize;
-    var startX = slotRect.left + (slotRect.width - width) / 2;
-    var startY = slotRect.top + window.scrollY + (slotRect.height - height) / 2;
-    var endX = targetRect.left;
-    var endY = targetRect.top + (targetRect.height - height * scale) / 2;
-
-    name.style.setProperty('--handoff-start-x', startX + 'px');
-    name.style.setProperty('--handoff-start-y', startY + 'px');
-    name.style.setProperty('--handoff-end-x', endX + 'px');
-    name.style.setProperty('--handoff-end-y', endY + 'px');
-    name.style.setProperty('--handoff-x', (endX - startX) + 'px');
-    name.style.setProperty('--handoff-y', (endY - startY) + 'px');
-    name.style.setProperty('--handoff-scale', String(scale));
-    name.classList.add('handoff-ready');
-  }
-
-  function progressForScroll() {
-    var distance = Math.max(1, hero.offsetHeight);
-    return Math.max(0, Math.min(1, window.scrollY / distance));
-  }
+  if (!hero || !name) return;
 
   function updateProgress() {
-    var progress = progressForScroll();
+    var progress = Math.max(0, Math.min(1, window.scrollY / Math.max(1, hero.offsetHeight)));
     root.style.setProperty('--p', progress.toFixed(4));
-    if (prefersReducedMotion.matches) {
-      name.classList.toggle('is-handed-off', progress >= 0.5);
-    }
   }
 
   var frame = 0;
   var scrollIdleTimer = 0;
-
   window.addEventListener('scroll', function () {
-    if (!frame) {
-      frame = window.requestAnimationFrame(function () {
-        frame = 0;
-        updateProgress();
-      });
-    }
-
+    if (!frame) frame = window.requestAnimationFrame(function () { frame = 0; updateProgress(); });
     root.classList.add('is-scrolling');
     window.clearTimeout(scrollIdleTimer);
-    scrollIdleTimer = window.setTimeout(function () {
-      root.classList.remove('is-scrolling');
-    }, 120);
+    scrollIdleTimer = window.setTimeout(function () { root.classList.remove('is-scrolling'); }, 120);
   }, { passive: true });
-
-  window.addEventListener('resize', function () {
-    measureHandoff();
-    updateProgress();
-  }, { passive: true });
-
-  measureHandoff();
+  window.addEventListener('resize', updateProgress, { passive: true });
   updateProgress();
 
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(measureHandoff);
-    if (document.fonts.addEventListener) {
-      document.fonts.addEventListener('loadingdone', measureHandoff);
-    }
-  }
-
   if (!prefersReducedMotion.matches) {
-    [name, document.querySelector('.hero-title'), document.querySelector('.hero-quote')]
-      .filter(Boolean)
-      .forEach(function (element) {
-        element.classList.add('is-entering');
-        element.addEventListener('animationend', function () {
-          element.classList.remove('is-entering');
-        }, { once: true });
-      });
+    [name, document.querySelector('.hero-title'), document.querySelector('.hero-quote')].filter(Boolean).forEach(function (element) {
+      element.classList.add('is-entering');
+      element.addEventListener('animationend', function () { element.classList.remove('is-entering'); }, { once: true });
+    });
   }
-})();
 
 /* ============================================================
    Nav unit: active nav item follows section entry

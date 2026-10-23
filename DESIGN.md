@@ -39,7 +39,7 @@ Accent is used for hover, active navigation and work tabs, the theme toggle focu
 
 # Typography
 
-Newsreader for all text; Newsreader italic only for the statement and contact line. JetBrains Mono for metadata and small labels. Hero name: Newsreader 500, `--size-hero-name: clamp(44px, 7vw, 72px)`. Hero quote: Newsreader italic 400, `--size-hero-quote: clamp(18px, 2vw, 24px)`. Hero title: JetBrains Mono 400, `--size-meta`, secondary color. Body: 16px. Metadata: 13px. Weights: 400 and 500 only.
+Newsreader for all text; Newsreader italic only for the statement and contact line. JetBrains Mono for metadata and small labels. Hero name: Newsreader 500, `--size-hero-name: clamp(44px, 7vw, 72px)`. Hero quote: Newsreader italic 400, `--size-hero-quote: clamp(18px, 2vw, 24px)`. Hero title: JetBrains Mono 400, `--size-hero-title: clamp(14px, 1.4vw, 16px)`, secondary color, 0.08em letter spacing. Body: 16px. Metadata: 13px. Weights: 400 and 500 only.
 
 **Loading:** self-hosted woff2, Latin subset, in `assets/fonts/` (Newsreader roman variable 400–500, Newsreader italic 400, JetBrains Mono 400). Above-the-fold faces are preloaded. `font-display: swap` with metric-matched local fallbacks (Times New Roman / Courier New) so the swap does not shift layout.
 
@@ -55,11 +55,11 @@ Newsreader for all text; Newsreader italic only for the statement and contact li
 
 # Layout
 
-One page with a centered, left-aligned content column, `--width-column: 880px`. Side margins remain empty. No sidebar. The fixed top bar is `--height-topbar: 72px`, with a 3-column `1fr auto 1fr` layout: handed-off name at left, navigation centered in the viewport, and space for the fixed top-right theme toggle. The navigation remains in normal flow and each link has a 44px minimum hit height. A dedicated glass layer behind the top bar content uses 16px backdrop blur and fades in with `--p`; the divider fades in at the same rate. Unsupported blur uses a 92% solid background, and reduced transparency uses a solid background. The toggle stays fixed at the top-right with pointer events enabled. The hero is centered and exactly 100svh high at all widths, with only the name, title, and statement. Work, Proof, and Contact appear in that order as 01, 02, and 03.
+One page with a centered, left-aligned content column, `--width-column: 880px`. Side margins remain empty. No sidebar. The fixed top bar is `--height-topbar: 80px`, with a 3-column `1fr auto 1fr` layout: separate small name link at left, navigation centered in the viewport, and space for the fixed top-right theme toggle. The navigation remains in normal flow and each link has a 44px minimum hit height. A dedicated glass layer behind the top bar content fades in with `--p` (no blur); the divider fades in at the same rate. Unsupported blur uses a 92% solid background, and reduced transparency uses a solid background. The toggle stays fixed at the top-right with pointer events enabled. The hero is exactly 100svh high at all widths; content sits around 45% viewport height and contains only name, title, and statement. Work, Proof, and Contact appear in that order as 01, 02, and 03.
 
 Below Contact, one quiet row aligned to the content column's left edge holds the education metadata and a circular, 48px, full-color avatar. The divider-colored circle remains visible if the image fails to load.
 
-**Theme toggle:** fixed top-right of the viewport (24px offsets), 44px hit area, always visible, icon-only, no background or border. Hover scales the icon slightly and shifts it to the accent color. Circular reveal originates from the toggle's actual center. Theme init and View Transition behavior remain unchanged.
+**Theme toggle:** fixed top-right of the viewport (24px right offset; vertically centered in the 80px top bar), 44px hit area, always visible, icon-only, no background or border. Hover scales the icon slightly and shifts it to the accent color. Circular reveal originates from the toggle's actual center. Theme init and View Transition behavior remain unchanged.
 
 ---
 
@@ -77,9 +77,9 @@ Contact uses the supplied italic line and the existing GitHub and LinkedIn links
 
 # Motion
 
-On load, the name, title, and statement fade up 8px over 300ms, staggered by 150ms. One passive, animation-frame-throttled scroll listener sets `--p` from 0 to 1 across the hero. It drives the same H1 from its centered position into the top-bar name slot with transform only. The statement fades to 18% opacity and drifts up 4px; the title fades out. The top-bar glass layer and divider fade in. Handoff geometry is recalculated on resize and font load.
+On load, the name, title, and statement fade up 8px over 300ms, staggered by 150ms. One passive, animation-frame-throttled scroll listener sets `--p` from 0 to 1 across the hero. CSS disperses the in-flow hero quote (opacity 1→0 over p 0–0.35, drift −8px), title (0–0.50, −16px), and name (0.10–0.65, −24px) using only opacity and transform. The separate top-bar name fades in over p 0.60–0.85; the top-bar glass layer and divider fade in over 0.50–0.85. Under reduced motion, drift is removed and opacity switches at p 0.5.
 
-The active section in the numbered navigation follows section entry and uses `aria-current="location"`. Tabs, rows, the contribution cells, and the redacted reveal use the same `cubic-bezier(0.22, 1, 0.36, 1)` easing. Theme changes retain the directional circular reveal and sun/moon icon morph, both 600ms with that easing. Under `prefers-reduced-motion`, transitions and anchor scrolling are instant; scroll-linked transforms and entrance motion are disabled, and the top-bar name swaps in with opacity. The top bar is the only element allowed to use backdrop blur; no other blur is used. Motion, when enabled, uses transform, opacity, and clip-path only; layout properties are not animated.
+The active section in the numbered navigation follows section entry and uses `aria-current="location"`. Tabs, rows, the contribution cells, and the redacted reveal use the same `cubic-bezier(0.22, 1, 0.36, 1)` easing. Theme changes retain the directional circular reveal and sun/moon icon morph, both 600ms with that easing. Under `prefers-reduced-motion`, transitions and anchor scrolling are instant; scroll-linked transforms and entrance motion are disabled, and the top-bar name appears with opacity at p 0.5. No blur is used. Motion, when enabled, uses transform, opacity, and clip-path only; layout properties are not animated.
 
 ---
 
