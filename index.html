@@ -118,14 +118,119 @@
     </section>
 
     <div class="content-column">
-      <section id="work" class="section">
-        <h2 class="section-label">Work</h2>
-        <div class="divider"></div>
+      <section id="work" class="section" aria-labelledby="work-heading">
+        <h2 id="work-heading" class="section-label">Work</h2>
+        <div class="work-tablist" role="tablist" aria-label="Work projects" aria-orientation="horizontal">
+          <button id="work-tab-01" class="work-tab" type="button" role="tab" aria-selected="true" aria-controls="work-panel-01" aria-label="Project 01" tabindex="0" data-repo="">01</button>
+          <button id="work-tab-02" class="work-tab" type="button" role="tab" aria-selected="false" aria-controls="work-panel-02" aria-label="Project 02" tabindex="-1" data-repo="">02</button>
+          <button id="work-tab-03" class="work-tab" type="button" role="tab" aria-selected="false" aria-controls="work-panel-03" aria-label="Project 03" tabindex="-1" data-repo="">03</button>
+          <button id="work-tab-04" class="work-tab" type="button" role="tab" aria-selected="false" aria-controls="work-panel-04" aria-label="Redacted project 01" tabindex="-1" data-repo="">04</button>
+          <button id="work-tab-05" class="work-tab" type="button" role="tab" aria-selected="false" aria-controls="work-panel-05" aria-label="Redacted project 02" tabindex="-1" data-repo="">05</button>
+          <span class="work-tab-underline" aria-hidden="true"></span>
+        </div>
+
+        <div class="work-panels">
+          <div id="work-panel-01" class="work-panel is-current" role="tabpanel" aria-labelledby="work-tab-01" tabindex="0" data-repo="">
+            <h3 class="work-title" data-placeholder>Project name</h3>
+            <p class="work-summary" data-placeholder>Two-line summary of what it does<br>and why it's interesting.</p>
+            <p class="work-meta" data-placeholder>type · year · status</p>
+            <div class="work-links">
+              <a class="work-link" data-url="" data-placeholder="GitHub URL" hidden>[github]</a>
+              <a class="work-link" data-url="" data-placeholder="site URL" hidden>[site]</a>
+            </div>
+          </div>
+          <div id="work-panel-02" class="work-panel" role="tabpanel" aria-labelledby="work-tab-02" tabindex="0" data-repo="">
+            <h3 class="work-title" data-placeholder>Project name</h3>
+            <p class="work-summary" data-placeholder>Two-line summary of what it does<br>and why it's interesting.</p>
+            <p class="work-meta" data-placeholder>type · year · status</p>
+            <div class="work-links">
+              <a class="work-link" data-url="" data-placeholder="GitHub URL" hidden>[github]</a>
+              <a class="work-link" data-url="" data-placeholder="site URL" hidden>[site]</a>
+            </div>
+          </div>
+          <div id="work-panel-03" class="work-panel" role="tabpanel" aria-labelledby="work-tab-03" tabindex="0" data-repo="">
+            <h3 class="work-title" data-placeholder>Project name</h3>
+            <p class="work-summary" data-placeholder>Two-line summary of what it does<br>and why it's interesting.</p>
+            <p class="work-meta" data-placeholder>type · year · status</p>
+            <div class="work-links">
+              <a class="work-link" data-url="" data-placeholder="GitHub URL" hidden>[github]</a>
+              <a class="work-link" data-url="" data-placeholder="site URL" hidden>[site]</a>
+            </div>
+          </div>
+          <div id="work-panel-04" class="work-panel work-panel--redacted" role="tabpanel" aria-labelledby="work-tab-04" tabindex="0" data-repo="">
+            <div class="redacted-reveal" role="group" aria-label="Redacted" tabindex="0">
+              <span class="redacted-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+              <span class="redacted-copy" aria-hidden="true">in progress</span>
+            </div>
+          </div>
+          <div id="work-panel-05" class="work-panel work-panel--redacted" role="tabpanel" aria-labelledby="work-tab-05" tabindex="0" data-repo="">
+            <div class="redacted-reveal" role="group" aria-label="Redacted" tabindex="0">
+              <span class="redacted-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+              <span class="redacted-copy" aria-hidden="true">in progress</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Existing contribution renderer; data remains in GitHub GraphQL calendar shape. -->
+        <div class="contrib" data-src="data/contributions.json">
+          <div class="contrib-scroll">
+            <div class="contrib-wrap">
+              <div class="contrib-head">
+                <div class="contrib-weekdays-spacer" aria-hidden="true"></div>
+                <div class="contrib-months" aria-hidden="true"></div>
+              </div>
+              <div class="contrib-body">
+                <div class="contrib-weekdays" aria-hidden="true">
+                  <span class="contrib-weekday"></span>
+                  <span class="contrib-weekday">Mon</span>
+                  <span class="contrib-weekday"></span>
+                  <span class="contrib-weekday">Wed</span>
+                  <span class="contrib-weekday"></span>
+                  <span class="contrib-weekday">Fri</span>
+                  <span class="contrib-weekday"></span>
+                </div>
+                <div class="contrib-grid" role="img" aria-label="GitHub contributions, past year"></div>
+              </div>
+            </div>
+          </div>
+          <div class="contrib-tooltip" aria-hidden="true"></div>
+          <p class="contrib-meta">
+            <span class="contrib-total">148 contributions, past year</span>
+            <span class="contrib-legend" role="group" aria-label="Filter contribution intensity">
+              less
+              <span class="contrib-swatches">
+                <span class="contrib-cell" data-level="0" tabindex="0" role="button" aria-label="Filter level 0"></span>
+                <span class="contrib-cell" data-level="1" tabindex="0" role="button" aria-label="Filter level 1"></span>
+                <span class="contrib-cell" data-level="2" tabindex="0" role="button" aria-label="Filter level 2"></span>
+                <span class="contrib-cell" data-level="3" tabindex="0" role="button" aria-label="Filter level 3"></span>
+                <span class="contrib-cell" data-level="4" tabindex="0" role="button" aria-label="Filter level 4"></span>
+              </span>
+              more
+            </span>
+          </p>
+          <span class="contrib-live" aria-live="polite"></span>
+        </div>
       </section>
 
-      <section id="proof" class="section">
-        <h2 class="section-label">Proof</h2>
-        <div class="divider"></div>
+      <section id="proof" class="section" aria-labelledby="proof-heading">
+        <h2 id="proof-heading" class="section-label">Proof</h2>
+        <div class="proof-list">
+          <article class="proof-row">
+            <h3 class="proof-title" data-placeholder>Proof title</h3>
+            <p class="proof-meta" data-placeholder>type · year · context</p>
+            <p class="proof-result" data-placeholder>One-line result.</p>
+          </article>
+          <article class="proof-row">
+            <h3 class="proof-title" data-placeholder>Proof title</h3>
+            <p class="proof-meta" data-placeholder>type · year · context</p>
+            <p class="proof-result" data-placeholder>One-line result.</p>
+          </article>
+          <article class="proof-row">
+            <h3 class="proof-title">CyberX</h3>
+            <p class="proof-meta">2026 · RNSIT · <span data-placeholder>type · status</span></p>
+            <p class="proof-result proof-result--withheld">[redacted]</p>
+          </article>
+        </div>
       </section>
 
       <!-- Uncomment this section when enabling the Writeups navigation link.
@@ -135,9 +240,16 @@
       </section>
       -->
 
-      <section id="contact" class="section">
-        <h2 class="section-label">Contact</h2>
-        <div class="divider"></div>
+      <section id="contact" class="section" aria-labelledby="contact-heading">
+        <h2 id="contact-heading" class="section-label">Contact</h2>
+        <p class="contact-statement">Curious about how things think, whether they're running on silicon or not.</p>
+        <p class="contact-links">
+          <a class="contact-link" href="https://github.com/ShreyasLoL" target="_blank" rel="noopener noreferrer">[github]</a>
+          <span aria-hidden="true">·</span>
+          <a class="contact-link" href="https://www.linkedin.com/in/shreyasis-5a87722b9/" target="_blank" rel="noopener noreferrer">[linkedin]</a>
+          <span aria-hidden="true">·</span>
+          <a class="contact-link" href="mailto:your-email@example.com" data-placeholder="email address">[email]</a>
+        </p>
       </section>
     </div>
   </main>

@@ -9,8 +9,7 @@
                                         contributionCount: number,
                                         weekday: 0-6 } ] } ]
      }
-   Any other fields (e.g. "mock") are ignored. Swapping mock data for real
-   data is a file replacement; only loadCalendar() knows where it lives. */
+   Snapshot metadata is ignored. loadCalendar() owns the data location. */
 (function () {
   'use strict';
 
@@ -106,11 +105,13 @@
     days.forEach(function (d, i) {
       var el = document.createElement('span');
       el.className = 'contrib-cell';
+      el.setAttribute('aria-hidden', 'true');
       el.setAttribute('data-level', levelFor(d.count, t));
       el.setAttribute('data-i', i);
       el.style.gridColumn = d.col + 1;
       el.style.gridRow = d.weekday + 1;
       el.style.setProperty('--col', d.col);
+      el.style.setProperty('--row', d.weekday);
       if (d.count > 0) {
         el.classList.add('is-clickable');
       }
@@ -186,7 +187,7 @@
   /* ---- Tooltip (fade only, no movement) ---- */
 
   function tooltipText(d) {
-    return countLabel(d.count) + ' \u00B7 ' + formatDate(d.date);
+    return formatDate(d.date) + ' \u00B7 ' + d.count.toLocaleString('en-US') + ' commits';
   }
 
   /** Show the tooltip for a day, clamped inside the column. */

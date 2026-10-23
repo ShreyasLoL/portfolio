@@ -31,7 +31,7 @@ CSS variables only, never hard-coded in components.
 | `--color-text` | `#1A1815` | `#ECE8DF` |
 | `--color-accent` | `#2F6F62` | `#5FB3A0` |
 
-Accent is used only for hover, the active navigation item, and `::selection`. Default to system preference via `prefers-color-scheme`, with a persisted toggle. `color-scheme` follows the active theme so scrollbars, form controls, and overscroll match.
+Accent is used for hover, active navigation and work tabs, the theme toggle focus indicator, and `::selection`. Default to system preference via `prefers-color-scheme`, with a persisted toggle. `color-scheme` follows the active theme so scrollbars, form controls, and overscroll match.
 
 **Known exceptions (hex outside CSS variables):** the three `<meta name="theme-color">` values in `index.html`, which mirror `--color-bg` for light and dark. The theme initialization script uses these values for the browser chrome.
 
@@ -55,7 +55,7 @@ Newsreader for all text; Newsreader italic only for the statement and contact li
 
 # Layout
 
-One page with a centered, left-aligned content column, `--width-column: 880px`. Side margins remain empty. No sidebar. The fixed top bar is `--height-topbar: 72px`, transparent over the hero, with the name at the left, a single-row numbered navigation, and the theme toggle fixed at the top-right. The navigation reserves the toggle's 44px hit area plus one 16px spacing step. A divider fades in as the hero is left. The hero is centered, 88svh high on desktop and 100svh on mobile. The 01 Work, 02 Proof, and 03 Contact shells follow in that order.
+One page with a centered, left-aligned content column, `--width-column: 880px`. Side margins remain empty. No sidebar. The fixed top bar is `--height-topbar: 72px`, transparent over the hero, with the name at the left, a single-row numbered navigation, and the theme toggle fixed at the top-right. The navigation reserves the toggle's 44px hit area plus one 16px spacing step. A divider fades in as the hero is left. The hero is centered, 88svh high on desktop and 100svh on mobile. Work, Proof, and Contact appear in that order as 01, 02, and 03.
 
 The avatar is circular, 48px, full color, beside the education metadata. The divider-colored circle remains visible if the image fails to load.
 
@@ -63,11 +63,23 @@ The avatar is circular, 48px, full color, beside the education metadata. The div
 
 ---
 
+# Sections
+
+Work has five numbered tabs: three project placeholders and two redacted panels. The tablist follows the horizontal ARIA tabs pattern, supports arrow keys and Home/End, and uses a 2px transform underline. Without JavaScript, every panel remains visible in a stack. Project panels contain a title, two-line summary, one `type · year · status` metadata line, and optional `[github]` / `[site]` links that appear only when their `data-url` value is set. Redacted panels show divider-colored bars; hover or focus reveals `in progress` with a clip-path wipe. Each tab carries an empty `data-repo` hook, and `highlightRepo(repo)` is a no-op.
+
+The existing GitHub contribution renderer and GraphQL-shaped data file are reused at the end of Work. The monochrome intensity ramp uses divider for zero and text at 25%, 45%, 70%, and 100% opacity. The graph has an opacity-only diagonal entrance wave, keyboard navigation, a `date · N commits` readout, and a `N contributions, past year` caption. `data/contributions.json` is a snapshot from the public GitHub profile dated 2026-10-23: 148 contributions across 2025-10-19 through 2026-10-23.
+
+Proof uses three unboxed rows. Two rows are placeholders; the CyberX row shows the supplied `2026 · RNSIT` details, placeholder metadata, and `[redacted]` for the withheld result. Row hover and focus shift 2px.
+
+Contact uses the supplied italic line and the existing GitHub and LinkedIn links. The email link points to `your-email@example.com` until replaced.
+
+---
+
 # Motion
 
 On load, the name, title, statement, and education line fade up 8px over 300ms, staggered by 150ms. One passive, animation-frame-throttled scroll listener sets `--p` from 0 to 1 across the hero. It drives the same H1 from its centered position into the top-bar name slot with transform only. The statement fades to 18% opacity and drifts up 4px; the title and education line fade out. The top-bar divider fades in. Handoff geometry is recalculated on resize and font load.
 
-The active section in the numbered navigation follows section entry and uses `aria-current="location"`. Theme changes retain the directional circular reveal and sun/moon icon morph, both 600ms with `cubic-bezier(0.22, 1, 0.36, 1)`. Under `prefers-reduced-motion`, transitions and anchor scrolling are instant; scroll-linked transforms and entrance motion are disabled, and the top-bar name swaps in with opacity. Motion, when enabled, uses transform, opacity, and clip-path only.
+The active section in the numbered navigation follows section entry and uses `aria-current="location"`. Tabs, rows, the contribution cells, and the redacted reveal use the same `cubic-bezier(0.22, 1, 0.36, 1)` easing. Theme changes retain the directional circular reveal and sun/moon icon morph, both 600ms with that easing. Under `prefers-reduced-motion`, transitions and anchor scrolling are instant; scroll-linked transforms and entrance motion are disabled, and the top-bar name swaps in with opacity. Motion, when enabled, uses transform, opacity, and clip-path only.
 
 ---
 
@@ -80,6 +92,8 @@ The active section in the numbered navigation follows section entry and uses `ar
 - **Avatar:** small, circular, full color. It reads as a person, not a decoration.
 - **Favicon:** the avatar, square.
 - **Theme direction:** light radiates from the toggle and dark collapses back into it. The asymmetry is intentional.
+- **Work/Proof:** no cards; project details live in a restrained tab panel and proof lives in rows.
+- **Contribution graph:** monochrome, with opacity defining intensity and the source snapshot dated in the data file.
 
 ---
 
@@ -91,11 +105,11 @@ Skill bars, tech-stack lists, testimonials, emojis, stock icons, extra sections 
 
 # Open items
 
-- Work and Proof content
+- Replace the marked project and proof placeholders, add any real project URLs, and replace the placeholder email address. See `PLACEHOLDERS.md`.
 - First Writeup entry
 - Domain and hosting
 - Open Graph image
-- 404 page
+- Refresh the dated GitHub contribution snapshot when needed.
 
 ---
 

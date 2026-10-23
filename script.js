@@ -177,6 +177,127 @@
 })();
 
 /* ============================================================
+   Work unit: progressively enhanced tabs and optional links
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var tablist = document.querySelector('.work-tablist');
+  var panels = document.querySelector('.work-panels');
+  if (!tablist || !panels) return;
+
+  var tabs = Array.prototype.slice.call(tablist.querySelectorAll('[role="tab"]'));
+  var activeTab = tabs.filter(function (tab) {
+    return tab.getAttribute('aria-selected') === 'true';
+  })[0] || tabs[0];
+  var hideTimers = Object.create(null);
+  var underline = tablist.querySelector('.work-tab-underline');
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function panelFor(tab) {
+    return document.getElementById(tab.getAttribute('aria-controls'));
+  }
+
+  function moveUnderline(tab) {
+    if (!tab || !underline) return;
+    underline.style.setProperty('--tab-x', tab.offsetLeft + 'px');
+    underline.style.setProperty('--tab-scale', String(tab.offsetWidth));
+  }
+
+  function setTab(tab, moveFocus) {
+    if (!tab || tab === activeTab) {
+      if (moveFocus && tab) tab.focus();
+      return;
+    }
+
+    var oldTab = activeTab;
+    var oldPanel = panelFor(oldTab);
+    var nextPanel = panelFor(tab);
+    activeTab = tab;
+
+    tabs.forEach(function (item) {
+      var selected = item === tab;
+      item.setAttribute('aria-selected', String(selected));
+      item.tabIndex = selected ? 0 : -1;
+    });
+
+    if (oldPanel) {
+      oldPanel.classList.remove('is-current');
+      window.clearTimeout(hideTimers[oldPanel.id]);
+      if (prefersReducedMotion.matches) {
+        oldPanel.hidden = true;
+      } else {
+        hideTimers[oldPanel.id] = window.setTimeout(function () {
+          if (panelFor(activeTab) !== oldPanel) oldPanel.hidden = true;
+        }, 200);
+      }
+    }
+
+    if (nextPanel) {
+      window.clearTimeout(hideTimers[nextPanel.id]);
+      nextPanel.hidden = false;
+      nextPanel.classList.remove('is-current');
+      var showPanel = function () {
+        nextPanel.classList.add('is-current');
+      };
+      if (prefersReducedMotion.matches) showPanel();
+      else window.requestAnimationFrame(showPanel);
+    }
+
+    moveUnderline(tab);
+    if (moveFocus) tab.focus();
+  }
+
+  panels.classList.add('is-enhanced');
+  panels.querySelectorAll('.work-panel').forEach(function (panel) {
+    var selected = panel.id === activeTab.getAttribute('aria-controls');
+    panel.hidden = !selected;
+    panel.classList.toggle('is-current', selected);
+  });
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () { setTab(tab, false); });
+  });
+
+  tablist.addEventListener('keydown', function (event) {
+    var index = tabs.indexOf(document.activeElement);
+    if (index < 0) return;
+
+    var next = index;
+    if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+    else if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
+    else if (event.key === 'Home') next = 0;
+    else if (event.key === 'End') next = tabs.length - 1;
+    else return;
+
+    event.preventDefault();
+    setTab(tabs[next], true);
+    tabs[next].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  });
+
+  window.addEventListener('resize', function () { moveUnderline(activeTab); }, { passive: true });
+  moveUnderline(activeTab);
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { moveUnderline(activeTab); });
+  }
+
+  panels.querySelectorAll('.work-link[data-url]').forEach(function (link) {
+    var url = link.getAttribute('data-url').trim();
+    if (!url) return;
+    link.href = url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.hidden = false;
+  });
+})();
+
+/* Heatmap integration point; repo highlighting is intentionally unimplemented. */
+window.highlightRepo = function highlightRepo(repo) {
+  void repo;
+};
+
+/* ============================================================
    Hero unit: entrance, scroll progress, and name handoff
    ============================================================ */
 (function () {
