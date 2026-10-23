@@ -470,6 +470,16 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 .topbar nav {
   grid-column: 2;
   grid-row: 1;
+  opacity: clamp(0, calc((var(--p) - 0.60) / 0.25), 1);
+  pointer-events: none;
+}
+
+html.is-past-hero .topbar nav {
+  pointer-events: auto;
+}
+
+.topbar nav:focus-within {
+  opacity: 1;
 }
 
 .topbar-name {
@@ -1297,6 +1307,8 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
     opacity: clamp(0, calc(1 - (var(--p) * 2)), 1);
     transform: none;
   }
+
+  .topbar nav { opacity: clamp(0, calc((var(--p) - 0.5) * 2), 1); transition: none; }
 
   .work-tab,
   a,

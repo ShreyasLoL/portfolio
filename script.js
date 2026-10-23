@@ -312,6 +312,7 @@ window.highlightRepo = function highlightRepo(repo) {
   function updateProgress() {
     var progress = Math.max(0, Math.min(1, window.scrollY / Math.max(1, hero.offsetHeight)));
     root.style.setProperty('--p', progress.toFixed(4));
+    root.classList.toggle('is-past-hero', progress >= (prefersReducedMotion.matches ? 0.5 : 0.6));
   }
 
   var frame = 0;
