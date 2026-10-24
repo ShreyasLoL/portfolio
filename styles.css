@@ -161,7 +161,7 @@
 html {
   scroll-behavior: smooth;
   scrollbar-width: none;
-  scroll-snap-type: y mandatory;
+  scroll-snap-type: y proximity;
 }
 
 html::-webkit-scrollbar {
@@ -548,7 +548,6 @@ html.is-past-hero .topbar nav {
   padding-block: var(--height-topbar) var(--space-5);
   text-align: center;
   scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 .hero-content {
@@ -625,7 +624,6 @@ html.is-past-hero .topbar nav {
   line-height: 1.6;
   color: var(--color-secondary);
   opacity: 1;
-  scroll-snap-align: end;
 }
 
 .is-scrolling .hero-name,
@@ -682,9 +680,9 @@ html.is-past-hero .topbar nav {
 .section {
   margin-bottom: var(--space-5);
   scroll-margin-top: var(--height-topbar);
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
+
+#work { scroll-snap-align: start; }
 
 .content-column > .section {
   counter-increment: section;
