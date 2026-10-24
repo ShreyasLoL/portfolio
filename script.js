@@ -332,6 +332,20 @@ window.highlightRepo = function highlightRepo(repo) {
       element.addEventListener('animationend', function () { element.classList.remove('is-entering'); }, { once: true });
     });
   }
+
+  var workSection = document.querySelector('#work');
+  if (!prefersReducedMotion.matches && workSection && 'IntersectionObserver' in window) {
+    workSection.classList.add('work-reveal-pending');
+    var workRevealObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        workSection.classList.remove('work-reveal-pending');
+        workSection.classList.add('work-revealed');
+        workRevealObserver.unobserve(workSection);
+      });
+    }, { rootMargin: '0px 0px -20% 0px' });
+    workRevealObserver.observe(workSection);
+  }
 })();
 
 /* ============================================================

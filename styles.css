@@ -544,9 +544,9 @@ html.is-past-hero .topbar nav {
 .hero {
   display: grid;
   place-items: center;
-  height: 100svh;
-  min-height: 100svh;
-  padding-block: var(--height-topbar) calc(var(--space-5) + var(--space-4));
+  height: 82svh;
+  min-height: 82svh;
+  padding-block: var(--height-topbar) var(--space-5);
   text-align: center;
 }
 
@@ -672,6 +672,7 @@ html.is-past-hero .topbar nav {
   width: calc(100% - var(--space-3) - var(--space-3));
   max-width: var(--width-column);
   margin-inline: auto;
+  padding-top: var(--space-4);
   padding-bottom: var(--space-5);
   counter-reset: section;
 }
@@ -679,6 +680,18 @@ html.is-past-hero .topbar nav {
 .section {
   margin-bottom: var(--space-5);
   scroll-margin-top: var(--height-topbar);
+}
+
+.section.work-reveal-pending {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.section.work-revealed {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .content-column > .section {
@@ -1249,12 +1262,11 @@ html.is-past-hero .topbar nav {
 
 @media (max-width: 720px) {
   .hero {
-    height: 100svh;
-    min-height: 100svh;
+    height: 82svh;
+    min-height: 82svh;
   }
 
   .content-column {
-    margin-top: var(--space-2);
     padding-bottom: calc(var(--space-5) + env(safe-area-inset-bottom));
   }
 
