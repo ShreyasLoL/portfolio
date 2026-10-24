@@ -298,7 +298,7 @@ window.highlightRepo = function highlightRepo(repo) {
 };
 
 /* ============================================================
-   Hero unit: entrance, scroll progress, and name handoff
+   Hero unit: entrance and snap-distance progress
    ============================================================ */
 (function () {
   'use strict';
@@ -306,45 +306,73 @@ window.highlightRepo = function highlightRepo(repo) {
   var root = document.documentElement;
   var hero = document.querySelector('.hero');
   var name = document.querySelector('.hero-name');
+  var topbar = document.querySelector('.topbar');
+  var work = document.querySelector('#work');
   var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  if (!hero || !name) return;
+  if (!hero || !name || !topbar || !work) return;
 
-  function updateProgress() {
-    var progress = Math.max(0, Math.min(1, window.scrollY / Math.max(1, hero.offsetHeight)));
-    root.style.setProperty('--p', progress.toFixed(4));
+  var snapDistance = 1;
+  var targetP = 0;
+  var currentP = 0;
+  var frame = 0;
+  var scrollIdleTimer = 0;
+
+  function writeProgress(value) {
+    var progress = Math.max(0, Math.min(1, value));
+    var workReveal = Math.max(0, Math.min(1, (progress - 0.4) / 0.6));
+    hero.style.setProperty('--p', progress.toFixed(4));
+    topbar.style.setProperty('--p', progress.toFixed(4));
+    work.style.setProperty('--p', progress.toFixed(4));
+    work.style.setProperty('--w', workReveal.toFixed(4));
     root.classList.toggle('is-past-hero', progress >= (prefersReducedMotion.matches ? 0.5 : 0.6));
   }
 
-  var frame = 0;
-  var scrollIdleTimer = 0;
+  function animateProgress() {
+    currentP += (targetP - currentP) * 0.14;
+    if (Math.abs(targetP - currentP) <= 0.001) {
+      currentP = targetP;
+      frame = 0;
+      writeProgress(currentP);
+      return;
+    }
+    writeProgress(currentP);
+    frame = window.requestAnimationFrame(animateProgress);
+  }
+
+  function updateTarget() {
+    var topbarHeight = parseFloat(getComputedStyle(root).getPropertyValue('--height-topbar')) || 0;
+    snapDistance = Math.max(1, work.offsetTop - topbarHeight);
+    targetP = Math.max(0, Math.min(1, window.scrollY / snapDistance));
+    if (prefersReducedMotion.matches) {
+      currentP = targetP;
+      writeProgress(currentP);
+    } else if (Math.abs(targetP - currentP) > 0.001 && !frame) {
+      frame = window.requestAnimationFrame(animateProgress);
+    } else if (Math.abs(targetP - currentP) <= 0.001) {
+      currentP = targetP;
+      writeProgress(currentP);
+    }
+  }
+
   window.addEventListener('scroll', function () {
-    if (!frame) frame = window.requestAnimationFrame(function () { frame = 0; updateProgress(); });
+    updateTarget();
     root.classList.add('is-scrolling');
     window.clearTimeout(scrollIdleTimer);
     scrollIdleTimer = window.setTimeout(function () { root.classList.remove('is-scrolling'); }, 120);
   }, { passive: true });
-  window.addEventListener('resize', updateProgress, { passive: true });
-  updateProgress();
+  window.addEventListener('resize', updateTarget, { passive: true });
+  updateTarget();
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(updateTarget);
+    if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', updateTarget);
+  }
 
   if (!prefersReducedMotion.matches) {
     [name, document.querySelector('.hero-title'), document.querySelector('.hero-quote')].filter(Boolean).forEach(function (element) {
       element.classList.add('is-entering');
       element.addEventListener('animationend', function () { element.classList.remove('is-entering'); }, { once: true });
     });
-  }
-
-  var workSection = document.querySelector('#work');
-  if (!prefersReducedMotion.matches && workSection && 'IntersectionObserver' in window) {
-    workSection.classList.add('work-reveal-pending');
-    var workRevealObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        workSection.classList.remove('work-reveal-pending');
-        workSection.classList.add('work-revealed');
-        workRevealObserver.unobserve(workSection);
-      });
-    }, { rootMargin: '0px 0px -20% 0px' });
-    workRevealObserver.observe(workSection);
   }
 })();
 
