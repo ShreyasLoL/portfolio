@@ -290,6 +290,64 @@
     link.rel = 'noopener noreferrer';
     link.hidden = false;
   });
+
+  document.querySelectorAll('.minor-row').forEach(function (row) {
+    var url = (row.getAttribute('data-url') || row.getAttribute('href') || '').trim();
+    if (!url) return;
+    var anchor = row.tagName === 'A' ? row : document.createElement('a');
+    if (anchor !== row) {
+      anchor.className = row.className;
+      anchor.setAttribute('data-url', url);
+      while (row.firstChild) anchor.appendChild(row.firstChild);
+      row.parentNode.replaceChild(anchor, row);
+    }
+    anchor.href = url;
+    anchor.target = '_blank';
+    anchor.rel = 'noopener noreferrer';
+    anchor.classList.add('is-linked');
+    if (!anchor.querySelector('.minor-arrow')) {
+      var arrow = document.createElement('span');
+      arrow.className = 'minor-arrow';
+      arrow.setAttribute('aria-hidden', 'true');
+      arrow.textContent = '\u2197';
+      var meta = anchor.querySelector('.minor-meta');
+      if (meta) meta.appendChild(arrow);
+      else anchor.appendChild(arrow);
+    }
+  });
+})();
+
+/* ============================================================
+   Reveal unit: scroll-reveal via IntersectionObserver
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var elements = document.querySelectorAll('.reveal');
+  if (!elements.length) return;
+
+  if (!prefersReducedMotion.matches && 'IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    elements.forEach(function (el) {
+      observer.observe(el);
+    });
+  } else {
+    elements.forEach(function (el) {
+      el.classList.add('visible');
+    });
+  }
 })();
 
 /* Heatmap integration point; repo highlighting is intentionally unimplemented. */

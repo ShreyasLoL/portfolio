@@ -69,6 +69,8 @@ Below Contact, one quiet row aligned to the content column's left edge holds the
 
 Work has five tabs: three project placeholders labeled Project A, Project B, and Project C, followed by two redacted tabs shown as short bars with the accessible name “Redacted.” The tablist follows the horizontal ARIA tabs pattern, supports arrow keys and Home/End, and uses a 2px transform underline. Without JavaScript, every panel remains visible in a stack. Project panels contain a title, two-line summary, one `type · year · status` metadata line, and optional `[github]` / `[site]` links that appear only when their `data-url` value is set. Redacted panels show divider-colored bars; hover or focus reveals `in progress` with a clip-path wipe. Each tab carries an empty `data-repo` hook, and `highlightRepo(repo)` is a no-op.
 
+Below the tab panels and before the contribution graph, a `Minor` projects list uses the `.section-label` styling without a section counter prefix and holds three placeholder rows separated by 1px `--color-divider` rules with 16px vertical padding. Each row pairs a left-aligned title with right-aligned `stack · year` metadata (`--size-meta`, `--color-secondary`), stacking the title above metadata on mobile (`<720px`). When a row has a URL, the whole row renders as an external anchor (`target="_blank" rel="noopener noreferrer"`) with a trailing `↗`; without a URL, it renders plain with no arrow. Hover and keyboard focus shift the row 2px and set the title to `--color-accent`. The block enters with the `.reveal` fade-up and respects `prefers-reduced-motion`.
+
 The existing GitHub contribution renderer and GraphQL-shaped data file are reused at the end of Work. The monochrome intensity ramp uses divider for zero and text at 25%, 45%, 70%, and 100% opacity. The graph has an opacity-only diagonal entrance wave, keyboard navigation, a `date · N commits` readout, and a `N contributions, past year` caption. `data/contributions.json` is a snapshot from the public GitHub profile dated 2026-10-23: 148 contributions across 2025-10-19 through 2026-10-23.
 
 Proof uses three unboxed rows. Two rows are placeholders; the CyberX row shows the supplied `2026 · RNSIT` details, placeholder metadata, and `[redacted]` for the withheld result. Row hover and focus shift 2px.
@@ -94,7 +96,7 @@ The active section in the numbered navigation follows section entry and uses `ar
 - **Avatar:** small, circular, full color. It reads as a person, not a decoration.
 - **Favicon:** the avatar, square.
 - **Theme direction:** light radiates from the toggle and dark collapses back into it. The asymmetry is intentional.
-- **Work/Proof:** no cards; project details live in a restrained tab panel and proof lives in rows.
+- **Work/Proof:** no cards; major project details live in a restrained tab panel, minor projects and proof live in rows.
 - **Contribution graph:** monochrome, with opacity defining intensity and the source snapshot dated in the data file.
 
 ---

@@ -30,6 +30,26 @@ Project 03:
 
 Redacted projects 01 and 02 have no placeholder copy. Their accessible label and `in progress` reveal are intentional.
 
+## Minor
+
+Placeholder row 01:
+
+- Title: `Project name`
+- Metadata: `stack · year`
+- Optional URL: empty `data-url` field
+
+Placeholder row 02:
+
+- Title: `Project name`
+- Metadata: `stack · year`
+- Optional URL: empty `data-url` field
+
+Placeholder row 03:
+
+- Title: `Project name`
+- Metadata: `stack · year`
+- Optional URL: empty `data-url` field
+
 ## Proof
 
 Placeholder row 01:
