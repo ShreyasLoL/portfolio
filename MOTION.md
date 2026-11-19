@@ -61,6 +61,8 @@ Animate in proportion to how rarely it happens. Theme switch: rare, so 600ms and
 - Durations over 300ms outside the theme switch
 - Different easing curves in different components
 
+Exemptions (per DESIGN.md): the hero load entrance (150ms stagger) and the GitHub contribution heatmap's diagonal opacity wave (8ms step across the grid).
+
 ## 8. Review pass (run before every commit that touches motion)
 
 1. Grep for `ease`, `ease-in`, `ease-out`, `transition: all`, raw `ms`/`s` values outside tokens.
