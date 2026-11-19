@@ -381,6 +381,8 @@
 
   /* ---- Boot ---- */
 
+  updateFit();
+
   loadCalendar()
     .then(function (cal) {
       render(cal);

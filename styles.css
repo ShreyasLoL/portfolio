@@ -107,12 +107,28 @@
 
   --leading-body: 1.6;
 
+  /* ---- Motion ---- */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-press: 120ms;
+  --dur-hover: 200ms;
+  --dur-reveal: 300ms;
+  --dur-theme: 600ms;
+  --stagger: 40ms;
+
   /* ---- Light palette (default) ---- */
   --color-bg: #F7F4ED;
   --color-divider: #E6E1D5;
   --color-secondary: #6B665B;
   --color-text: #1A1815;
   --color-accent: #2F6F62;
+
+  /* ---- Theme toggle morph state (light: sun) ---- */
+  --toggle-rot: 0deg;
+  --toggle-core-scale: 1;
+  --toggle-rays-transform: scale(1) rotate(0deg);
+  --toggle-rays-opacity: 1;
+  --toggle-rays-opacity-delay: 0s;
+  --toggle-mask-transform: translate(20px, -20px);
 
   /* Native UI (scrollbars, form controls, overscroll) follows the theme. */
   color-scheme: light;
@@ -126,6 +142,12 @@
     --color-secondary: #8F8B82;
     --color-text: #ECE8DF;
     --color-accent: #5FB3A0;
+    --toggle-rot: 40deg;
+    --toggle-core-scale: 1.35;
+    --toggle-rays-transform: scale(0) rotate(-90deg);
+    --toggle-rays-opacity: 0;
+    --toggle-rays-opacity-delay: calc(var(--dur-theme) * 0.6);
+    --toggle-mask-transform: translate(0, 0);
     color-scheme: dark;
   }
 }
@@ -136,6 +158,12 @@
   --color-secondary: #8F8B82;
   --color-text: #ECE8DF;
   --color-accent: #5FB3A0;
+  --toggle-rot: 40deg;
+  --toggle-core-scale: 1.35;
+  --toggle-rays-transform: scale(0) rotate(-90deg);
+  --toggle-rays-opacity: 0;
+  --toggle-rays-opacity-delay: calc(var(--dur-theme) * 0.6);
+  --toggle-mask-transform: translate(0, 0);
   color-scheme: dark;
 }
 
@@ -145,6 +173,12 @@
   --color-secondary: #6B665B;
   --color-text: #1A1815;
   --color-accent: #2F6F62;
+  --toggle-rot: 0deg;
+  --toggle-core-scale: 1;
+  --toggle-rays-transform: scale(1) rotate(0deg);
+  --toggle-rays-opacity: 1;
+  --toggle-rays-opacity-delay: 0s;
+  --toggle-mask-transform: translate(20px, -20px);
   color-scheme: light;
 }
 
@@ -191,7 +225,14 @@ body {
 a {
   color: var(--color-text);
   text-decoration: none;
-  transition: color 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: color var(--dur-hover) var(--ease);
+}
+
+a,
+button,
+.redacted-reveal,
+.contrib-cell {
+  -webkit-tap-highlight-color: transparent;
 }
 
 @media (hover: hover) {
@@ -280,7 +321,8 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   border: none;
   cursor: pointer;
   color: var(--color-secondary);
-  transition: color 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: color var(--dur-hover) var(--ease),
+              transform var(--dur-press) var(--ease);
   pointer-events: auto;
 }
 
@@ -288,6 +330,10 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   .theme-toggle:hover {
     color: var(--color-accent);
   }
+}
+
+.theme-toggle:active {
+  transform: scale(0.94);
 }
 
 .theme-toggle:focus {
@@ -299,16 +345,18 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   outline-offset: 2px;
 }
 
-/* Sun/Moon icon base & morph (600ms, in sync with the page reveal) */
+/* Sun/Moon icon morph (--dur-theme) split from hover scale (--dur-hover). */
 .theme-toggle svg {
   transform-origin: center;
-  transform: rotate(0deg) scale(1);
-  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  rotate: var(--toggle-rot);
+  scale: 1;
+  transition: rotate var(--dur-theme) var(--ease),
+              scale var(--dur-hover) var(--ease);
 }
 
 @media (hover: hover) {
   .theme-toggle:hover svg {
-    transform: rotate(0deg) scale(1.08);
+    scale: 1.08;
   }
 }
 
@@ -321,103 +369,22 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
   transform-origin: center;
 }
 
-/* To light: rays appear immediately and grow out of the core. */
-.theme-toggle .sun-rays {
-  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1) 0ms,
-              opacity 240ms cubic-bezier(0.22, 1, 0.36, 1) 0ms;
+.theme-toggle .sun-core {
+  transform: scale(var(--toggle-core-scale));
+  transition: transform var(--dur-theme) var(--ease) calc(var(--dur-theme) * 0.1);
 }
 
-.theme-toggle .sun-core {
-  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1) 60ms;
+/* To light: rays appear immediately; to dark: fade only as they retract. */
+.theme-toggle .sun-rays {
+  transform: var(--toggle-rays-transform);
+  opacity: var(--toggle-rays-opacity);
+  transition: transform var(--dur-theme) var(--ease),
+              opacity calc(var(--dur-theme) * 0.4) var(--ease) var(--toggle-rays-opacity-delay);
 }
 
 .theme-toggle .moon-mask {
-  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1) 100ms;
-}
-
-/* Light mode: show sun (rays visible, mask off-screen) */
-[data-theme="light"] .theme-toggle svg,
-:root:not([data-theme]) .theme-toggle svg {
-  transform: rotate(0deg) scale(1);
-}
-
-@media (hover: hover) {
-  [data-theme="light"] .theme-toggle:hover svg,
-  :root:not([data-theme]) .theme-toggle:hover svg {
-    transform: rotate(0deg) scale(1.08);
-  }
-}
-
-[data-theme="light"] .theme-toggle .sun-core,
-:root:not([data-theme]) .theme-toggle .sun-core {
-  transform: scale(1);
-}
-
-[data-theme="light"] .theme-toggle .sun-rays,
-:root:not([data-theme]) .theme-toggle .sun-rays {
-  transform: scale(1) rotate(0);
-  opacity: 1;
-}
-
-[data-theme="light"] .theme-toggle .moon-mask,
-:root:not([data-theme]) .theme-toggle .moon-mask {
-  transform: translate(20px, -20px);
-}
-
-/* Dark mode: show moon (rays retracted/hidden, mask slides in) */
-[data-theme="dark"] .theme-toggle svg {
-  transform: rotate(40deg) scale(1);
-}
-
-@media (hover: hover) {
-  [data-theme="dark"] .theme-toggle:hover svg {
-    transform: rotate(40deg) scale(1.08);
-  }
-}
-
-[data-theme="dark"] .theme-toggle .sun-core {
-  transform: scale(1.35);
-}
-
-/* To dark: rays are pulled all the way into the core, fading only as they
-   arrive, so the retraction is visible rather than a fade. */
-[data-theme="dark"] .theme-toggle .sun-rays {
-  transform: scale(0) rotate(-90deg);
-  opacity: 0;
-  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1) 0ms,
-              opacity 240ms cubic-bezier(0.22, 1, 0.36, 1) 360ms;
-}
-
-[data-theme="dark"] .theme-toggle .moon-mask {
-  transform: translate(0, 0);
-}
-
-/* System dark with no explicit data-theme */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) .theme-toggle svg {
-    transform: rotate(40deg) scale(1);
-  }
-
-  @media (hover: hover) {
-    :root:not([data-theme]) .theme-toggle:hover svg {
-      transform: rotate(40deg) scale(1.08);
-    }
-  }
-
-  :root:not([data-theme]) .theme-toggle .sun-core {
-    transform: scale(1.35);
-  }
-
-  :root:not([data-theme]) .theme-toggle .sun-rays {
-    transform: scale(0) rotate(-90deg);
-    opacity: 0;
-    transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1) 0ms,
-                opacity 240ms cubic-bezier(0.22, 1, 0.36, 1) 360ms;
-  }
-
-  :root:not([data-theme]) .theme-toggle .moon-mask {
-    transform: translate(0, 0);
-  }
+  transform: var(--toggle-mask-transform);
+  transition: transform var(--dur-theme) var(--ease) calc(var(--dur-theme) / 6);
 }
 
 /* ============================================================
@@ -479,6 +446,7 @@ html.is-past-hero .topbar nav {
 
 .topbar nav:focus-within {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .topbar-name {
@@ -488,6 +456,16 @@ html.is-past-hero .topbar nav {
   font-size: var(--size-name);
   font-weight: var(--weight-medium);
   opacity: clamp(0, calc((var(--p) - 0.60) / 0.25), 1);
+  transition: color var(--dur-hover) var(--ease),
+              transform var(--dur-press) var(--ease);
+}
+
+.topbar-name:focus-visible {
+  opacity: 1;
+}
+
+.topbar-name:active {
+  transform: translateY(1px);
 }
 
 .nav-list {
@@ -512,7 +490,12 @@ html.is-past-hero .topbar nav {
   font-family: var(--font-mono);
   font-size: var(--size-meta);
   color: var(--color-secondary);
-  transition: color 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: color var(--dur-hover) var(--ease),
+              transform var(--dur-press) var(--ease);
+}
+
+.nav-link:active {
+  transform: translateY(1px);
 }
 
 .nav-link::before {
@@ -567,19 +550,14 @@ html.is-past-hero .topbar nav {
   transform: translateY(calc(-24px * clamp(0, calc(var(--p) / 0.65), 1)));
 }
 
-.hero-name.is-entering {
-  animation: hero-enter 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
+.hero-name.is-entering,
 .hero-title.is-entering,
-.hero-quote.is-entering,
-.hero-education.is-entering {
-  animation: hero-enter 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+.hero-quote.is-entering {
+  animation: hero-enter var(--dur-reveal) var(--ease) both;
 }
 
-.hero-title.is-entering { animation-delay: 150ms; }
-.hero-quote.is-entering { animation-delay: 300ms; }
-.hero-education.is-entering { animation-delay: 450ms; }
+.hero-title.is-entering { animation-delay: calc(var(--dur-reveal) / 2); }
+.hero-quote.is-entering { animation-delay: var(--dur-reveal); }
 
 @keyframes hero-enter {
   from { opacity: 0; transform: translateY(8px); }
@@ -626,9 +604,9 @@ html.is-past-hero .topbar nav {
   opacity: 1;
 }
 
-.is-scrolling .hero-name,
-.is-scrolling .hero-title,
-.is-scrolling .hero-quote {
+.hero.is-scrolling .hero-name,
+.hero.is-scrolling .hero-title,
+.hero.is-scrolling .hero-quote {
   will-change: transform, opacity;
 }
 
@@ -649,15 +627,13 @@ html.is-past-hero .topbar nav {
   object-fit: cover;
 }
 
-@media (scripting: enabled) {
-  .avatar img {
-    opacity: 0;
-    transition: opacity 300ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
+.js .avatar img {
+  opacity: 0;
+  transition: opacity var(--dur-reveal) var(--ease);
+}
 
-  .avatar img.loaded {
-    opacity: 1;
-  }
+.js .avatar img.loaded {
+  opacity: 1;
 }
 
 .avatar img.avatar-fallback {
@@ -703,8 +679,8 @@ html.is-past-hero .topbar nav {
 #work > .section-label,
 #work .work-tablist,
 #work .work-panels {
-  opacity: var(--w);
-  transform: translateY(calc((1 - var(--w)) * 16px));
+  opacity: var(--w, 1);
+  transform: translateY(calc((1 - var(--w, 1)) * 16px));
 }
 
 .content-column > .section > .section-label::before {
@@ -747,7 +723,8 @@ html.is-past-hero .topbar nav {
   color: var(--color-secondary);
   white-space: nowrap;
   cursor: pointer;
-  transition: color 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: color var(--dur-hover) var(--ease),
+              transform var(--dur-press) var(--ease);
 }
 
 .work-tab[aria-selected="true"] {
@@ -760,6 +737,10 @@ html.is-past-hero .topbar nav {
   }
 }
 
+.work-tab:active {
+  transform: translateY(1px);
+}
+
 .work-tab-underline {
   position: absolute;
   left: 0;
@@ -769,8 +750,12 @@ html.is-past-hero .topbar nav {
   background-color: var(--color-accent);
   transform: translateX(var(--tab-x, 0)) scaleX(var(--tab-scale, 0));
   transform-origin: left center;
-  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: none;
   pointer-events: none;
+}
+
+.work-tablist.is-ready .work-tab-underline {
+  transition: transform var(--dur-hover) var(--ease);
 }
 
 .work-panels {
@@ -797,13 +782,21 @@ html.is-past-hero .topbar nav {
   border: 0;
   opacity: 0;
   transform: translateY(2px);
-  transition: opacity 200ms cubic-bezier(0.22, 1, 0.36, 1),
-              transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--dur-hover) var(--ease),
+              transform var(--dur-hover) var(--ease),
+              visibility 0s linear var(--dur-hover);
 }
 
 .work-panels.is-enhanced .work-panel.is-current {
   opacity: 1;
   transform: translateY(0);
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity var(--dur-hover) var(--ease),
+              transform var(--dur-hover) var(--ease),
+              visibility 0s linear 0s;
 }
 
 .work-title,
@@ -835,9 +828,16 @@ html.is-past-hero .topbar nav {
 }
 
 .work-link {
+  display: inline-block;
   font-family: var(--font-mono);
   font-size: var(--size-meta);
   color: var(--color-secondary);
+  transition: color var(--dur-hover) var(--ease),
+              transform var(--dur-press) var(--ease);
+}
+
+.work-link:active {
+  transform: translateY(1px);
 }
 
 .work-link[hidden] {
@@ -850,6 +850,7 @@ html.is-past-hero .topbar nav {
   align-items: center;
   width: max-content;
   min-height: var(--space-4);
+  height: 100%;
   max-width: 100%;
   cursor: pointer;
 }
@@ -859,7 +860,16 @@ html.is-past-hero .topbar nav {
   flex-direction: column;
   gap: var(--space-1);
   width: var(--space-5);
-  transition: opacity 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity var(--dur-hover) var(--ease);
+}
+
+.work-panel--redacted .redacted-bars {
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: calc(var(--space-5) * 3);
+  max-width: 100%;
+  height: 100%;
+  padding-block: var(--space-1);
 }
 
 .work-tab--redacted {
@@ -880,12 +890,22 @@ html.is-past-hero .topbar nav {
   background-color: var(--color-divider);
 }
 
-.redacted-bars span:nth-child(2) { width: 80%; }
-.redacted-bars span:nth-child(3) { width: 60%; }
+.work-tab--redacted .redacted-bars span:nth-child(2) { width: 80%; }
+.work-tab--redacted .redacted-bars span:nth-child(3) { width: 60%; }
+
+.work-panel--redacted .redacted-bars span:nth-child(1) { width: 45%; }
+.work-panel--redacted .redacted-bars span:nth-child(2) { width: 100%; }
+.work-panel--redacted .redacted-bars span:nth-child(3) { width: 82%; }
+.work-panel--redacted .redacted-bars span:nth-child(4) { width: 68%; }
+.work-panel--redacted .redacted-bars span:nth-child(5) { width: 56%; }
+.work-panel--redacted .redacted-bars span:nth-child(6) { width: 38%; }
 
 .redacted-copy {
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: max-content;
   display: flex;
   align-items: center;
   font-family: var(--font-mono);
@@ -893,18 +913,36 @@ html.is-past-hero .topbar nav {
   color: var(--color-secondary);
   background-color: var(--color-bg);
   clip-path: inset(0 100% 0 0);
-  transition: clip-path 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: clip-path var(--dur-hover) var(--ease);
   white-space: nowrap;
 }
 
-.redacted-reveal:hover .redacted-copy,
+@media (hover: hover) {
+  .redacted-reveal:hover .redacted-copy {
+    clip-path: inset(0 0 0 0);
+  }
+
+  .redacted-reveal:hover .redacted-bars {
+    opacity: 0;
+  }
+}
+
 .redacted-reveal:focus-visible .redacted-copy {
   clip-path: inset(0 0 0 0);
 }
 
-.redacted-reveal:hover .redacted-bars,
 .redacted-reveal:focus-visible .redacted-bars {
   opacity: 0;
+}
+
+@media (hover: none) {
+  .redacted-reveal:focus .redacted-copy {
+    clip-path: inset(0 0 0 0);
+  }
+
+  .redacted-reveal:focus .redacted-bars {
+    opacity: 0;
+  }
 }
 
 /* ============================================================
@@ -917,11 +955,14 @@ html.is-past-hero .topbar nav {
 
 .minor-list {
   list-style: none;
-  border-top: 1px solid var(--color-divider);
 }
 
 .minor-item {
   border-bottom: 1px solid var(--color-divider);
+}
+
+.minor-item:first-child {
+  border-top: 1px solid var(--color-divider);
 }
 
 .minor-row {
@@ -931,7 +972,8 @@ html.is-past-hero .topbar nav {
   gap: var(--space-2);
   padding-block: var(--space-2);
   color: var(--color-text);
-  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform var(--dur-hover) var(--ease),
+              translate var(--dur-press) var(--ease);
 }
 
 @media (hover: hover) {
@@ -945,13 +987,15 @@ html.is-past-hero .topbar nav {
   }
 }
 
-.minor-row:focus-visible,
-.minor-row:focus-within {
+a.minor-row:active {
+  translate: 0 1px;
+}
+
+.minor-row:focus-visible {
   transform: translateX(2px);
 }
 
-.minor-row:focus-visible .minor-title,
-.minor-row:focus-within .minor-title {
+.minor-row:focus-visible .minor-title {
   color: var(--color-accent);
 }
 
@@ -959,7 +1003,7 @@ html.is-past-hero .topbar nav {
   font-size: var(--size-body);
   font-weight: var(--weight-normal);
   color: var(--color-text);
-  transition: color 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: color var(--dur-hover) var(--ease);
 }
 
 .minor-meta {
@@ -973,32 +1017,38 @@ html.is-past-hero .topbar nav {
   margin-left: var(--space-1);
 }
 
-@media (scripting: enabled) {
-  .reveal {
-    opacity: 0;
-    transform: translateY(8px);
-  }
+/* Staggered reveal: cap at 4 items (--i: 0..3); omit --i beyond 4 for 0s delay. */
+.js .reveal {
+  --reveal-delay: calc(min(var(--i, 0), 3) * var(--stagger));
+  opacity: 0;
+  translate: 0 8px;
+}
 
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 300ms cubic-bezier(0.22, 1, 0.36, 1),
-                transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
+.js .reveal.visible {
+  opacity: 1;
+  translate: 0 0;
+  transition: opacity var(--dur-reveal) var(--ease) var(--reveal-delay),
+              translate var(--dur-reveal) var(--ease) var(--reveal-delay);
 }
 
 /* ============================================================
    Proof rows and contact
    ============================================================ */
 
-.proof-list {
-  border-top: 1px solid var(--color-divider);
-}
-
 .proof-row {
   padding-block: var(--space-3);
   border-bottom: 1px solid var(--color-divider);
-  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform var(--dur-hover) var(--ease);
+}
+
+.proof-row:first-child {
+  border-top: 1px solid var(--color-divider);
+}
+
+.js .proof-row.reveal.visible {
+  transition: opacity var(--dur-reveal) var(--ease) var(--reveal-delay),
+              translate var(--dur-reveal) var(--ease) var(--reveal-delay),
+              transform var(--dur-hover) var(--ease);
 }
 
 @media (hover: hover) {
@@ -1007,7 +1057,7 @@ html.is-past-hero .topbar nav {
   }
 }
 
-.proof-row:focus-within {
+.proof-row:has(:focus-visible) {
   transform: translateX(2px);
 }
 
@@ -1051,7 +1101,15 @@ html.is-past-hero .topbar nav {
   --cg-label-w: 32px;
   position: relative;
   margin-top: var(--space-4);
-  contain: inline-size;
+  container-type: inline-size;
+}
+
+@media (min-width: 721px) {
+  @container (min-width: 633px) {
+    .contrib-scroll {
+      --cg-cell: calc(((100cqi - var(--cg-label-w)) - 52 * var(--cg-gap)) / 53);
+    }
+  }
 }
 
 @media (scripting: none) {
@@ -1091,6 +1149,7 @@ html.is-past-hero .topbar nav {
   grid-template-columns: repeat(53, var(--cg-cell));
   gap: var(--cg-gap);
   width: max-content;
+  min-height: 1em;
   font-family: var(--font-mono);
   font-size: var(--size-meta);
   line-height: 1;
@@ -1140,6 +1199,14 @@ html.is-past-hero .topbar nav {
   grid-auto-columns: var(--cg-cell);
   gap: var(--cg-gap);
   width: max-content;
+  min-width: calc(53 * var(--cg-cell) + 52 * var(--cg-gap));
+  min-height: calc(7 * var(--cg-cell) + 6 * var(--cg-gap));
+}
+
+.contrib-grid:empty {
+  background-image:
+    repeating-linear-gradient(to right, transparent 0 var(--cg-cell), var(--color-bg) var(--cg-cell) calc(var(--cg-cell) + var(--cg-gap))),
+    repeating-linear-gradient(to bottom, var(--color-divider) 0 var(--cg-cell), var(--color-bg) var(--cg-cell) calc(var(--cg-cell) + var(--cg-gap)));
 }
 
 .contrib-cell {
@@ -1165,12 +1232,12 @@ html.is-past-hero .topbar nav {
 
 .contrib-grid .contrib-cell {
   opacity: 0;
-  transition: opacity 160ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity var(--dur-hover) var(--ease);
 }
 
 .contrib.is-visible .contrib-grid .contrib-cell {
   opacity: var(--cell-opacity);
-  transition-delay: calc((var(--col) + var(--row)) * 8ms);
+  transition-delay: calc((var(--col) + var(--row)) * (var(--stagger) / 5));
 }
 
 .contrib-cell.is-today {
@@ -1242,12 +1309,17 @@ html.is-past-hero .topbar nav {
   background-color: var(--color-text);
   opacity: 0;
   visibility: hidden;
-  transition: opacity 150ms cubic-bezier(0.22, 1, 0.36, 1),
-              visibility 150ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity var(--dur-hover) var(--ease),
+              visibility 0s linear var(--dur-hover);
   pointer-events: none;
 }
 
-.contrib-tooltip.is-active { opacity: 1; visibility: visible; }
+.contrib-tooltip.is-active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--dur-hover) var(--ease),
+              visibility 0s linear 0s;
+}
 
 .contrib-meta {
   display: flex;
@@ -1322,16 +1394,22 @@ html.is-past-hero .topbar nav {
 }
 
 .contact-link {
+  display: inline-block;
   font-family: var(--font-mono);
   font-size: var(--size-meta);
   color: var(--color-secondary);
-  transition: color 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: color var(--dur-hover) var(--ease),
+              transform var(--dur-press) var(--ease);
 }
 
 @media (hover: hover) {
   .contact-link:hover {
     color: var(--color-accent);
   }
+}
+
+.contact-link:active {
+  transform: translateY(1px);
 }
 /* ============================================================
    Responsive Layout
@@ -1385,8 +1463,7 @@ html.is-past-hero .topbar nav {
 
   .hero-name.is-entering,
   .hero-title.is-entering,
-  .hero-quote.is-entering,
-  .hero-education.is-entering {
+  .hero-quote.is-entering {
     animation: none;
   }
 
@@ -1399,20 +1476,29 @@ html.is-past-hero .topbar nav {
     transform: none;
   }
 
+  #work > .section-label,
+  #work .work-tablist,
+  #work .work-panels {
+    transform: none;
+  }
+
   .topbar nav { opacity: clamp(0, calc((var(--p) - 0.5) * 2), 1); transition: none; }
 
-  .reveal,
-  .reveal.visible {
+  .js .reveal,
+  .js .reveal.visible {
     opacity: 1;
-    transform: none;
+    translate: none;
     transition: none !important;
   }
 
   .work-tab,
   a,
+  .topbar-name,
   .nav-link,
   .work-tab-underline,
+  .work-tablist.is-ready .work-tab-underline,
   .work-panels.is-enhanced .work-panel,
+  .work-link,
   .redacted-bars,
   .redacted-copy,
   .minor-row,
@@ -1424,13 +1510,26 @@ html.is-past-hero .topbar nav {
     transition: none !important;
   }
 
+  .theme-toggle:hover svg {
+    scale: 1;
+  }
+
+  .theme-toggle:active,
+  .topbar-name:active,
+  .nav-link:active,
+  .work-tab:active,
+  .work-link:active,
+  .contact-link:active,
   .work-panels.is-enhanced .work-panel,
   .minor-row:hover,
   .minor-row:focus-visible,
-  .minor-row:focus-within,
   .proof-row:hover,
-  .proof-row:focus-within {
+  .proof-row:has(:focus-visible) {
     transform: none;
+  }
+
+  a.minor-row:active {
+    translate: none;
   }
 
   .contrib-grid .contrib-cell,
@@ -1439,13 +1538,13 @@ html.is-past-hero .topbar nav {
     transition-delay: 0s;
   }
 
-  .is-scrolling .hero-name,
-  .is-scrolling .hero-title,
-  .is-scrolling .hero-quote {
+  .hero.is-scrolling .hero-name,
+  .hero.is-scrolling .hero-title,
+  .hero.is-scrolling .hero-quote {
     will-change: auto;
   }
 
-  .avatar img,
+  .js .avatar img,
   .theme-toggle,
   .theme-toggle svg,
   .theme-toggle svg * {

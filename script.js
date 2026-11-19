@@ -190,18 +190,29 @@
   var activeTab = tabs.filter(function (tab) {
     return tab.getAttribute('aria-selected') === 'true';
   })[0] || tabs[0];
-  var hideTimers = Object.create(null);
   var underline = tablist.querySelector('.work-tab-underline');
-  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   function panelFor(tab) {
     return document.getElementById(tab.getAttribute('aria-controls'));
   }
 
-  function moveUnderline(tab) {
+  function moveUnderline(tab, instant) {
     if (!tab || !underline) return;
+    if (instant) {
+      tablist.classList.remove('is-ready');
+    }
     underline.style.setProperty('--tab-x', tab.offsetLeft + 'px');
     underline.style.setProperty('--tab-scale', String(tab.offsetWidth));
+    if (instant) {
+      void underline.offsetWidth;
+      tablist.classList.add('is-ready');
+    }
+  }
+
+  function syncPanelState(panel, selected) {
+    panel.classList.toggle('is-current', selected);
+    panel.setAttribute('aria-hidden', String(!selected));
+    panel.tabIndex = selected ? 0 : -1;
   }
 
   function setTab(tab, moveFocus) {
@@ -221,38 +232,18 @@
       item.tabIndex = selected ? 0 : -1;
     });
 
-    if (oldPanel) {
-      oldPanel.classList.remove('is-current');
-      window.clearTimeout(hideTimers[oldPanel.id]);
-      if (prefersReducedMotion.matches) {
-        oldPanel.hidden = true;
-      } else {
-        hideTimers[oldPanel.id] = window.setTimeout(function () {
-          if (panelFor(activeTab) !== oldPanel) oldPanel.hidden = true;
-        }, 200);
-      }
-    }
+    if (oldPanel) syncPanelState(oldPanel, false);
+    if (nextPanel) syncPanelState(nextPanel, true);
 
-    if (nextPanel) {
-      window.clearTimeout(hideTimers[nextPanel.id]);
-      nextPanel.hidden = false;
-      nextPanel.classList.remove('is-current');
-      var showPanel = function () {
-        nextPanel.classList.add('is-current');
-      };
-      if (prefersReducedMotion.matches) showPanel();
-      else window.requestAnimationFrame(showPanel);
-    }
-
-    moveUnderline(tab);
+    moveUnderline(tab, false);
     if (moveFocus) tab.focus();
   }
 
   panels.classList.add('is-enhanced');
   panels.querySelectorAll('.work-panel').forEach(function (panel) {
     var selected = panel.id === activeTab.getAttribute('aria-controls');
-    panel.hidden = !selected;
-    panel.classList.toggle('is-current', selected);
+    panel.hidden = false;
+    syncPanelState(panel, selected);
   });
 
   tabs.forEach(function (tab) {
@@ -275,11 +266,11 @@
     tabs[next].scrollIntoView({ block: 'nearest', inline: 'nearest' });
   });
 
-  window.addEventListener('resize', function () { moveUnderline(activeTab); }, { passive: true });
-  moveUnderline(activeTab);
+  window.addEventListener('resize', function () { moveUnderline(activeTab, true); }, { passive: true });
+  moveUnderline(activeTab, true);
 
   if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function () { moveUnderline(activeTab); });
+    document.fonts.ready.then(function () { moveUnderline(activeTab, true); });
   }
 
   panels.querySelectorAll('.work-link[data-url]').forEach(function (link) {
@@ -327,12 +318,30 @@
   var elements = document.querySelectorAll('.reveal');
   if (!elements.length) return;
 
+  function revealTarget(target) {
+    if (target.hasAttribute('data-reveal-group')) {
+      target.querySelectorAll('.reveal').forEach(function (el) {
+        el.classList.add('visible');
+      });
+    } else {
+      target.classList.add('visible');
+    }
+  }
+
   if (!prefersReducedMotion.matches && 'IntersectionObserver' in window) {
+    var targets = [];
+    document.querySelectorAll('[data-reveal-group]').forEach(function (group) {
+      targets.push(group);
+    });
+    elements.forEach(function (el) {
+      if (!el.closest('[data-reveal-group]')) targets.push(el);
+    });
+
     var observer = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
+          if (entry.isIntersecting || entry.boundingClientRect.top < 0) {
+            revealTarget(entry.target);
             observer.unobserve(entry.target);
           }
         });
@@ -340,8 +349,8 @@
       { threshold: 0.1 }
     );
 
-    elements.forEach(function (el) {
-      observer.observe(el);
+    targets.forEach(function (target) {
+      observer.observe(target);
     });
   } else {
     elements.forEach(function (el) {
@@ -349,6 +358,9 @@
     });
   }
 })();
+
+/* Enable :active press states on iOS Safari without blocking scroll. */
+document.addEventListener('touchstart', function () {}, { passive: true });
 
 /* Heatmap integration point; repo highlighting is intentionally unimplemented. */
 window.highlightRepo = function highlightRepo(repo) {
@@ -369,42 +381,69 @@ window.highlightRepo = function highlightRepo(repo) {
   var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   if (!hero || !name || !topbar || !work) return;
 
+  var workTargets = [
+    document.getElementById('work-heading'),
+    work.querySelector('.work-tablist'),
+    work.querySelector('.work-panels')
+  ].filter(Boolean);
+
   var snapDistance = 1;
   var targetP = 0;
   var currentP = 0;
   var frame = 0;
+  var lastFrameTime = 0;
   var scrollIdleTimer = 0;
+  var lastWrittenP = null;
+  var lastWrittenW = null;
 
   function writeProgress(value) {
     var progress = Math.max(0, Math.min(1, value));
+    var pStr = progress.toFixed(4);
+    if (pStr !== lastWrittenP) {
+      lastWrittenP = pStr;
+      hero.style.setProperty('--p', pStr);
+      topbar.style.setProperty('--p', pStr);
+      root.classList.toggle('is-past-hero', progress >= (prefersReducedMotion.matches ? 0.5 : 0.6));
+    }
     var workReveal = Math.max(0, Math.min(1, (progress - 0.4) / 0.6));
-    hero.style.setProperty('--p', progress.toFixed(4));
-    topbar.style.setProperty('--p', progress.toFixed(4));
-    work.style.setProperty('--p', progress.toFixed(4));
-    work.style.setProperty('--w', workReveal.toFixed(4));
-    root.classList.toggle('is-past-hero', progress >= (prefersReducedMotion.matches ? 0.5 : 0.6));
+    var wStr = workReveal.toFixed(4);
+    if (wStr !== lastWrittenW) {
+      lastWrittenW = wStr;
+      workTargets.forEach(function (el) {
+        el.style.setProperty('--w', wStr);
+      });
+    }
   }
 
-  function animateProgress() {
-    currentP += (targetP - currentP) * 0.14;
+  function animateProgress(now) {
+    var dt = lastFrameTime ? Math.min(now - lastFrameTime, 100) : 16.6667;
+    lastFrameTime = now;
+    var factor = 1 - Math.pow(1 - 0.14, dt / 16.6667);
+    currentP += (targetP - currentP) * factor;
     if (Math.abs(targetP - currentP) <= 0.001) {
       currentP = targetP;
       frame = 0;
+      lastFrameTime = 0;
       writeProgress(currentP);
+      if (currentP >= 1) hero.classList.remove('is-scrolling');
       return;
     }
     writeProgress(currentP);
     frame = window.requestAnimationFrame(animateProgress);
   }
 
-  function updateTarget() {
+  function measureSnapDistance() {
     var topbarHeight = parseFloat(getComputedStyle(root).getPropertyValue('--height-topbar')) || 0;
     snapDistance = Math.max(1, work.offsetTop - topbarHeight);
+  }
+
+  function updateTarget() {
     targetP = Math.max(0, Math.min(1, window.scrollY / snapDistance));
     if (prefersReducedMotion.matches) {
       currentP = targetP;
       writeProgress(currentP);
     } else if (Math.abs(targetP - currentP) > 0.001 && !frame) {
+      lastFrameTime = 0;
       frame = window.requestAnimationFrame(animateProgress);
     } else if (Math.abs(targetP - currentP) <= 0.001) {
       currentP = targetP;
@@ -412,21 +451,28 @@ window.highlightRepo = function highlightRepo(repo) {
     }
   }
 
-  window.addEventListener('scroll', function () {
+  function remeasureAndSync() {
+    measureSnapDistance();
     updateTarget();
-    root.classList.add('is-scrolling');
-    window.clearTimeout(scrollIdleTimer);
-    scrollIdleTimer = window.setTimeout(function () { root.classList.remove('is-scrolling'); }, 120);
-  }, { passive: true });
-  window.addEventListener('resize', updateTarget, { passive: true });
-  updateTarget();
-
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(updateTarget);
-    if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', updateTarget);
   }
 
-  if (!prefersReducedMotion.matches) {
+  window.addEventListener('scroll', function () {
+    updateTarget();
+    if (!prefersReducedMotion.matches && (currentP < 1 || targetP < 1)) {
+      hero.classList.add('is-scrolling');
+      window.clearTimeout(scrollIdleTimer);
+      scrollIdleTimer = window.setTimeout(function () { hero.classList.remove('is-scrolling'); }, 120);
+    }
+  }, { passive: true });
+  window.addEventListener('resize', remeasureAndSync, { passive: true });
+  remeasureAndSync();
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(remeasureAndSync);
+    if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', remeasureAndSync);
+  }
+
+  if (!prefersReducedMotion.matches && window.scrollY === 0) {
     [name, document.querySelector('.hero-title'), document.querySelector('.hero-quote')].filter(Boolean).forEach(function (element) {
       element.classList.add('is-entering');
       element.addEventListener('animationend', function () { element.classList.remove('is-entering'); }, { once: true });

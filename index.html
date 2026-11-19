@@ -31,6 +31,7 @@
   <!-- Theme Initialization to prevent FOUC -->
   <script>
     (function() {
+      document.documentElement.classList.add('js');
       function getTheme() {
         try { return localStorage.getItem('theme'); } catch(e) { return null; }
       }
@@ -144,34 +145,34 @@
           </div>
           <div id="work-panel-04" class="work-panel work-panel--redacted" role="tabpanel" aria-labelledby="work-tab-04" tabindex="0" data-repo="">
             <div class="redacted-reveal" role="group" aria-label="Redacted" tabindex="0">
-              <span class="redacted-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+              <span class="redacted-bars" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></span>
               <span class="redacted-copy" aria-hidden="true">in progress</span>
             </div>
           </div>
           <div id="work-panel-05" class="work-panel work-panel--redacted" role="tabpanel" aria-labelledby="work-tab-05" tabindex="0" data-repo="">
             <div class="redacted-reveal" role="group" aria-label="Redacted" tabindex="0">
-              <span class="redacted-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+              <span class="redacted-bars" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></span>
               <span class="redacted-copy" aria-hidden="true">in progress</span>
             </div>
           </div>
         </div>
 
-        <div class="minor-work reveal">
-          <h3 class="section-label minor-heading">Minor</h3>
+        <div class="minor-work" data-reveal-group>
+          <h3 class="section-label minor-heading reveal" style="--i:0">Minor</h3>
           <ul class="minor-list">
-            <li class="minor-item">
+            <li class="minor-item reveal" style="--i:1">
               <div class="minor-row" data-url="">
                 <span class="minor-title" data-placeholder>Project name</span>
                 <span class="minor-meta" data-placeholder>stack · year</span>
               </div>
             </li>
-            <li class="minor-item">
+            <li class="minor-item reveal" style="--i:2">
               <div class="minor-row" data-url="">
                 <span class="minor-title" data-placeholder>Project name</span>
                 <span class="minor-meta" data-placeholder>stack · year</span>
               </div>
             </li>
-            <li class="minor-item">
+            <li class="minor-item reveal" style="--i:3">
               <div class="minor-row" data-url="">
                 <span class="minor-title" data-placeholder>Project name</span>
                 <span class="minor-meta" data-placeholder>stack · year</span>
@@ -221,20 +222,20 @@
         </div>
       </section>
 
-      <section id="proof" class="section" aria-labelledby="proof-heading">
-        <h2 id="proof-heading" class="section-label">Proof</h2>
+      <section id="proof" class="section" aria-labelledby="proof-heading" data-reveal-group>
+        <h2 id="proof-heading" class="section-label reveal" style="--i:0">Proof</h2>
         <div class="proof-list">
-          <article class="proof-row">
+          <article class="proof-row reveal" style="--i:1">
             <h3 class="proof-title" data-placeholder>Proof title</h3>
             <p class="proof-meta" data-placeholder>type · year · context</p>
             <p class="proof-result" data-placeholder>One-line result.</p>
           </article>
-          <article class="proof-row">
+          <article class="proof-row reveal" style="--i:2">
             <h3 class="proof-title" data-placeholder>Proof title</h3>
             <p class="proof-meta" data-placeholder>type · year · context</p>
             <p class="proof-result" data-placeholder>One-line result.</p>
           </article>
-          <article class="proof-row">
+          <article class="proof-row reveal" style="--i:3">
             <h3 class="proof-title">CyberX</h3>
             <p class="proof-meta">2026 · RNSIT · <span data-placeholder>type · status</span></p>
             <p class="proof-result proof-result--withheld">[redacted]</p>
@@ -249,10 +250,10 @@
       </section>
       -->
 
-      <section id="contact" class="section" aria-labelledby="contact-heading">
-        <h2 id="contact-heading" class="section-label">Contact</h2>
-        <p class="contact-statement">Curious about how things think, whether they're running on silicon or not.</p>
-        <p class="contact-links">
+      <section id="contact" class="section" aria-labelledby="contact-heading" data-reveal-group>
+        <h2 id="contact-heading" class="section-label reveal" style="--i:0">Contact</h2>
+        <p class="contact-statement reveal" style="--i:1">Curious about how things think, whether they're running on silicon or not.</p>
+        <p class="contact-links reveal" style="--i:2">
           <a class="contact-link" href="https://github.com/ShreyasLoL" target="_blank" rel="noopener noreferrer">[github]</a>
           <span aria-hidden="true">·</span>
           <a class="contact-link" href="https://www.linkedin.com/in/shreyasis-5a87722b9/" target="_blank" rel="noopener noreferrer">[linkedin]</a>
@@ -277,7 +278,7 @@
     </div>
   </main>
 
-  <script src="script.js"></script>
+  <script src="script.js" onerror="document.documentElement.classList.remove('js')"></script>
   <script src="contributions.js"></script>
 </body>
 </html>

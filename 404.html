@@ -24,6 +24,7 @@
   <!-- Theme Initialization to prevent FOUC -->
   <script>
     (function() {
+      document.documentElement.classList.add('js');
       function getTheme() {
         try { return localStorage.getItem('theme'); } catch(e) { return null; }
       }
@@ -80,6 +81,6 @@
     </main>
   </div>
 
-  <script src="script.js"></script>
+  <script src="script.js" onerror="document.documentElement.classList.remove('js')"></script>
 </body>
 </html>
