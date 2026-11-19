@@ -781,7 +781,7 @@ html.is-past-hero .topbar nav {
   padding: 0;
   border: 0;
   opacity: 0;
-  transform: translateY(2px);
+  transform: translateX(calc(var(--panel-x, 0) * 4px));
   visibility: hidden;
   pointer-events: none;
   transition: opacity var(--dur-hover) var(--ease),
@@ -789,9 +789,13 @@ html.is-past-hero .topbar nav {
               visibility 0s linear var(--dur-hover);
 }
 
+.work-panels.is-enhanced .work-panel.is-staging {
+  transition: none;
+}
+
 .work-panels.is-enhanced .work-panel.is-current {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateX(0);
   visibility: visible;
   pointer-events: auto;
   transition: opacity var(--dur-hover) var(--ease),
@@ -1521,6 +1525,7 @@ a.minor-row:active {
   .work-link:active,
   .contact-link:active,
   .work-panels.is-enhanced .work-panel,
+  .work-panels.is-enhanced .work-panel.is-current,
   .minor-row:hover,
   .minor-row:focus-visible,
   .proof-row:hover,

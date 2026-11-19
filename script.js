@@ -224,6 +224,7 @@
     var oldTab = activeTab;
     var oldPanel = panelFor(oldTab);
     var nextPanel = panelFor(tab);
+    var dir = tabs.indexOf(tab) > tabs.indexOf(oldTab) ? 1 : -1;
     activeTab = tab;
 
     tabs.forEach(function (item) {
@@ -232,8 +233,19 @@
       item.tabIndex = selected ? 0 : -1;
     });
 
-    if (oldPanel) syncPanelState(oldPanel, false);
-    if (nextPanel) syncPanelState(nextPanel, true);
+    if (oldPanel) {
+      oldPanel.style.setProperty('--panel-x', String(-dir));
+      syncPanelState(oldPanel, false);
+    }
+    if (nextPanel) {
+      if (parseFloat(getComputedStyle(nextPanel).opacity) <= 0.05) {
+        nextPanel.classList.add('is-staging');
+        nextPanel.style.setProperty('--panel-x', String(dir));
+        void nextPanel.offsetWidth;
+        nextPanel.classList.remove('is-staging');
+      }
+      syncPanelState(nextPanel, true);
+    }
 
     moveUnderline(tab, false);
     if (moveFocus) tab.focus();
