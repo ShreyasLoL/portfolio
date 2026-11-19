@@ -195,7 +195,6 @@
 html {
   scroll-behavior: smooth;
   scrollbar-width: none;
-  scroll-snap-type: y proximity;
 }
 
 html::-webkit-scrollbar {
@@ -543,16 +542,18 @@ html.is-past-hero .topbar nav {
 }
 
 .hero {
-  display: grid;
-  place-items: center;
-  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   min-height: 100svh;
-  padding-block: var(--height-topbar) var(--space-5);
+  padding-top: max(var(--height-topbar), 28svh);
+  padding-bottom: 0;
   text-align: center;
-  scroll-snap-align: start;
 }
 
 .hero-content {
+  position: sticky;
+  top: max(var(--height-topbar), 28svh);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -565,8 +566,8 @@ html.is-past-hero .topbar nav {
   font-weight: var(--weight-medium);
   line-height: 1.2;
   text-wrap: balance;
-  opacity: clamp(0, calc((0.65 - var(--p)) / 0.55), 1);
-  transform: translateY(calc(-24px * clamp(0, calc(var(--p) / 0.65), 1)));
+  opacity: clamp(0, calc((0.78 - var(--p, 0)) / 0.40), 1);
+  transform: translateY(calc(-24px * clamp(0, calc((var(--p, 0) - 0.20) / 0.58), 1)));
 }
 
 .hero-name.is-entering,
@@ -589,8 +590,8 @@ html.is-past-hero .topbar nav {
   font-weight: var(--weight-normal);
   color: var(--color-secondary);
   letter-spacing: 0.08em;
-  opacity: clamp(0, calc((0.50 - var(--p)) / 0.50), 1);
-  transform: translateY(calc(-16px * clamp(0, calc(var(--p) / 0.50), 1)));
+  opacity: clamp(0, calc((0.84 - var(--p, 0)) / 0.40), 1);
+  transform: translateY(calc(-16px * clamp(0, calc((var(--p, 0) - 0.24) / 0.60), 1)));
   margin-top: var(--space-3);
 }
 
@@ -601,8 +602,8 @@ html.is-past-hero .topbar nav {
   line-height: 1.35;
   color: var(--color-text);
   text-wrap: balance;
-  opacity: clamp(0, calc((0.35 - var(--p)) / 0.35), 1);
-  transform: translateY(calc(-8px * clamp(0, calc(var(--p) / 0.35), 1)));
+  opacity: clamp(0, calc((0.94 - var(--p, 0)) / 0.42), 1);
+  transform: translateY(calc(-8px * clamp(0, calc((var(--p, 0) - 0.28) / 0.66), 1)));
   margin-top: var(--space-4);
 }
 
@@ -676,8 +677,6 @@ html.is-past-hero .topbar nav {
   margin-bottom: var(--space-5);
   scroll-margin-top: var(--height-topbar);
 }
-
-#work { scroll-snap-align: start; }
 
 .content-column > .section {
   counter-increment: section;
@@ -1444,7 +1443,7 @@ a.minor-row:active {
 
 @media (max-width: 720px) {
   .content-column {
-    padding-bottom: calc(var(--space-5) + env(safe-area-inset-bottom));
+    padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
   }
 
   .section {
@@ -1485,7 +1484,10 @@ a.minor-row:active {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-    scroll-snap-type: none;
+  }
+
+  .hero-content {
+    position: static;
   }
 
   .hero-name.is-entering,
@@ -1494,22 +1496,23 @@ a.minor-row:active {
     animation: none;
   }
 
-  .topbar-name { opacity: clamp(0, calc((var(--p) - 0.5) * 2), 1); }
+  .topbar-name { opacity: clamp(0, calc((var(--p, 0) - 0.5) * 2), 1); }
 
   .hero-name,
   .hero-title,
   .hero-quote {
-    opacity: clamp(0, calc(1 - (var(--p) * 2)), 1);
+    opacity: 1;
     transform: none;
   }
 
   #work > .section-label,
   #work .work-tablist,
   #work .work-panels {
+    opacity: 1;
     transform: none;
   }
 
-  .topbar nav { opacity: clamp(0, calc((var(--p) - 0.5) * 2), 1); transition: none; }
+  .topbar nav { opacity: clamp(0, calc((var(--p, 0) - 0.5) * 2), 1); transition: none; }
 
   .js .reveal,
   .js .reveal.visible {

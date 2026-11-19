@@ -363,7 +363,7 @@
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.01 }
     );
 
     targets.forEach(function (target) {
@@ -422,7 +422,7 @@ window.highlightRepo = function highlightRepo(repo) {
       topbar.style.setProperty('--p', pStr);
       root.classList.toggle('is-past-hero', progress >= (prefersReducedMotion.matches ? 0.5 : 0.6));
     }
-    var workReveal = Math.max(0, Math.min(1, (progress - 0.4) / 0.6));
+    var workReveal = Math.max(0, Math.min(1, (progress - 0.08) / 0.47));
     var wStr = workReveal.toFixed(4);
     if (wStr !== lastWrittenW) {
       lastWrittenW = wStr;
@@ -451,7 +451,9 @@ window.highlightRepo = function highlightRepo(repo) {
 
   function measureSnapDistance() {
     var topbarHeight = parseFloat(getComputedStyle(root).getPropertyValue('--height-topbar')) || 0;
-    snapDistance = Math.max(1, work.offsetTop - topbarHeight);
+    var maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    var rawDistance = Math.min(work.offsetTop - topbarHeight, window.innerHeight, maxScroll);
+    snapDistance = Math.max(1, rawDistance);
   }
 
   function updateTarget() {
@@ -468,9 +470,17 @@ window.highlightRepo = function highlightRepo(repo) {
     }
   }
 
-  function remeasureAndSync() {
+  function snapProgressToTarget() {
     measureSnapDistance();
-    updateTarget();
+    targetP = Math.max(0, Math.min(1, window.scrollY / snapDistance));
+    if (frame) {
+      window.cancelAnimationFrame(frame);
+      frame = 0;
+      lastFrameTime = 0;
+    }
+    currentP = targetP;
+    writeProgress(currentP);
+    if (currentP >= 1 || currentP <= 0) hero.classList.remove('is-scrolling');
   }
 
   window.addEventListener('scroll', function () {
@@ -481,12 +491,15 @@ window.highlightRepo = function highlightRepo(repo) {
       scrollIdleTimer = window.setTimeout(function () { hero.classList.remove('is-scrolling'); }, 120);
     }
   }, { passive: true });
-  window.addEventListener('resize', remeasureAndSync, { passive: true });
-  remeasureAndSync();
+  window.addEventListener('scrollend', snapProgressToTarget, { passive: true });
+  window.addEventListener('hashchange', snapProgressToTarget, { passive: true });
+  window.addEventListener('load', snapProgressToTarget, { passive: true });
+  window.addEventListener('resize', snapProgressToTarget, { passive: true });
+  snapProgressToTarget();
 
   if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(remeasureAndSync);
-    if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', remeasureAndSync);
+    document.fonts.ready.then(snapProgressToTarget);
+    if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', snapProgressToTarget);
   }
 
   if (!prefersReducedMotion.matches && window.scrollY === 0) {
