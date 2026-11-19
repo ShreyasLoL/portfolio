@@ -434,6 +434,7 @@ html.theme-switching *:not(.theme-toggle):not(.theme-toggle *) {
 }
 
 .topbar nav {
+  position: relative;
   grid-column: 2;
   grid-row: 1;
   opacity: clamp(0, calc((var(--p) - 0.60) / 0.25), 1);
@@ -502,8 +503,26 @@ html.is-past-hero .topbar nav {
   content: counter(nav, decimal-leading-zero);
 }
 
-.nav-link[aria-current="location"] {
-  color: var(--color-accent);
+.nav-dot {
+  display: none;
+}
+
+.js .nav-dot {
+  position: absolute;
+  left: -2px;
+  bottom: 7px;
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  transform: translateX(var(--dot-x, 0px));
+  transition: none;
+  pointer-events: none;
+}
+
+.js .topbar nav.is-ready .nav-dot {
+  transition: transform var(--dur-reveal) var(--ease);
 }
 
 .nav-copy {
@@ -1503,6 +1522,8 @@ a.minor-row:active {
   a,
   .topbar-name,
   .nav-link,
+  .nav-dot,
+  .js .topbar nav.is-ready .nav-dot,
   .work-tab-underline,
   .work-tablist.is-ready .work-tab-underline,
   .work-panels.is-enhanced .work-panel,

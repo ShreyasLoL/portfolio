@@ -29,7 +29,7 @@ Rule: no raw `ease`, no raw ms values in components. Tiers only.
 
 1. **Press feedback.** `.theme-toggle:active { transform: scale(0.94); }` at `--dur-press`. Same for nav links (`translateY(1px)`). Instant response is most of what "fluid" feels like.
 2. **Staggered reveal, capped.** Set `style="--i:n"` per element in a section, `transition-delay: calc(var(--i) * var(--stagger))`, max 4. Beyond that, no delay.
-3. **Sliding nav marker.** One 1px accent line (`transform: translateY`) that glides between active nav items instead of a color flip. Uses transform only. Needs a one-line DESIGN.md note (accent on active nav item stays true).
+3. **Sliding nav marker.** One 4px accent dot (`transform: translateX`, `--dur-reveal`, `--ease`) centered 6px below the active nav number instead of a color flip. Numbers stay `--color-secondary` (hover still shifts to accent); the dot snaps on load, resize, and font load, glides on scroll, and locks to a clicked link until `scrollend` (with timeout fallback). Uses transform only.
 4. **Interruptible by default.** Use transitions, not keyframes, for hover and press, so reversing mid-motion eases back instead of snapping.
 5. **Font loading without shift.** Preload Newsreader 400/500, and add a fallback `@font-face` with `size-adjust` / `ascent-override` so swap does not move the layout.
 6. **Scroll feel.** Native only: `scroll-behavior: smooth`, `scroll-padding-top`, `overscroll-behavior: none` on body. No scroll-hijack libraries.

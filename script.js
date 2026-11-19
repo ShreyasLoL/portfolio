@@ -503,33 +503,102 @@ window.highlightRepo = function highlightRepo(repo) {
 (function () {
   'use strict';
 
+  var nav = document.querySelector('.topbar nav');
+  var navDot = nav ? nav.querySelector('.nav-dot') : null;
   var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-link'));
   var sections = Array.prototype.slice.call(document.querySelectorAll('.section:not([hidden])'));
+  var activeLink = null;
+  var isClickScrolling = false;
+  var clickScrollTimer = 0;
 
-  function setActiveNav(id) {
+  function moveDot(link, instant) {
+    if (!link || !navDot || !nav) return;
+    if (instant) {
+      nav.classList.remove('is-ready');
+    }
+    var center = link.offsetLeft + link.offsetWidth / 2;
+    navDot.style.setProperty('--dot-x', center + 'px');
+    if (instant) {
+      void navDot.offsetWidth;
+      nav.classList.add('is-ready');
+    }
+  }
+
+  function setActiveNav(id, instant) {
+    var nextLink = null;
     navLinks.forEach(function (link) {
       if (link.getAttribute('data-section') === id) {
         link.setAttribute('aria-current', 'location');
+        nextLink = link;
       } else {
         link.removeAttribute('aria-current');
       }
     });
+    if (nextLink && (nextLink !== activeLink || instant)) {
+      activeLink = nextLink;
+      moveDot(nextLink, Boolean(instant));
+    }
   }
+
+  function unlockClickScroll() {
+    if (!isClickScrolling) return;
+    isClickScrolling = false;
+    window.clearTimeout(clickScrollTimer);
+    window.removeEventListener('scrollend', unlockClickScroll);
+  }
+
+  function lockClickScroll() {
+    isClickScrolling = true;
+    window.clearTimeout(clickScrollTimer);
+    window.removeEventListener('scrollend', unlockClickScroll);
+    window.addEventListener('scrollend', unlockClickScroll, { once: true, passive: true });
+    clickScrollTimer = window.setTimeout(unlockClickScroll, 900);
+  }
+
+  navLinks.forEach(function (link) {
+    link.addEventListener('click', function () {
+      var id = link.getAttribute('data-section');
+      if (!id) return;
+      lockClickScroll();
+      setActiveNav(id, false);
+    });
+  });
 
   function updateActiveNav() {
+    if (isClickScrolling || !sections.length) return;
     var line = window.innerHeight * 0.3;
     var active = sections[0];
-    sections.forEach(function (section) {
-      if (section.getBoundingClientRect().top <= line) active = section;
-    });
-    if (active) setActiveNav(active.id);
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+      active = sections[sections.length - 1];
+    } else {
+      sections.forEach(function (section) {
+        if (section.getBoundingClientRect().top <= line) active = section;
+      });
+    }
+    if (active) setActiveNav(active.id, false);
   }
 
-  if (sections.length) setActiveNav(sections[0].id);
+  if (sections.length) setActiveNav(sections[0].id, true);
+
+  window.addEventListener('scroll', updateActiveNav, { passive: true });
+  window.addEventListener('resize', function () {
+    if (activeLink) moveDot(activeLink, true);
+  }, { passive: true });
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () {
+      if (activeLink) moveDot(activeLink, true);
+    });
+    if (document.fonts.addEventListener) {
+      document.fonts.addEventListener('loadingdone', function () {
+        if (activeLink) moveDot(activeLink, true);
+      });
+    }
+  }
 
   if ('IntersectionObserver' in window) {
     var navObserver = new IntersectionObserver(updateActiveNav, {
-      rootMargin: '-20% 0px -65% 0px',
+      rootMargin: '-20% 0px -35% 0px',
       threshold: 0
     });
     sections.forEach(function (section) { navObserver.observe(section); });
