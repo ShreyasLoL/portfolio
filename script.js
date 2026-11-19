@@ -191,6 +191,7 @@
     return tab.getAttribute('aria-selected') === 'true';
   })[0] || tabs[0];
   var underline = tablist.querySelector('.work-tab-underline');
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   function panelFor(tab) {
     return document.getElementById(tab.getAttribute('aria-controls'));
@@ -275,7 +276,11 @@
 
     event.preventDefault();
     setTab(tabs[next], true);
-    tabs[next].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    tabs[next].scrollIntoView({
+      block: 'nearest',
+      inline: 'center',
+      behavior: prefersReducedMotion.matches ? 'auto' : 'smooth'
+    });
   });
 
   window.addEventListener('resize', function () { moveUnderline(activeTab, true); }, { passive: true });
