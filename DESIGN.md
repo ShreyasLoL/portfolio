@@ -23,10 +23,10 @@ CSS variables only, never hard-coded in components.
 
 | Token | Light | Dark |
 |---|---|---|
-| `--color-bg` | `#F7F4ED` | `#0F0E0E` |
-| `--color-divider` | `#E6E1D5` | `#282624` |
-| `--color-secondary` | `#6B665B` | `#8F8B82` |
-| `--color-text` | `#1A1815` | `#ECE8DF` |
+| `--color-bg` | `#F5F4F1` | `#0B0B0B` |
+| `--color-divider` | `#E0DFDA` | `#1C1C1C` |
+| `--color-secondary` | `#5E5D59` | `#8A8A87` |
+| `--color-text` | `#111110` | `#F0EFEC` |
 | `--color-accent` | `#2F6F62` | `#5FB3A0` |
 
 Accent is used for hover, the active navigation dot, active work tabs, the theme toggle focus indicator, and `::selection`. Default to system preference via `prefers-color-scheme`, with a persisted toggle. `color-scheme` follows the active theme so scrollbars, form controls, and overscroll match.
@@ -92,7 +92,7 @@ The active section in the numbered navigation follows section entry and sets `ar
 # Design choices
 
 - **Type:** Newsreader + JetBrains Mono. Serif for voice, mono for metadata.
-- **Light background:** warm marble-toward-sand (`#F7F4ED`).
+- **Light background:** paper and ink, high contrast.
 - **Accent:** verdigris, used sparingly.
 - **Toggle:** icon-only sun/moon morph, placed at the fixed top-right.
 - **Avatar:** small, circular, full color. It reads as a person, not a decoration.

@@ -116,10 +116,10 @@
   --stagger: 40ms;
 
   /* ---- Light palette (default) ---- */
-  --color-bg: #F7F4ED;
-  --color-divider: #E6E1D5;
-  --color-secondary: #6B665B;
-  --color-text: #1A1815;
+  --color-bg: #F5F4F1;
+  --color-divider: #E0DFDA;
+  --color-secondary: #5E5D59;
+  --color-text: #111110;
   --color-accent: #2F6F62;
 
   /* ---- Theme toggle morph state (light: sun) ---- */
@@ -137,10 +137,10 @@
 /* ---- Dark palette ---- */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-bg: #0F0E0E;
-    --color-divider: #282624;
-    --color-secondary: #8F8B82;
-    --color-text: #ECE8DF;
+    --color-bg: #0B0B0B;
+    --color-divider: #1C1C1C;
+    --color-secondary: #8A8A87;
+    --color-text: #F0EFEC;
     --color-accent: #5FB3A0;
     --toggle-rot: 40deg;
     --toggle-core-scale: 1.35;
@@ -153,10 +153,10 @@
 }
 
 :root[data-theme="dark"] {
-  --color-bg: #0F0E0E;
-  --color-divider: #282624;
-  --color-secondary: #8F8B82;
-  --color-text: #ECE8DF;
+  --color-bg: #0B0B0B;
+  --color-divider: #1C1C1C;
+  --color-secondary: #8A8A87;
+  --color-text: #F0EFEC;
   --color-accent: #5FB3A0;
   --toggle-rot: 40deg;
   --toggle-core-scale: 1.35;
@@ -168,10 +168,10 @@
 }
 
 :root[data-theme="light"] {
-  --color-bg: #F7F4ED;
-  --color-divider: #E6E1D5;
-  --color-secondary: #6B665B;
-  --color-text: #1A1815;
+  --color-bg: #F5F4F1;
+  --color-divider: #E0DFDA;
+  --color-secondary: #5E5D59;
+  --color-text: #111110;
   --color-accent: #2F6F62;
   --toggle-rot: 0deg;
   --toggle-core-scale: 1;
