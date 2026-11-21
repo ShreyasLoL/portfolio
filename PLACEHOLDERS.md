@@ -69,6 +69,6 @@ CyberX:
 - Metadata after the supplied `2026 · RNSIT`: `type · status`
 - Result `[redacted]` is intentional, not a placeholder.
 
-## Contact
+## Connect
 
 - Email address: `your-email@example.com` in the marked `mailto:` link.

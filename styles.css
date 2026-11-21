@@ -1056,7 +1056,7 @@ a.minor-row:active {
 }
 
 /* ============================================================
-   Proof rows and contact
+   Proof rows and connect
    ============================================================ */
 
 .proof-row {
@@ -1098,21 +1098,54 @@ a.minor-row:active {
   margin-top: var(--space-1);
 }
 
-.contact-statement {
-  margin-bottom: var(--space-2);
-  font-size: var(--size-statement);
-  font-style: italic;
-  text-wrap: balance;
+.connect-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
 }
 
-.contact-links {
-  display: flex;
-  flex-wrap: wrap;
+.connect-link {
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
-  font-family: var(--font-mono);
-  font-size: var(--size-meta);
+  justify-content: center;
+  width: 44px;
+  height: 44px;
   color: var(--color-secondary);
+  transition: color var(--dur-hover) var(--ease),
+              transform var(--dur-hover) var(--ease),
+              scale var(--dur-press) var(--ease);
+}
+
+.connect-link:first-child {
+  margin-left: calc((24px - 44px) / 2);
+}
+
+.connect-link svg {
+  display: block;
+}
+
+.js .connect-link.reveal.visible {
+  transition: opacity var(--dur-reveal) var(--ease) var(--reveal-delay),
+              translate var(--dur-reveal) var(--ease) var(--reveal-delay),
+              color var(--dur-hover) var(--ease),
+              transform var(--dur-hover) var(--ease),
+              scale var(--dur-press) var(--ease);
+}
+
+@media (hover: hover) {
+  .connect-link:hover {
+    color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+}
+
+.connect-link:focus-visible {
+  color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.connect-link:active {
+  scale: 0.94;
 }
 
 /* ============================================================
@@ -1419,7 +1452,7 @@ a.minor-row:active {
   line-height: var(--leading-body);
 }
 
-.contact-link {
+.return-link {
   display: inline-block;
   font-family: var(--font-mono);
   font-size: var(--size-meta);
@@ -1429,12 +1462,12 @@ a.minor-row:active {
 }
 
 @media (hover: hover) {
-  .contact-link:hover {
+  .return-link:hover {
     color: var(--color-accent);
   }
 }
 
-.contact-link:active {
+.return-link:active {
   transform: translateY(1px);
 }
 /* ============================================================
@@ -1538,11 +1571,14 @@ a.minor-row:active {
   .proof-row,
   .contrib-grid .contrib-cell,
   .contrib-tooltip,
-  .contact-link {
+  .connect-link,
+  .js .connect-link.reveal.visible,
+  .return-link {
     transition: none !important;
   }
 
-  .theme-toggle:hover svg {
+  .theme-toggle:hover svg,
+  .connect-link:active {
     scale: 1;
   }
 
@@ -1551,7 +1587,9 @@ a.minor-row:active {
   .nav-link:active,
   .work-tab:active,
   .work-link:active,
-  .contact-link:active,
+  .return-link:active,
+  .connect-link:hover,
+  .connect-link:focus-visible,
   .work-panels.is-enhanced .work-panel,
   .work-panels.is-enhanced .work-panel.is-current,
   .minor-row:hover,
